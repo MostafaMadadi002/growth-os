@@ -1,2 +1,51 @@
-# UI/UX Design Placeholder
-*To be completed in Phase 6.*
+# سیستم طراحی (Design System) - GrowthOS
+
+این سیستم بر پایه **React Native** و **NativeWind** (Tailwind CSS) طراحی شده است تا تجربه‌ای یکپارچه، سریع و مدرن در پلتفرم اندروید ارائه دهد.
+
+## ۱. پالت رنگی (Color Palette)
+
+رنگ‌بندی GrowthOS بر پایه مفهوم "رشد" (رنگ سبز) و "تمرکز" (رنگ‌های خنثی تیره) انتخاب شده است.
+
+| دسته‌بندی | رنگ | کلاس‌های Tailwind | کاربرد |
+| :--- | :--- | :--- | :--- |
+| **اصلی (Emerald)** | رشد و حیات | `bg-emerald-500`, `text-emerald-600` | دکمه‌های اصلی، استریک‌ها، پیشرفت |
+| **ثانویه (Indigo)** | تمرکز و عمق | `bg-indigo-600`, `text-indigo-400` | بخش‌های آموزشی، یادداشت‌های مهم |
+| **موفقیت (Success)** | سبز روشن | `bg-green-500`, `text-green-600` | تریدهای سودده، عادات کامل شده |
+| **خطا (Error)** | قرمز تند | `bg-red-500`, `text-red-600` | تریدهای ضررده، اهداف عقب افتاده |
+| **هشدار (Warning)** | نارنجی/زرد | `bg-amber-500`, `text-amber-600` | عادات "متوسط" یا نیمه‌تمام |
+| **خنثی (Neutral)** | خاکستری‌ها | `bg-slate-50`, `bg-slate-900` | پس‌زمینه، متن، خطوط جداکننده |
+
+---
+
+## ۲. تایپوگرافی (Typography)
+
+فونت پیشنهادی: **Vazirmatn** (یا مشابه آن که از زبان فارسی به خوبی پشتیبانی می‌کند).
+
+| سطح | اندازه (Size) | وزن (Weight) | کلاس Tailwind |
+| :--- | :--- | :--- | :--- |
+| **Heading 1** | 24px (2xl) | Bold | `text-2xl font-bold` |
+| **Heading 2** | 20px (xl) | SemiBold | `text-xl font-semibold` |
+| **Body Large** | 16px (base) | Medium | `text-base font-medium` |
+| **Body Regular** | 14px (sm) | Normal | `text-sm font-normal` |
+| **Caption** | 12px (xs) | Light/Normal | `text-xs font-light text-slate-500` |
+
+---
+
+## ۳. اجزای اصلی (Core Components)
+
+### دکمه (Button)
+- `bg-emerald-500 px-6 py-3 rounded-2xl active:opacity-80`
+
+### کارت (Card)
+- `bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-100 dark:border-slate-800`
+
+### هیت‌مپ (Heatmap)
+- گرید خانه‌های ۱۰ در ۱۰ پیکسل با `rounded-sm` و رنگ‌های داینامیک بر اساس سطح فعالیت.
+
+---
+
+## ۴. استراتژی RTL و Dark Mode
+
+- **RTL:** تمامی استایل‌های جهت‌دار باید بر اساس `writing-direction: rtl` تنظیم شوند. در Tailwind از `text-right` استفاده شود.
+- **Dark Mode:** استفاده از پیشوند `dark:` برای تمامی رنگ‌های پس‌زمینه و متن.
+
