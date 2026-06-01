@@ -1,11 +1,24 @@
-<div align="center">
+# GrowthOS
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+GrowthOS is a unified **Personal Growth Operating System** designed to help users consolidate their journaling, habit tracking, goal management, and reflections into a single, cohesive platform.
 
-  <h1>Built with AI Studio</h2>
+## Project Structure
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+- `docs/`: Formal documentation (Vision, SRS, Architecture, etc.)
+- `src/`: Application source code (React + TypeScript)
+- `assets/`: UI/UX assets and illustrations
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Phased Roadmap
 
-</div>
+1. **Phase 0**: Vision & Scope
+2. **Phase 1**: Software Requirements Specification (SRS)
+3. **Phase 2**: User Stories & Journey Mapping
+4. **Phase 3**: Domain Modeling
+5. **Phase 4**: Database Design
+6. **Phase 5**: Architecture Design
+7. **Phase 6**: UI/UX Design
+8. **Development**: Implementation
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,0 +1,6 @@
+{
+  "name": "GrowthOS",
+  "description": "A Personal Growth Operating System for tracking habits, journals, goals, and analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
