@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { JournalEntry } from '../../../core/types';
-import { Tag, Sparkles, AlertTriangle, Lightbulb, Heart } from 'lucide-react';
+import { Tag, Sparkles, AlertTriangle, Lightbulb, Heart, X } from 'lucide-react';
 
 interface Props {
   initialData?: Partial<JournalEntry>;

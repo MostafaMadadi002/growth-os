@@ -176,7 +176,7 @@ export default function HabitsScreen() {
   );
 }
 
-function HabitItem({ habit, log, onLog, onDelete }: { habit: Habit, log?: any, onLog: (s: HabitStatus, v?: number) => void, onDelete: () => void }) {
+function HabitItem({ habit, log, onLog, onDelete }: { habit: Habit, log?: any, onLog: (s: HabitStatus, v?: number) => void, onDelete: () => void, key?: any }) {
   const status = log?.status;
   const isDone = status === HabitStatus.DONE;
 

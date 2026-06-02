@@ -1,6 +1,7 @@
 export enum MarketType {
   FOREX = 'FOREX',
   CRYPTO = 'CRYPTO',
+  STOCKS = 'STOCKS',
 }
 
 export enum TradeStatus {
