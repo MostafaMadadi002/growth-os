@@ -1,10 +1,12 @@
-import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
-import App from './App.tsx';
+import { AppRegistry } from 'react-native';
+import App from './App';
 import './index.css';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+// ثبت برنامه برای محیط وب
+AppRegistry.registerComponent('Main', () => App);
+
+// اجرای برنامه در المنت root
+AppRegistry.runApplication('Main', {
+  initialProps: {},
+  rootTag: document.getElementById('root'),
+});
