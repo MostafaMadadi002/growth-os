@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Book, CheckCircle, Target, TrendingUp, FileText } from 'lucide-react-native';
 
 import DashboardScreen from '../../features/dashboard/DashboardScreen';
-import JournalScreen from '../../features/journal/JournalScreen';
+import JournalNavigator from '../../features/journal/navigation/JournalNavigator';
 import HabitsScreen from '../../features/habits/HabitsScreen';
 import GoalsScreen from '../../features/goals/GoalsScreen';
 import TradingScreen from '../../features/trading/TradingScreen';
@@ -33,7 +33,7 @@ export default function BottomTabsNavigator() {
       />
       <Tab.Screen 
         name="Journal" 
-        component={JournalScreen} 
+        component={JournalNavigator} 
         options={{ tabBarIcon: ({ color }) => <Book color={color} size={24} /> }}
       />
       <Tab.Screen 

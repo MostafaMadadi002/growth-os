@@ -49,6 +49,7 @@ export interface Trade {
 export interface JournalEntry {
   id: string;
   user_id: string;
+  title: string;
   entry_date: string;
   content: string;
   mood_emoji?: string;
