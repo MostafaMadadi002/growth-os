@@ -9,7 +9,7 @@ import { Note } from '../../core/types';
 type ViewMode = 'LIST' | 'CREATE' | 'DETAIL' | 'EDIT';
 
 export default function NotesScreen() {
-  const { notes, isLoading, fetchNotes, addNote, updateNote, deleteNote } = useNoteStore();
+  const { notes, isLoading, error, fetchNotes, addNote, updateNote, deleteNote } = useNoteStore();
   const [viewMode, setViewMode] = useState<ViewMode>('LIST');
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -123,6 +123,13 @@ export default function NotesScreen() {
           />
         </div>
       </header>
+
+      {error && (
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-sm">
+          <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+          <p>خطا: {error}</p>
+        </div>
+      )}
 
       <main className="flex-1">
         {isLoading && notes.length === 0 ? (
