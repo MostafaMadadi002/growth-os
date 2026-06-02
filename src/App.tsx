@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Home, Book, CheckCircle, Target, TrendingUp, NotebookTabs } from 'lucide-react';
 import DashboardScreen from './features/dashboard/DashboardScreen';
-// I'll import other screens as well, but first I need to make sure they are web-compatible
+import NotesScreen from './features/notes/NotesScreen';
 
 const queryClient = new QueryClient();
 
@@ -15,6 +15,8 @@ export default function App() {
     switch (activeTab) {
       case 'Home':
         return <DashboardScreen />;
+      case 'Notes':
+        return <NotesScreen />;
       default:
         return (
           <div className="flex-1 flex items-center justify-center p-8">

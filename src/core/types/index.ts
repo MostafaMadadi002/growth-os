@@ -55,3 +55,13 @@ export interface JournalEntry {
   mood_emoji?: string;
   energy_level?: number;
 }
+
+export interface Note {
+  id: string;
+  user_id: string;
+  title: string;
+  content: string;
+  tags?: string[];
+  last_edited_at: string;
+  created_at: string;
+}
