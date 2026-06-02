@@ -20,7 +20,7 @@ export const useJournalStore = create<JournalState>((set, get) => ({
   fetchEntries: async () => {
     set({ isLoading: true, error: null });
     try {
-      const entries = await journalService.getAllJournals();
+      const entries = await journalService.getAllEntries();
       set({ entries, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
@@ -30,7 +30,7 @@ export const useJournalStore = create<JournalState>((set, get) => ({
   addEntry: async (entry) => {
     set({ isLoading: true });
     try {
-      const newEntry = await journalService.createJournal(entry);
+      const newEntry = await journalService.createEntry(entry);
       set({ entries: [newEntry, ...get().entries], isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
@@ -40,7 +40,7 @@ export const useJournalStore = create<JournalState>((set, get) => ({
   updateEntry: async (id, updates) => {
     set({ isLoading: true });
     try {
-      const updated = await journalService.updateJournal(id, updates);
+      const updated = await journalService.updateEntry(id, updates);
       set({
         entries: get().entries.map((e) => (e.id === id ? updated : e)),
         isLoading: false,
@@ -53,7 +53,7 @@ export const useJournalStore = create<JournalState>((set, get) => ({
   deleteEntry: async (id) => {
     set({ isLoading: true });
     try {
-      await journalService.deleteJournal(id);
+      await journalService.deleteEntry(id);
       set({
         entries: get().entries.filter((e) => e.id !== id),
         isLoading: false,

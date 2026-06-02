@@ -1,32 +1,44 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { Card } from '../../../shared/ui/Card';
 import { JournalEntry } from '../../../core/types';
-import { getJalaliDate } from '../../../core/utils/dateHelpers';
-import { ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft } from 'lucide-react';
 
 interface Props {
   entry: JournalEntry;
-  onPress: () => void;
+  onClick: () => void;
+  key?: string;
 }
 
-export const JournalListItem = ({ entry, onPress }: Props) => {
+export default function JournalListItem({ entry, onClick }: Props) {
+  const dateStr = new Date(entry.entry_date).toLocaleDateString('fa-IR');
+
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7} className="mb-4">
-      <Card className="flex-row items-center justify-between">
-        <View className="flex-1 pr-4">
-          <Text className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-1" numberOfLines={1}>
-            {entry.title || 'بدون عنوان'}
-          </Text>
-          <Text className="text-sm text-slate-500 dark:text-slate-400 mb-2">
-            {getJalaliDate(new Date(entry.entry_date))}
-          </Text>
-          <Text className="text-sm text-slate-600 dark:text-slate-300" numberOfLines={2}>
-            {entry.content}
-          </Text>
-        </View>
-        <ChevronLeft size={20} color="#64748b" />
-      </Card>
-    </TouchableOpacity>
+    <div 
+      onClick={onClick}
+      className="bg-slate-800 border border-slate-700 p-5 rounded-2xl mb-4 cursor-pointer hover:bg-slate-750 transition-colors"
+    >
+      <div className="flex justify-between items-center mb-2">
+        <div className="flex items-center gap-2">
+          {entry.mood_emoji && <span className="text-2xl">{entry.mood_emoji}</span>}
+          <h3 className="text-xl font-bold text-white line-clamp-1">{entry.title || 'بدون عنوان'}</h3>
+        </div>
+        <ChevronLeft size={20} className="text-slate-500" />
+      </div>
+      <p className="text-slate-400 text-sm line-clamp-2 mb-4 leading-relaxed">
+        {entry.content}
+      </p>
+      <div className="flex items-center justify-between">
+        <span className="text-slate-500 text-xs">{dateStr}</span>
+        {entry.energy_level !== undefined && (
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map(lvl => (
+              <div 
+                key={lvl} 
+                className={`w-2 h-2 rounded-full ${lvl <= entry.energy_level! ? 'bg-emerald-500' : 'bg-slate-700'}`} 
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
-};
+}

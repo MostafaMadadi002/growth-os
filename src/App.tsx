@@ -3,6 +3,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Home, Book, CheckCircle, Target, TrendingUp, NotebookTabs } from 'lucide-react';
 import DashboardScreen from './features/dashboard/DashboardScreen';
 import NotesScreen from './features/notes/NotesScreen';
+import JournalScreen from './features/journal/JournalScreen';
+import HabitsScreen from './features/habits/HabitsScreen';
+import GoalsScreen from './features/goals/GoalsScreen';
+import TradingScreen from './features/trading/TradingScreen';
 
 const queryClient = new QueryClient();
 
@@ -15,6 +19,14 @@ export default function App() {
     switch (activeTab) {
       case 'Home':
         return <DashboardScreen />;
+      case 'Journal':
+        return <JournalScreen />;
+      case 'Habits':
+        return <HabitsScreen />;
+      case 'Goals':
+        return <GoalsScreen />;
+      case 'Trading':
+        return <TradingScreen />;
       case 'Notes':
         return <NotesScreen />;
       default:

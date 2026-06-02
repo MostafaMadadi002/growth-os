@@ -16,6 +16,22 @@ export enum HabitStatus {
   MISSED = 'MISSED',
 }
 
+export interface Habit {
+  id: string;
+  user_id: string;
+  title: string;
+  is_good: boolean;
+  frequency: 'DAILY' | 'WEEKLY';
+  created_at: string;
+}
+
+export interface HabitLog {
+  id: string;
+  habit_id: string;
+  status: HabitStatus;
+  date: string;
+}
+
 export interface BigGoal {
   id: string;
   user_id: string;
@@ -26,6 +42,15 @@ export interface BigGoal {
   total_expected_sessions: number;
   category: 'EDUCATION' | 'PERSONAL' | 'PROJECT';
   status: 'ACTIVE' | 'COMPLETED' | 'ON_HOLD' | 'OVERDUE';
+}
+
+export interface GoalSession {
+  id: string;
+  goal_id: string;
+  session_number: number;
+  date?: string;
+  is_completed: boolean;
+  reflection?: string;
 }
 
 export interface Trade {
