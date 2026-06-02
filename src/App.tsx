@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Home, Book, CheckCircle, Target, TrendingUp, NotebookTabs } from 'lucide-react';
+import { Home, Book, CheckCircle, Target, TrendingUp, NotebookTabs, GraduationCap, Dumbbell, BarChart3 } from 'lucide-react';
 import DashboardScreen from './features/dashboard/DashboardScreen';
 import NotesScreen from './features/notes/NotesScreen';
 import JournalScreen from './features/journal/JournalScreen';
 import HabitsScreen from './features/habits/HabitsScreen';
 import GoalsScreen from './features/goals/GoalsScreen';
 import TradingScreen from './features/trading/TradingScreen';
+import LearningScreen from './features/learning/LearningScreen';
+import FitnessScreen from './features/fitness/FitnessScreen';
+import AnalyticsScreen from './features/analytics/AnalyticsScreen';
 
 const queryClient = new QueryClient();
 
-type TabType = 'Home' | 'Journal' | 'Habits' | 'Goals' | 'Trading' | 'Notes';
+type TabType = 'Home' | 'Journal' | 'Habits' | 'Goals' | 'Learning' | 'Fitness' | 'Trading' | 'Notes' | 'Analytics';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Home');
@@ -25,10 +28,16 @@ export default function App() {
         return <HabitsScreen />;
       case 'Goals':
         return <GoalsScreen />;
+      case 'Learning':
+        return <LearningScreen />;
+      case 'Fitness':
+        return <FitnessScreen />;
       case 'Trading':
         return <TradingScreen />;
       case 'Notes':
         return <NotesScreen />;
+      case 'Analytics':
+        return <AnalyticsScreen />;
       default:
         return (
           <div className="flex-1 flex items-center justify-center p-8">
@@ -73,6 +82,18 @@ export default function App() {
             label="اهداف"
           />
           <TabButton 
+            active={activeTab === 'Learning'} 
+            onClick={() => setActiveTab('Learning')}
+            icon={<GraduationCap size={24} />}
+            label="یادگیری"
+          />
+          <TabButton 
+            active={activeTab === 'Fitness'} 
+            onClick={() => setActiveTab('Fitness')}
+            icon={<Dumbbell size={24} />}
+            label="ورزش"
+          />
+          <TabButton 
             active={activeTab === 'Trading'} 
             onClick={() => setActiveTab('Trading')}
             icon={<TrendingUp size={24} />}
@@ -83,6 +104,12 @@ export default function App() {
             onClick={() => setActiveTab('Notes')}
             icon={<NotebookTabs size={24} />}
             label="یادداشت"
+          />
+          <TabButton 
+            active={activeTab === 'Analytics'} 
+            onClick={() => setActiveTab('Analytics')}
+            icon={<BarChart3 size={24} />}
+            label="تحلیل"
           />
         </nav>
       </div>

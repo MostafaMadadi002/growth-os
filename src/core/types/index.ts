@@ -53,6 +53,34 @@ export interface GoalSession {
   reflection?: string;
 }
 
+export interface LearningSession {
+  id: string;
+  user_id: string;
+  title: string;
+  category: string; // Course, Book, etc.
+  duration_minutes: number;
+  date: string;
+  notes?: string;
+}
+
+export interface Workout {
+  id: string;
+  user_id: string;
+  title: string;
+  type: string;
+  duration: number;
+  calories?: number;
+  date: string;
+}
+
+export interface BodyMetric {
+  id: string;
+  user_id: string;
+  weight: number;
+  body_fat?: number;
+  date: string;
+}
+
 export interface Trade {
   id: string;
   user_id: string;
