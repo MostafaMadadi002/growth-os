@@ -50,7 +50,7 @@ Media or files associated with entries.
 
 ### 9. ActivityRecord (Core Event Engine)
 A unified record of all significant actions within the app.
-- **Attributes**: id, user_id, title, event_type (JOURNAL_CREATED, HABIT_COMPLETED, GOAL_COMPLETED, MILESTONE_COMPLETED, WORKOUT_LOGGED, TRADE_REVIEWED, CUSTOM), points_earned, date, metadata (JSON).
+- **Attributes**: id, user_id, title, event_type (JOURNAL_CREATED, HABIT_COMPLETED, GOAL_COMPLETED, MILESTONE_COMPLETED, WORKOUT_LOGGED, TRADE_REVIEWED, CUSTOM), source_type, source_id, points_earned, date, metadata (JSON).
 - **Purpose**: Feeds the Heatmap, Growth Score, and Achievement systems.
 
 ### 10. Achievement

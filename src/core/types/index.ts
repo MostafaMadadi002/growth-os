@@ -173,6 +173,8 @@ export interface ActivityRecord {
   user_id: string;
   title: string;
   event_type: 'JOURNAL_CREATED' | 'HABIT_COMPLETED' | 'GOAL_COMPLETED' | 'MILESTONE_COMPLETED' | 'WORKOUT_LOGGED' | 'TRADE_REVIEWED' | 'CUSTOM';
+  source_type: string; // e.g., 'JournalEntry', 'HabitLog'
+  source_id: string;   // e.g., 'journal_123'
   points_earned: number;
   date: string;
   goal_id?: string;
