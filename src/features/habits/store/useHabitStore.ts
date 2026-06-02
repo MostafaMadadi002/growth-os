@@ -9,7 +9,7 @@ interface HabitState {
   fetchHabits: () => Promise<void>;
   fetchLogs: (date: string) => Promise<void>;
   addHabit: (habit: Omit<Habit, 'id' | 'user_id' | 'created_at'>) => Promise<void>;
-  logHabit: (habitId: string, status: HabitStatus, date: string) => Promise<void>;
+  logHabit: (habitId: string, status: HabitStatus, date: string, value?: number) => Promise<void>;
   removeHabit: (id: string) => Promise<void>;
 }
 
@@ -34,8 +34,8 @@ export const useHabitStore = create<HabitState>((set, get) => ({
     set({ habits: [...get().habits, newHabit] });
   },
 
-  logHabit: async (habitId, status, date) => {
-    const newLog = await habitService.logHabit(habitId, status, date);
+  logHabit: async (habitId, status, date, value) => {
+    const newLog = await habitService.logHabit(habitId, status, date, value);
     const dayLogs = get().logs[date] || [];
     const updatedDayLogs = dayLogs.filter(l => l.habit_id !== habitId).concat(newLog);
     set({ logs: { ...get().logs, [date]: updatedDayLogs } });

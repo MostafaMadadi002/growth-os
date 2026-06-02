@@ -1,20 +1,17 @@
 import { create } from 'zustand';
-import { BigGoal, GoalSession } from '../../../core/types';
+import { BigGoal } from '../../../core/types';
 import { goalService } from '../services/goalService';
 
 interface GoalState {
   goals: BigGoal[];
-  sessions: Record<string, GoalSession[]>;
   isLoading: boolean;
   fetchGoals: () => Promise<void>;
-  fetchSessions: (goalId: string) => Promise<void>;
   addGoal: (goal: Omit<BigGoal, 'id' | 'user_id' | 'status'>) => Promise<void>;
-  toggleSession: (goalId: string, sessionId: string, isCompleted: boolean) => Promise<void>;
+  toggleMilestone: (goalId: string, milestoneId: string) => Promise<void>;
 }
 
 export const useGoalStore = create<GoalState>((set, get) => ({
   goals: [],
-  sessions: {},
   isLoading: false,
 
   fetchGoals: async () => {
@@ -23,24 +20,15 @@ export const useGoalStore = create<GoalState>((set, get) => ({
     set({ goals, isLoading: false });
   },
 
-  fetchSessions: async (goalId) => {
-    const s = await goalService.getSessions(goalId);
-    set({ sessions: { ...get().sessions, [goalId]: s } });
-  },
-
   addGoal: async (goal) => {
     const g = await goalService.createGoal(goal);
-    set({ goals: [g as BigGoal, ...get().goals] });
+    set({ goals: [g, ...get().goals] });
   },
 
-  toggleSession: async (goalId, sessionId, isCompleted) => {
-    const updated = await goalService.completeSession(sessionId, isCompleted);
-    const goalSessions = get().sessions[goalId] || [];
+  toggleMilestone: async (goalId, milestoneId) => {
+    const updatedGoal = await goalService.toggleMilestone(goalId, milestoneId);
     set({
-      sessions: {
-        ...get().sessions,
-        [goalId]: goalSessions.map(s => s.id === sessionId ? updated : s)
-      }
+      goals: get().goals.map(g => g.id === goalId ? updatedGoal : g)
     });
   }
 }));

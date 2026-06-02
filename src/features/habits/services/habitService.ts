@@ -38,21 +38,26 @@ export const habitService = {
       if (error) throw error;
       return data as Habit;
     } catch (e) {
-      const newHabit: Habit = { ...habit, id: Math.random().toString(36).substring(2, 11), user_id: 'guest', created_at: new Date().toISOString() };
+      const newHabit: Habit = { 
+        ...habit, 
+        id: Math.random().toString(36).substring(2, 11), 
+        user_id: 'guest', 
+        created_at: new Date().toISOString()
+      } as Habit;
       saveLocalHabits([...getLocalHabits(), newHabit]);
       return newHabit;
     }
   },
 
-  async logHabit(habitId: string, status: HabitStatus, date: string) {
+  async logHabit(habitId: string, status: HabitStatus, date: string, value?: number) {
     try {
-      const { data, error } = await supabase.from('habit_logs').upsert([{ habit_id: habitId, status, date }], { onConflict: 'habit_id,date' }).select().single();
+      const { data, error } = await supabase.from('habit_logs').upsert([{ habit_id: habitId, status, date, value }], { onConflict: 'habit_id,date' }).select().single();
       if (error) throw error;
       return data as HabitLog;
     } catch (e) {
       const logs = getLocalLogs();
       const existingIdx = logs.findIndex(l => l.habit_id === habitId && l.date === date);
-      const newLog = { id: Math.random().toString(36).substring(2, 11), habit_id: habitId, status, date };
+      const newLog = { id: Math.random().toString(36).substring(2, 11), habit_id: habitId, status, date, value };
       if (existingIdx > -1) logs[existingIdx] = newLog;
       else logs.push(newLog);
       saveLocalLogs(logs);

@@ -16,20 +16,46 @@ export enum HabitStatus {
   MISSED = 'MISSED',
 }
 
+export enum HabitType {
+  BINARY = 'BINARY',
+  QUANTITATIVE = 'QUANTITATIVE'
+}
+
 export interface Habit {
   id: string;
   user_id: string;
   title: string;
+  type: HabitType;
+  target_value?: number;
+  unit?: string;
   is_good: boolean;
   frequency: 'DAILY' | 'WEEKLY';
+  goal_id?: string;
   created_at: string;
 }
 
 export interface HabitLog {
   id: string;
   habit_id: string;
+  value?: number;
   status: HabitStatus;
   date: string;
+}
+
+export enum GoalLevel {
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  QUARTERLY = 'QUARTERLY',
+  YEARLY = 'YEARLY',
+  LIFETIME = 'LIFETIME'
+}
+
+export interface Milestone {
+  id: string;
+  title: string;
+  is_completed: boolean;
+  target_date?: string;
 }
 
 export interface BigGoal {
@@ -37,10 +63,11 @@ export interface BigGoal {
   user_id: string;
   title: string;
   description?: string;
+  level: GoalLevel;
+  milestones: Milestone[];
   start_date: string;
   end_date?: string;
-  total_expected_sessions: number;
-  category: 'EDUCATION' | 'PERSONAL' | 'PROJECT';
+  category: 'EDUCATION' | 'PERSONAL' | 'PROJECT' | 'FITNESS' | 'TRADING';
   status: 'ACTIVE' | 'COMPLETED' | 'ON_HOLD' | 'OVERDUE';
 }
 
@@ -103,10 +130,16 @@ export interface JournalEntry {
   id: string;
   user_id: string;
   title: string;
-  entry_date: string;
   content: string;
-  mood_emoji?: string;
-  energy_level?: number;
+  entry_date: string;
+  mood: number;
+  energy: number;
+  gratitude?: string;
+  achievement?: string;
+  challenge?: string;
+  lesson?: string;
+  tags: string[];
+  goal_id?: string;
 }
 
 export interface Note {

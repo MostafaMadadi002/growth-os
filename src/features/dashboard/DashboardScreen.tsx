@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHabitStore } from '../habits/store/useHabitStore';
 import { useGoalStore } from '../goals/store/useGoalStore';
 import { useJournalStore } from '../journal/store/useJournalStore';
+import { useGrowthStore } from '../../core/store/useGrowthStore';
 import { useI18n } from '../../core/store/useI18n';
 import { Flame, Target, BookText, CheckCircle2, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -10,7 +11,12 @@ export default function DashboardScreen() {
   const { habits } = useHabitStore();
   const { goals } = useGoalStore();
   const { entries } = useJournalStore();
+  const { dailyScore, lifetimeScore, calculateScores } = useGrowthStore();
   const { t, dir } = useI18n();
+
+  useEffect(() => {
+    calculateScores();
+  }, [habits, goals, entries, calculateScores]);
 
   const activeGoals = goals.filter(g => g.status === 'ACTIVE').length;
   
@@ -31,12 +37,13 @@ export default function DashboardScreen() {
 
       {/* Main Stats Row */}
       <div className="grid grid-cols-2 gap-4 mb-8">
-         <div className="bg-slate-900 border border-white/5 p-6 rounded-[2rem] relative overflow-hidden group">
+         <div className="bg-slate-900 border border-white/5 p-6 rounded-[2.5rem] relative overflow-hidden group">
            <Zap className="text-yellow-500/20 absolute -right-2 -top-2 scale-150 group-hover:scale-175 transition-transform" size={80} />
-           <span className="text-slate-500 text-xs font-bold block mb-1 uppercase tracking-widest">{t('growth_score')}</span>
-           <span className="text-4xl font-black text-white">84</span>
+           <span className="text-slate-500 text-[10px] font-bold block mb-1 uppercase tracking-widest">{t('growth_score')}</span>
+           <span className="text-4xl font-black text-white">{dailyScore}</span>
+           <div className="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Total: {lifetimeScore}</div>
          </div>
-         <div className="bg-slate-900 border border-white/5 p-6 rounded-[2rem] flex flex-col justify-between">
+         <div className="bg-slate-900 border border-white/5 p-6 rounded-[2.5rem] flex flex-col justify-between">
            <div className="flex items-center gap-2 text-orange-500">
               <Flame size={18} fill="currentColor" />
               <span className="font-black text-sm uppercase tracking-tighter">12 DAYS</span>
