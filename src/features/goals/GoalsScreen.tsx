@@ -48,8 +48,8 @@ export default function GoalsScreen() {
   };
 
   if (selectedGoal) {
-    const completedCount = selectedGoal.milestones.filter(m => m.is_completed).length;
-    const totalCount = selectedGoal.milestones.length;
+    const completedCount = (selectedGoal.milestones || []).filter(m => m.is_completed).length;
+    const totalCount = selectedGoal.milestones?.length || 0;
     const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
     return (
@@ -77,7 +77,7 @@ export default function GoalsScreen() {
         </div>
 
         <div className="flex-1 overflow-y-auto space-y-3 pb-24 scrollbar-hide">
-           {selectedGoal.milestones.map((m) => (
+           {(selectedGoal.milestones || []).map((m) => (
              <button 
                key={m.id}
                onClick={() => toggleMilestone(selectedGoal.id, m.id)}
@@ -125,7 +125,7 @@ export default function GoalsScreen() {
             <div className="flex items-center gap-4">
                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{g.level}</span>
                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full">
-                 {g.milestones.length} MILESTONES
+                 {g.milestones?.length || 0} MILESTONES
                </span>
             </div>
           </div>

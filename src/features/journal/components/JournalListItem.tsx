@@ -5,7 +5,6 @@ import { ChevronLeft, Zap, Sparkles } from 'lucide-react';
 interface Props {
   entry: JournalEntry;
   onClick: () => void;
-  key?: string;
 }
 
 export default function JournalListItem({ entry, onClick }: Props) {

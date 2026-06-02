@@ -11,9 +11,9 @@ export const goalService = {
     try {
       const { data, error } = await supabase.from('big_goals').select('*');
       if (error) throw error;
-      return data as BigGoal[];
+      return (data as BigGoal[]).map(g => ({ ...g, milestones: g.milestones || [] }));
     } catch (e) {
-      return getGoals();
+      return getGoals().map(g => ({ ...g, milestones: g.milestones || [] }));
     }
   },
 
@@ -59,7 +59,7 @@ export const goalService = {
     const goal = goals.find(g => g.id === goalId);
     if (!goal) throw new Error('Goal not found');
 
-    const updatedMilestones = goal.milestones.map(m => 
+    const updatedMilestones = (goal.milestones || []).map(m => 
       m.id === milestoneId ? { ...m, is_completed: !m.is_completed } : m
     );
 

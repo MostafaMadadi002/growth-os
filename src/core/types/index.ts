@@ -141,6 +141,47 @@ export interface JournalEntry {
   lesson?: string;
   tags: string[];
   goal_id?: string;
+  attachments?: Attachment[];
+}
+
+export interface Attachment {
+  id: string;
+  file_name: string;
+  file_type: string;
+  url: string;
+  size: number;
+  uploaded_at: string;
+}
+
+export interface Achievement {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  category: 'GOAL' | 'HABIT' | 'CONSISTENCY' | 'MILESTONE';
+  icon_name?: string;
+  unlocked_at: string;
+  goal_id?: string;
+}
+
+export interface Activity {
+  id: string;
+  user_id: string;
+  title: string;
+  type: 'LEARNING' | 'WORKOUT' | 'TRADING' | 'CUSTOM';
+  duration_minutes?: number;
+  points_earned: number;
+  date: string;
+  goal_id?: string;
+}
+
+export interface ProgressRecord {
+  id: string;
+  goal_id: string;
+  milestone_id?: string;
+  value: number;
+  notes?: string;
+  date: string;
 }
 
 export interface Note {

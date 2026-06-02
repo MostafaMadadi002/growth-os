@@ -168,7 +168,6 @@ export default function JournalScreen() {
           <div className="pb-32">
             {filteredEntries.map(entry => (
               <JournalListItem 
-                key={entry.id} 
                 entry={entry} 
                 onClick={() => {
                   setSelectedEntry(entry);
