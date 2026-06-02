@@ -62,6 +62,7 @@ export default function HabitsScreen() {
           <div className="space-y-4">
             {goodHabits.map(h => (
               <HabitItem 
+                key={h.id}
                 habit={h} 
                 log={getLog(h.id)} 
                 onLog={(s, v) => logHabit(h.id, s, today, v)} 
@@ -80,6 +81,7 @@ export default function HabitsScreen() {
           <div className="space-y-4">
             {badHabits.map(h => (
               <HabitItem 
+                key={h.id}
                 habit={h} 
                 log={getLog(h.id)} 
                 onLog={(s, v) => logHabit(h.id, s, today, v)} 
@@ -174,7 +176,7 @@ export default function HabitsScreen() {
   );
 }
 
-function HabitItem({ habit, log, onLog, onDelete }: { habit: Habit, log?: any, onLog: (s: HabitStatus, v?: number) => void, onDelete: () => void }) {
+function HabitItem({ habit, log, onLog, onDelete }: { habit: Habit, log?: any, onLog: (s: HabitStatus, v?: number) => void, onDelete: () => void, key?: string }) {
   const status = log?.status;
   const isDone = status === HabitStatus.DONE;
 

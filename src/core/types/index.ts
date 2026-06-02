@@ -68,7 +68,7 @@ export interface BigGoal {
   milestones: Milestone[];
   start_date: string;
   end_date?: string;
-  category: 'EDUCATION' | 'PERSONAL' | 'PROJECT' | 'FITNESS' | 'TRADING';
+  category: 'EDUCATION' | 'PERSONAL' | 'FITNESS' | 'TRADING' | 'CAREER' | 'FINANCE';
   status: 'ACTIVE' | 'COMPLETED' | 'ON_HOLD' | 'OVERDUE';
 }
 
@@ -146,6 +146,8 @@ export interface JournalEntry {
 
 export interface Attachment {
   id: string;
+  parent_id: string;
+  parent_type: 'JOURNAL' | 'TRADE' | 'NOTE' | 'ACTIVITY';
   file_name: string;
   file_type: string;
   url: string;
@@ -160,25 +162,26 @@ export interface Achievement {
   description: string;
   category: 'GOAL' | 'HABIT' | 'CONSISTENCY' | 'MILESTONE';
   icon_name?: string;
+  points_value: number;
+  type: 'SYSTEM' | 'USER';
   unlocked_at: string;
   goal_id?: string;
 }
 
-export interface Activity {
+export interface ActivityRecord {
   id: string;
   user_id: string;
   title: string;
-  type: 'LEARNING' | 'WORKOUT' | 'TRADING' | 'CUSTOM';
-  duration_minutes?: number;
+  event_type: 'JOURNAL_CREATED' | 'HABIT_COMPLETED' | 'GOAL_COMPLETED' | 'MILESTONE_COMPLETED' | 'WORKOUT_LOGGED' | 'TRADE_REVIEWED' | 'CUSTOM';
   points_earned: number;
   date: string;
   goal_id?: string;
+  metadata?: Record<string, any>;
 }
 
 export interface ProgressRecord {
   id: string;
-  goal_id: string;
-  milestone_id?: string;
+  milestone_id: string;
   value: number;
   notes?: string;
   date: string;

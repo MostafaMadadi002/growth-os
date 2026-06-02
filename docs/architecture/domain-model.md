@@ -1,133 +1,68 @@
-# Domain Model - GrowthOS (Phase 1)
+# GrowthOS Domain Model
 
-## ۱. موجودیت‌ها (Entities)
+## Core Entities
 
-در این بخش، موجودیت‌های اصلی سیستم به همراه ویژگی‌ها (Attributes) و نوع داده‌ای آن‌ها تعریف شده‌اند.
+### 1. User
+The central entity for personalization and data isolation.
+- **Attributes**: id, email, display_name, profile_image, growth_points, created_at.
 
-### ۱.۱. هدف بزرگ (BigGoal)
-نمایانگر یک هدف بلندمدت که باید به قطعات کوچک‌تر تقسیم شود.
-- **id**: Long (PK)
-- **title**: String (عنوان هدف)
-- **description**: String
-- **startDate**: Date
-- **endDate**: Date
-- **totalExpectedSessions**: Int (تعداد کل جلسات مورد نیاز)
-- **category**: Enum (EDUCATION, PERSONAL, PROJECT)
-- **status**: Enum (ACTIVE, COMPLETED, ON_HOLD)
+### 2. Goal
+Long-term objectives the user wants to achieve.
+- **Attributes**: id, user_id, title, description, category (EDUCATION, FITNESS, TRADING, CAREER, PERSONAL, FINANCE), level (S, A, B, C), status (ACTIVE, COMPLETED, ARCHIVED), deadline, created_at.
+- **Relationships**: 
+  - 1 -> N Milestones
+  - N <-> N Habits
+  - N <-> N JournalEntries
+  - N <-> N Activities
 
-### ۱.۲. برنامه زمانی جلسات (GoalSchedule)
-برنامه‌ریزی دقیق برای هر بخش از هدف بزرگ.
-- **id**: Long (PK)
-- **goalId**: Long (FK)
-- **scheduledDate**: Date
-- **sessionTitle**: String
-- **isCompleted**: Boolean
-- **completionDate**: Date
-- **notes**: String
+### 3. Milestone
+Specific, measurable steps towards a Goal.
+- **Attributes**: id, goal_id, title, description, is_completed, deadline, created_at.
+- **Relationships**:
+  - 1 -> N ProgressRecords
 
-### ۱.۳. عادت خوب (GoodHabit)
-فعالیت‌های مثبت تکرارپذیر.
-- **id**: Long (PK)
-- **name**: String
-- **frequency**: Enum (DAILY, WEEKLY, CUSTOM)
-- **targetDaysOfWeek**: List<Int> (مثلاً شنبه و دوشنبه)
-- **reminderTime**: String (Time)
+### 4. ProgressRecord
+Granular tracking of progress for a specific milestone.
+- **Attributes**: id, milestone_id, value, notes, date.
 
-### ۱.۴. ثبت انجام عادت خوب (GoodHabitCompletion)
-- **id**: Long (PK)
-- **habitId**: Long (FK)
-- **date**: Date
-- **status**: Enum (DONE, PARTIAL, MISSED)
-- **value**: Double (اختیاری - مثلاً مقدار مطالعه به دقیقه)
+### 5. Habit
+Recurring behaviors to support Goals or personal growth.
+- **Attributes**: id, user_id, title, frequency, type (GOOD, BAD), current_streak, best_streak, created_at.
+- **Relationships**:
+  - 1 -> N HabitLogs
+  - N <-> N Goals (via junction table)
 
-### ۱.۵. عادت بد (BadHabit)
-فعالیت‌های غیرضروری که باید کاهش یابند.
-- **id**: Long (PK)
-- **name**: String (مثلاً اسکرول کردن اینستاگرام)
-- **category**: Enum (SOCIAL_MEDIA, GAMING, NEWS, OTHER)
+### 6. HabitLog
+The daily execution record of a Habit.
+- **Attributes**: id, habit_id, status (DONE, SKIP, FAIL), value, date.
 
-### ۱.۶. ثبت زمان عادت بد (BadHabitLog)
-- **id**: Long (PK)
-- **badHabitId**: Long (FK)
-- **date**: Date
-- **durationMinutes**: Int (مدت زمان تلف شده)
-- **replacementActivityId**: Long (FK - عادت خوبی که می‌توانست جایگزین شود)
+### 7. JournalEntry
+Daily reflections, notes, or logs.
+- **Attributes**: id, user_id, content, mood, tags, date, goal_id (optional, supports Many-to-Many).
+- **Relationships**:
+  - 1 -> N Attachments
+  - N <-> N Goals (via junction table)
 
-### ۱.۷. معامله (Trade)
-اطلاعات مربوط به ترید در بازارهای مالی.
-- **id**: Long (PK)
-- **marketType**: Enum (FOREX, CRYPTO)
-- **symbol**: String (نام ارز یا جفت‌ارز)
-- **entryPrice**: Double
-- **stopLoss**: Double
-- **targetPrice**: Double
-- **leverage**: Double (مخصوص کریپتو)
-- **lotSize**: Double (مخصوص فارکس)
-- **fee**: Double
-- **spread**: Double
-- **status**: Enum (OPEN, WIN, LOSS, RISK_FREE)
-- **reflectionReason**: String (دلیل سود یا ضرر)
-- **closingDate**: Date
+### 8. Attachment
+Media or files associated with entries.
+- **Attributes**: id, parent_id, parent_type (JOURNAL, TRADE, NOTE), file_name, file_type, url, size, created_at.
+- **Polymorphic**: Designed to be attached to various entity types.
 
-### ۱.۸. ورودی ژورنال (JournalEntry)
-- **id**: Long (PK)
-- **date**: Date
-- **content**: String (Markdown)
-- **moodEmoji**: String
-- **energyLevel**: Int (1-10)
+### 9. ActivityRecord (Core Event Engine)
+A unified record of all significant actions within the app.
+- **Attributes**: id, user_id, title, event_type (JOURNAL_CREATED, HABIT_COMPLETED, GOAL_COMPLETED, MILESTONE_COMPLETED, WORKOUT_LOGGED, TRADE_REVIEWED, CUSTOM), points_earned, date, metadata (JSON).
+- **Purpose**: Feeds the Heatmap, Growth Score, and Achievement systems.
 
-### ۱.۹. یادداشت (Note)
-- **id**: Long (PK)
-- **title**: String
-- **body**: String (Markdown)
-- **tags**: List<String>
-- **createdAt**: DateTime
+### 10. Achievement
+Rewards for reaching specific triggers.
+- **Attributes**: id, title, description, category (GOAL, HABIT, CONSISTENCY, MILESTONE), icon, points_value, type (SYSTEM, USER).
+- **Relationships**:
+  - N <-> N Users (Unlocked achievements)
 
----
+## Key Architectural Decisions
 
-## ۲. روابط (Relationships)
-
-ارتباطات بین موجودیت‌ها به شرح زیر است:
-
-- **BigGoal (1) ----< (Many) GoalSchedule**: هر هدف بزرگ شامل چندین جلسه برنامه‌ریزی شده است.
-- **GoodHabit (1) ----< (Many) GoodHabitCompletion**: هر عادت خوب در طول زمان چندین بار ثبت می‌شود.
-- **BadHabit (1) ----< (Many) BadHabitLog**: هر عادت بد می‌تواند چندین بار در روز/هفته ثبت شود.
-- **BadHabitLog (Many) >---- (1) GoodHabit**: (اختیاری) یک ثبت عادت بد می‌تواند به یک عادت خوب "جایگزین" اشاره کند.
-- **User (1) ----< (Many) All Entities**: تمامی موجودیت‌ها متعلق به یک کاربر خاص هستند.
-
----
-
-## ۳. قوانین کسب‌و‌کار (Business Rules)
-
-۱. **IF** تاریخ فعلی از `endDate` هدف بزرگ بگذرد و جلسات تمام نشده باشد **THEN** وضعیت هدف به `OVERDUE` تغییر یابد.
-۲. **IF** یک `GoalSchedule` تیک بخورد **THEN** درصد پیشرفت `BigGoal` مربوطه آپدیت شود.
-۳. **IF** تمامی عادات خوب برنامه‌ریزی شده برای یک روز `DONE` شوند **THEN** رنگ آن روز در Heatmap به "سبز پررنگ" تغییر کند.
-۴. **IF** وضعیت انجام عادت `PARTIAL` باشد **THEN** رنگ Heatmap "زرد" یا "سبز کمرنگ" شود.
-۵. **IF** زمان درج شده در `BadHabitLog` بیش از ۶۰ دقیقه باشد **THEN** سیستم هشدار "اتلاف وقت بالا" صادر کند.
-۶. **IF** کاربر تریدی را با وضعیت `LOSS` ببندد **THEN** فیلد `reflectionReason` اجباری (Mandatory) شود.
-۷. **IF** یک `Trade` در وضعیت `OPEN` باشد **THEN** فیلد `closingDate` باید تهی (Null) باشد.
-۸. **IF** لوریج (Leverage) در ترید کریپتو وارد نشود **THEN** مقدار پیش‌فرض ۱ در نظر گرفته شود.
-۹. **IF** کاربر بخواهد ترید `OPEN` را به `RISK_FREE` تغییر دهد **THEN** قیمت استاپ‌لاس با قیمت ورود برابر شود.
-۱۰. **IF** در گزارش هفتگی جمع `BadHabitLog` بیش از ۱۰ ساعت باشد **THEN** سیستم استراتژی "حذف تدریجی" را پیشنهاد دهد.
-
----
-
-## ۴. ماشین حالت (State Machine) برای موجودیت Trade
-
-چرخه حیات یک معامله در سیستم:
-
-```mermaid
-stateDiagram-v2
-    [*] --> OPEN : ایجاد معامله (Create Trade)
-    OPEN --> WIN : قیمت به Target رسید (Finalize)
-    OPEN --> LOSS : قیمت به SL رسید (Finalize)
-    OPEN --> RISK_FREE : جابجایی استاپ‌لاس به نقطه ورود
-    RISK_FREE --> WIN : قیمت به Target رسید
-    RISK_FREE --> LOSS : خروج در نقطه ورود (Break-even Win/Loss)
-    WIN --> [*]
-    LOSS --> [*]
-```
-
-**قوانین انتقال (Transition Rules):**
-- انتقال از هر حالتی به **WIN/LOSS** باید فیلد `closingDate` را مقداردهی کند.
-- بازگشت از **WIN/LOSS** به **OPEN** فقط در صورت ویرایش دستی توسط کاربر ممکن است (برای تصحیح خطا).
+1. **Many-to-Many Linking**: Goals can be linked to multiple Habits, Journal Entries, and Activities. This reflects real-world complexity where one action contributes to multiple objectives.
+2. **Polymorphic Attachments**: Attachments are designed to support any entity type (Journals today, Trades/Notes tomorrow).
+3. **Unified Activity Engine**: The `ActivityRecord` is the primary source of truth for analytics and gamification.
+4. **Progress via Milestones**: Quantitative progress is tracked at the Milestone level, which aggregates into Goal completion.
+5. **Growth Points**: Every meaningful action (ActivityRecord) and achievement grants Growth Points, powering the user's level and progression.
