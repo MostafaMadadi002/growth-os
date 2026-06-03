@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { User, LogOut, Cloud, CloudOff, Shield, Mail, Calendar, Award } from 'lucide-react';
+import { User, LogOut, Cloud, CloudOff, Shield, Mail, Calendar, Award, Activity } from 'lucide-react';
 import { useAuthStore } from '../../core/stores/authStore';
 import { motion } from 'motion/react';
 import AuthScreen from '../auth/AuthScreen';
 
-export default function ProfileScreen() {
+interface ProfileProps {
+  onDevRequest?: () => void;
+}
+
+export default function ProfileScreen({ onDevRequest }: ProfileProps) {
   const { user, signOut, isLoading } = useAuthStore();
   const [showAuth, setShowAuth] = useState(false);
 
@@ -128,6 +132,20 @@ export default function ProfileScreen() {
                 <div className="text-left">
                   <div className="text-white text-sm font-bold">Two-Factor Auth</div>
                   <div className="text-slate-500 text-[10px]">Add an extra layer of protection</div>
+                </div>
+              </div>
+            </button>
+            <button 
+              onClick={onDevRequest}
+              className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors bg-slate-800/20"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-slate-950 rounded-2xl flex items-center justify-center text-emerald-500">
+                  <Activity size={18} />
+                </div>
+                <div className="text-left">
+                  <div className="text-white text-sm font-bold">Developer Console</div>
+                  <div className="text-slate-500 text-[10px]">System health and raw data logs</div>
                 </div>
               </div>
             </button>

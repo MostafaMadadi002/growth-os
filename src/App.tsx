@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { LayoutDashboard, BookText, Target, Activity, User } from 'lucide-react';
+import { LayoutDashboard, BookText, Target, Activity, User, Terminal } from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
 import { useAuthStore } from './core/stores/authStore';
 
@@ -10,10 +10,11 @@ import JournalScreen from './features/journal/JournalScreen';
 import GoalsScreen from './features/goals/GoalsScreen';
 import HabitsScreen from './features/habits/HabitsScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
+import DevDashboard from './features/dev/DevDashboard';
 
 const queryClient = new QueryClient();
 
-type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Profile';
+type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Profile' | 'Dev';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Dashboard');
@@ -30,7 +31,13 @@ export default function App() {
       case 'Journal': return <JournalScreen />;
       case 'Goals': return <GoalsScreen />;
       case 'Habits': return <HabitsScreen />;
-      case 'Profile': return <ProfileScreen />;
+      case 'Profile': return <ProfileScreen onDevRequest={() => setActiveTab('Dev')} />;
+      case 'Dev': return <div className="h-full relative">
+        <button onClick={() => setActiveTab('Profile')} className="absolute top-6 left-6 z-50 bg-slate-900/50 p-2 rounded-full text-white">
+          <Terminal size={18} />
+        </button>
+        <DevDashboard />
+      </div>;
       default: return <DashboardScreen />;
     }
   };
