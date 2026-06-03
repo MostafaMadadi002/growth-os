@@ -56,18 +56,19 @@ export default function App() {
             </div>
             <div>
               <span className="text-xl font-display font-black tracking-tighter text-white block leading-none">GrowthOS</span>
-              <span className="text-[9px] font-mono font-bold text-brand-primary uppercase tracking-[0.3em]">System Active</span>
+              <span className="text-[9px] font-mono font-bold text-brand-primary uppercase tracking-[0.3em]">{t('status_active')}</span>
             </div>
           </div>
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-slate-900/50 border border-white/[0.05] rounded-full">
               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Network Secure</span>
+              <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{t('network_secure')}</span>
             </div>
             <button 
               onClick={() => setLanguage(language === 'fa' ? 'en' : 'fa')}
-              className="text-[10px] font-black bg-slate-900 border border-white/[0.05] px-4 py-2 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95"
+              className="text-[10px] font-black bg-slate-900 border border-white/[0.05] px-4 py-2 rounded-xl text-slate-400 hover:text-white transition-all active:scale-95 flex items-center gap-2"
             >
+              <Terminal size={12} />
               {language === 'fa' ? 'ENGINEERING_EN' : 'ENGINEERING_FA'}
             </button>
           </div>
@@ -108,7 +109,7 @@ export default function App() {
             active={activeTab === 'Profile'} 
             onClick={() => setActiveTab('Profile')}
             icon={<User size={22} />}
-            label="Profile"
+            label={t('profile')}
           />
         </nav>
       </div>

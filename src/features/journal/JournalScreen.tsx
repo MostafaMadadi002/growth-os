@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, ChevronRight, Trash2, Edit3, X, Calendar, Book, ArrowLeft, Filter, Star, Zap } from 'lucide-react';
+import { useI18n } from '../../core/store/useI18n';
 import { useJournalStore } from './stores/journalStore';
 import JournalListItem from './components/JournalListItem';
 import JournalForm from './components/JournalForm';
@@ -10,6 +11,7 @@ type ViewMode = 'LIST' | 'CREATE' | 'DETAIL' | 'EDIT';
 
 export default function JournalScreen() {
   const { entries, isLoading, fetchEntries, addEntry, updateEntry, deleteEntry } = useJournalStore();
+  const { t, dir } = useI18n();
   const [viewMode, setViewMode] = useState<ViewMode>('LIST');
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,8 +21,8 @@ export default function JournalScreen() {
   }, [fetchEntries]);
 
   const filteredEntries = entries.filter(e => 
-    e.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    e.content.toLowerCase().includes(searchQuery.toLowerCase())
+    e.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    e.content?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleCreate = async (data: any) => {
@@ -49,15 +51,15 @@ export default function JournalScreen() {
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col h-full bg-slate-950"
+        className="flex flex-col h-full bg-slate-950 data-grid"
       >
         <header className="p-8 flex items-center justify-between border-b border-white/5">
           <div>
-            <h2 className="text-2xl font-display font-black text-white tracking-tighter">New Archival</h2>
-            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Capture this moment in time</p>
+            <h2 className="text-3xl font-display font-black text-white tracking-tighter">New Archive Initialization</h2>
+            <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-[0.4em] mt-1">Capture state temporal snapshot</p>
           </div>
-          <button onClick={() => setViewMode('LIST')} className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all">
-            <X size={20}/>
+          <button onClick={() => setViewMode('LIST')} className="w-14 h-14 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
+            <X size={24}/>
           </button>
         </header>
         <div className="flex-1 overflow-y-auto">
@@ -72,15 +74,15 @@ export default function JournalScreen() {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col h-full bg-slate-950"
+        className="flex flex-col h-full bg-slate-950 data-grid"
       >
         <header className="p-8 flex items-center justify-between border-b border-white/5">
            <div>
-            <h2 className="text-2xl font-display font-black text-white tracking-tighter">Refine Memory</h2>
-            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Adjusting the narrative</p>
+            <h2 className="text-3xl font-display font-black text-white tracking-tighter">Modify Log Entry</h2>
+            <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-[0.4em] mt-1">Adjusting neural archival data</p>
           </div>
-          <button onClick={() => setViewMode('DETAIL')} className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all">
-            <X size={20}/>
+          <button onClick={() => setViewMode('DETAIL')} className="w-14 h-14 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
+            <X size={24}/>
           </button>
         </header>
         <div className="flex-1 overflow-y-auto">
@@ -96,30 +98,30 @@ export default function JournalScreen() {
   }
 
   if (viewMode === 'DETAIL' && selectedEntry) {
-    const formattedDate = new Date(selectedEntry.entry_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const formattedDate = new Date(selectedEntry.entry_date).toLocaleDateString(dir === 'rtl' ? 'fa-IR' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     
     return (
       <motion.div 
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
-        className="flex flex-col h-full bg-slate-950 overflow-y-auto"
+        className="flex flex-col h-full bg-slate-950 overflow-y-auto data-grid"
       >
         <header className="sticky top-0 p-8 bg-slate-950/80 backdrop-blur-3xl border-b border-white/5 flex items-center justify-between z-50">
           <button 
             onClick={() => setViewMode('LIST')} 
-            className="flex items-center text-slate-500 gap-3 hover:text-white transition-colors"
+            className="flex items-center text-slate-500 gap-4 hover:text-white transition-colors"
           >
-            <div className="w-10 h-10 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center">
-               <ArrowLeft size={18} />
+            <div className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center shadow-lg">
+               <ArrowLeft size={20} />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest">Back to Archive</span>
+            <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em]">EXIT_LOG_VIEW</span>
           </button>
           <div className="flex gap-4">
-            <button onClick={() => setViewMode('EDIT')} className="w-12 h-12 bg-slate-900 border border-white/5 text-emerald-500 rounded-2xl flex items-center justify-center hover:bg-slate-800 transition-all">
-              <Edit3 size={18} />
+            <button onClick={() => setViewMode('EDIT')} className="w-14 h-14 bg-slate-900 border border-white/5 text-emerald-500 rounded-2xl flex items-center justify-center hover:bg-slate-800 transition-all shadow-xl">
+              <Edit3 size={20} />
             </button>
-            <button onClick={handleDelete} className="w-12 h-12 bg-slate-900 border border-white/5 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-slate-800 transition-all">
-              <Trash2 size={18} />
+            <button onClick={handleDelete} className="w-14 h-14 bg-slate-900 border border-white/5 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-slate-800 transition-all shadow-xl">
+              <Trash2 size={20} />
             </button>
           </div>
         </header>
@@ -129,38 +131,40 @@ export default function JournalScreen() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-16"
+            className="mb-20"
           >
-            <div className="flex items-center text-slate-600 gap-2 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
-               <Calendar size={14} className="text-emerald-500" />
-               <span>{formattedDate}</span>
+            <div className="flex items-center text-slate-600 gap-3 text-[10px] font-mono font-black uppercase tracking-[0.4em] mb-8">
+               <Calendar size={14} className="text-brand-primary" />
+               <span>TIMELINE_COORD: {formattedDate}</span>
             </div>
-            <h1 className="text-6xl font-display font-black text-white leading-[1.1] tracking-tighter mb-10">{selectedEntry.title || 'Untitled Archive'}</h1>
+            <h1 className="text-7xl font-display font-black text-white leading-[1] tracking-tighter mb-12">{selectedEntry.title || ''}</h1>
             
-            <div className="flex flex-wrap gap-6 p-8 bg-slate-900/50 border border-white/5 rounded-[3.5rem]">
-              <StatInsight icon={<Star className="text-emerald-500" />} label="Mood Index" value={`${selectedEntry.mood}/10`} />
-              <StatInsight icon={<Zap className="text-blue-500" />} label="Energy Level" value={`${selectedEntry.energy}/10`} />
+            <div className="flex flex-wrap gap-8 p-10 bg-slate-900/50 border border-white/10 rounded-[3rem] backdrop-blur-sm relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1/2 h-[1px] bg-brand-primary/20" />
+              <StatInsight icon={<Star className="text-brand-primary" />} label="Neuro_Mood" value={`${selectedEntry.mood}/10`} />
+              <StatInsight icon={<Zap className="text-brand-secondary" />} label="Vitality_Index" value={`${selectedEntry.energy}/10`} />
               <div className="flex-1" />
               {selectedEntry.tags?.map(t => (
-                <span key={t} className="bg-slate-950 px-4 py-2 rounded-full border border-white/5 text-[10px] font-black text-slate-500 uppercase tracking-widest">#{t}</span>
+                <span key={t} className="bg-slate-950 px-5 py-2.5 rounded-lg border border-white/5 text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest self-center shadow-lg">#{t}</span>
               ))}
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-             {selectedEntry.gratitude && <EditorialFeature label="Gratitude Reflection" value={selectedEntry.gratitude} icon="🙏" />}
-             {selectedEntry.achievement && <EditorialFeature label="Growth Spike" value={selectedEntry.achievement} icon="🏆" />}
-             {selectedEntry.challenge && <EditorialFeature label="Adversity Encounter" value={selectedEntry.challenge} icon="⚔️" />}
-             {selectedEntry.lesson && <EditorialFeature label="Synthesis Lesson" value={selectedEntry.lesson} icon="💡" />}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+             {selectedEntry.gratitude && <EditorialFeature label="Ascending_Reflection" value={selectedEntry.gratitude} icon="🙏" />}
+             {selectedEntry.achievement && <EditorialFeature label="Growth_Vector_Peak" value={selectedEntry.achievement} icon="🏆" />}
+             {selectedEntry.challenge && <EditorialFeature label="Entropy_Conflict" value={selectedEntry.challenge} icon="⚔️" />}
+             {selectedEntry.lesson && <EditorialFeature label="Logic_Synthesis" value={selectedEntry.lesson} icon="💡" />}
           </div>
 
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="prose prose-invert max-w-none"
+            className="prose prose-invert max-w-none relative"
           >
-            <div className="text-slate-300 text-2xl font-medium leading-[1.6] whitespace-pre-wrap font-sans selection:bg-emerald-500/30">
+            <div className="absolute -left-10 top-0 w-1 h-full bg-slate-900 rounded-full" />
+            <div className="text-slate-300 text-3xl font-medium leading-[1.6] whitespace-pre-wrap font-sans selection:bg-brand-primary/30">
               {selectedEntry.content}
             </div>
           </motion.div>
@@ -177,10 +181,10 @@ export default function JournalScreen() {
             <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_10px_#a855f7]" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Intelligence Archive // Neural Logs</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">System Logs.</h1>
+          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('journal')}.</h1>
         </div>
         <div className="flex items-center gap-4">
-           <button className="w-16 h-16 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all">
+           <button className="w-16 h-16 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
              <Filter size={20} />
            </button>
            <button 
@@ -198,10 +202,10 @@ export default function JournalScreen() {
         </div>
         <input 
           type="text"
-          placeholder="Query logs // Search intent or narrative..."
+          placeholder="Query logs // Narrative search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-slate-950/50 border border-white/[0.03] rounded-2xl py-6 pl-16 pr-8 text-white font-mono font-bold text-xs uppercase tracking-widest outline-none focus:border-brand-primary/20 transition-all placeholder:text-slate-850"
+          className="w-full bg-slate-950/50 border border-white/[0.03] rounded-2xl py-6 pl-16 pr-8 text-white font-mono font-bold text-xs uppercase tracking-widest outline-none focus:border-brand-primary/20 transition-all placeholder:text-slate-850 shadow-xl"
         />
       </div>
 
@@ -227,9 +231,9 @@ export default function JournalScreen() {
         </AnimatePresence>
 
         {filteredEntries.length === 0 && !isLoading && (
-          <div className="flex flex-col items-center justify-center py-32 text-slate-850">
-            <Book size={100} strokeWidth={1} className="mb-8 opacity-20" />
-            <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] opacity-40">Archive Empty // No Data Captured</p>
+          <div className="flex flex-col items-center justify-center py-40 text-slate-850">
+            <Book size={120} strokeWidth={1} className="mb-10 opacity-10" />
+            <p className="text-[11px] font-mono font-black uppercase tracking-[0.6em] opacity-30">Archive Empty // No Narrative Logs Found</p>
           </div>
         )}
       </main>

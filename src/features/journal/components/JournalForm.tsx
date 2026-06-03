@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { JournalEntry } from '../../../core/types';
+import { useI18n } from '../../../core/store/useI18n';
 import { Tag, Sparkles, AlertTriangle, Lightbulb, Heart, X, Moon, Sunrise, Zap, Star } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -22,6 +23,8 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
   const [lesson, setLesson] = useState(initialData?.lesson || '');
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
+
+  const { t } = useI18n();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,13 +63,13 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-slate-950/50 border border-white/[0.04] rounded-xl p-4 text-brand-primary font-mono font-bold text-sm outline-none focus:border-brand-primary/20 transition-all uppercase tracking-widest"
+                className="bg-slate-950/50 border border-white/[0.04] rounded-xl p-4 text-brand-primary font-mono font-bold text-sm outline-none focus:border-brand-primary/20 transition-all uppercase tracking-widest shadow-xl"
               />
             </div>
             
-            <div className="flex gap-8 border-l border-white/[0.03] pl-12">
-               <RangeInput icon={<Star size={14} />} label="Vibe" value={mood} min={1} max={10} onChange={setMood} color="emerald" />
-               <RangeInput icon={<Zap size={14} />} label="NRG" value={energy} min={1} max={10} onChange={setEnergy} color="blue" />
+            <div className="flex gap-10 border-l border-white/[0.03] pl-12">
+               <RangeInput icon={<Star size={14} />} label="Neuro_Vibe" value={mood} min={1} max={10} onChange={setMood} color="emerald" t={t} />
+               <RangeInput icon={<Zap size={14} />} label="Energy_LVL" value={energy} min={1} max={10} onChange={setEnergy} color="blue" t={t} />
             </div>
           </section>
 
@@ -77,60 +80,60 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="THE_CORE_THEME_INITIALIZATION..."
-              className="w-full bg-transparent text-7xl font-display font-black text-white placeholder:text-slate-900 outline-none border-b border-white/[0.03] pb-10 focus:border-brand-primary/20 transition-all tracking-tighter uppercase"
+              placeholder="THE_CORE_THEME..."
+              className="w-full bg-transparent text-7xl font-display font-black text-white placeholder:text-slate-900 outline-none border-b border-white/[0.05] pb-12 focus:border-brand-primary/20 transition-all tracking-tighter"
             />
           </section>
 
           {/* Qualitative Features */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
-             <EditorialField icon={<Heart className="text-rose-500" size={16} />} label="Gratitude" value={gratitude} onChange={setGratitude} placeholder="APPRECIATION_LOG..." />
-             <EditorialField icon={<Sparkles className="text-brand-primary" size={16} />} label="Breakthrough" value={achievement} onChange={setAchievement} placeholder="LOCAL_VICTORY_CAPTURED..." />
-             <EditorialField icon={<AlertTriangle className="text-orange-500" size={16} />} label="Resistance" value={challenge} onChange={setChallenge} placeholder="FRICTION_POINT_IDENTIFIED..." />
-             <EditorialField icon={<Lightbulb className="text-brand-secondary" size={16} />} label="Synthesis" value={lesson} onChange={setLesson} placeholder="CONSOLIDATED_INTELLIGENCE..." />
+             <EditorialField icon={<Heart className="text-rose-500" size={16} />} label="Ascending_Reflection" value={gratitude} onChange={setGratitude} placeholder="Input apprecitation vectors..." />
+             <EditorialField icon={<Sparkles className="text-brand-primary" size={16} />} label="Growth_Peak" value={achievement} onChange={setAchievement} placeholder="Log growth spike data..." />
+             <EditorialField icon={<AlertTriangle className="text-orange-500" size={16} />} label="System_Entropy" value={challenge} onChange={setChallenge} placeholder="Identify friction points..." />
+             <EditorialField icon={<Lightbulb className="text-brand-secondary" size={16} />} label="Logic_Synthesis" value={lesson} onChange={setLesson} placeholder="Capture core intelligence..." />
           </section>
 
           {/* Main Thought Space */}
-          <section className="space-y-6">
+          <section className="space-y-8">
             <div className="flex items-center justify-between px-1">
-               <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em]">Extended_Reflection_Space</span>
-               <span className="text-[9px] font-mono font-black text-slate-850 uppercase tracking-widest">{content.length} BYTES_WRITTEN</span>
+               <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em]">Extended_Narrative_Log</span>
+               <span className="text-[9px] font-mono font-black text-slate-850 uppercase tracking-widest">{content.length} CHARS_BUFFERED</span>
             </div>
             <textarea 
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="COMMIT YOUR COGNITIVE STREAM TO THE ARCHIVE..."
-              className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl p-12 text-slate-300 text-2xl font-medium leading-[1.8] focus:border-brand-primary/10 outline-none resize-none min-h-[600px] transition-all selection:bg-brand-primary/20 font-sans"
+              placeholder="COMMIT NARRATIVE STREAM TO CORE ARCHIVE..."
+              className="w-full bg-slate-950 border border-white/[0.03] rounded-3xl p-12 text-slate-300 text-3xl font-medium leading-[1.7] focus:border-brand-primary/20 outline-none resize-none min-h-[700px] transition-all selection:bg-brand-primary/20 font-sans shadow-2xl"
             />
           </section>
 
           {/* Classification */}
           <section className="space-y-8">
-             <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] block ml-1">Log_Classification_Tags</span>
-             <div className="flex flex-wrap gap-4">
+             <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] block ml-1">Classification_Nodes</span>
+             <div className="flex flex-wrap gap-5">
                 {tags.map(t => (
                    <motion.span 
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     key={t} 
-                    className="bg-slate-900 border border-white/[0.04] text-[9px] font-mono font-black text-slate-500 px-5 py-2.5 rounded-sm flex items-center gap-4 uppercase tracking-[0.2em] group"
+                    className="bg-slate-900 border border-white/[0.04] text-[9px] font-mono font-black text-slate-500 px-6 py-3 rounded-lg flex items-center gap-4 uppercase tracking-[0.3em] group shadow-lg"
                   >
                     #{t}
-                    <button type="button" onClick={() => setTags(tags.filter(tg => tg !== t))} className="hover:text-rose-500 transition-colors">
-                      <X size={12} />
+                    <button type="button" onClick={() => setTags(tags.filter(tg => tg !== t))} className="text-slate-800 hover:text-rose-500 transition-colors">
+                      <X size={14} />
                     </button>
                   </motion.span>
                 ))}
-                <div className="flex items-center gap-3 bg-slate-950 border border-white/[0.04] rounded-sm px-6 py-2 focus-within:border-brand-primary/30 transition-all">
+                <div className="flex items-center gap-4 bg-slate-950 border border-white/[0.04] rounded-lg px-8 py-3 focus-within:border-brand-primary/30 transition-all shadow-inner">
                   <input 
                     value={tagInput}
                     onChange={e => setTagInput(e.target.value)}
                     onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                    placeholder="TAG_INPUT..."
-                    className="bg-transparent text-[9px] font-mono font-black text-white uppercase tracking-widest outline-none w-32 placeholder:text-slate-900"
+                    placeholder="TAG_COORD..."
+                    className="bg-transparent text-[10px] font-mono font-black text-white uppercase tracking-widest outline-none w-40 placeholder:text-slate-900"
                   />
                   <button type="button" onClick={addTag} className="text-slate-800 hover:text-white transition-colors">
-                    <Tag size={12} />
+                    <Tag size={14} />
                   </button>
                 </div>
              </div>
@@ -138,43 +141,43 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-10 bg-slate-950/90 backdrop-blur-3xl border-t border-white/[0.03] flex gap-8 z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-12 bg-slate-950/90 backdrop-blur-3xl border-t border-white/[0.03] flex gap-10 z-50">
         <button 
           type="submit"
           disabled={loading || !title || !content}
-          className="flex-[3] bg-brand-primary hover:bg-emerald-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.3em] py-8 rounded-2xl transition-all shadow-2xl shadow-brand-primary/10 active:scale-95"
+          className="flex-[3] bg-brand-primary hover:bg-emerald-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.4em] py-8 rounded-[2rem] transition-all shadow-2xl shadow-brand-primary/20 active:scale-95"
         >
-          {loading ? 'COMMITTING_DATA...' : 'COMMIT_LOG_TO_HUB'}
+          {loading ? 'COMMITTING_SNAPSHOT...' : 'COMMIT_ARCHIVE_DATA'}
         </button>
         <button 
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-slate-900 border border-white/[0.03] hover:bg-slate-850 text-slate-600 hover:text-white font-mono font-black uppercase tracking-[0.2em] py-8 rounded-2xl transition-all"
+          className="flex-1 bg-slate-900 border border-white/[0.03] hover:bg-slate-850 text-slate-600 hover:text-white font-mono font-black uppercase tracking-[0.3em] py-8 rounded-[2rem] transition-all"
         >
-          DISCARD
+          ABORT
         </button>
       </div>
     </form>
   );
 }
 
-function RangeInput({ icon, label, value, min, max, onChange, color }: { icon: any, label: string, value: number, min: number, max: number, onChange: (v: number) => void, color: string }) {
+function RangeInput({ icon, label, value, min, max, onChange, color, t }: { icon: any, label: string, value: number, min: number, max: number, onChange: (v: number) => void, color: string, t: any }) {
   const colors: any = {
-    emerald: 'text-emerald-500 bg-emerald-500/10',
-    blue: 'text-blue-500 bg-blue-500/10'
+    emerald: 'text-brand-primary bg-brand-primary/10',
+    blue: 'text-brand-secondary bg-brand-secondary/10'
   }
   return (
-    <div className="bg-slate-900 border border-white/5 p-4 rounded-3xl min-w-[120px]">
-       <div className="flex items-center justify-between mb-4">
-          <div className={`p-2 rounded-xl ${colors[color]}`}>{icon}</div>
-          <span className="text-xl font-display font-black text-white">{value}</span>
+    <div className="command-card !p-6 min-w-[150px] relative overflow-hidden group">
+       <div className="flex items-center justify-between mb-6">
+          <div className={`p-2.5 rounded-xl ${colors[color]} group-hover:scale-110 transition-transform duration-500`}>{icon}</div>
+          <span className="text-2xl font-mono font-black text-white">{value}</span>
        </div>
        <input 
          type="range" min={min} max={max} value={value}
          onChange={(e) => onChange(parseInt(e.target.value))}
-         className="w-full h-1 bg-slate-950 rounded-full appearance-none cursor-pointer accent-white"
+         className="w-full h-1.5 bg-slate-950 rounded-full appearance-none cursor-pointer accent-white border border-white/5"
        />
-       <span className="text-[8px] font-black text-slate-700 uppercase tracking-widest block mt-2">{label} INDEX</span>
+       <span className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest block mt-3">{label} // {t('operational')}</span>
     </div>
   )
 }

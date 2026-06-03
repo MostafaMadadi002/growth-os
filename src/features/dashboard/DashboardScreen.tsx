@@ -38,24 +38,24 @@ export default function DashboardScreen() {
             className="flex items-center gap-3 mb-4"
           >
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_10px_#10b981]" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Node-01 // Strategic Command</span>
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Node-01 // {t('welcome')}</span>
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-7xl font-display font-black text-white tracking-tighter leading-none"
           >
-            Terminal.
+            {t('dashboard')}.
           </motion.h1>
         </div>
         
         <div className="flex gap-12 border-l border-white/[0.05] pl-12 h-16 items-center">
             <div className="text-right">
-              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">Local Time</span>
+              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">LOCAL_TIME</span>
               <div className="text-2xl font-mono font-medium text-white tracking-tight">12:42:08</div>
             </div>
             <div className="text-right">
-              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">Uptime</span>
+              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">UPTIME_NODE</span>
               <div className="text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
             </div>
         </div>
@@ -78,7 +78,7 @@ export default function DashboardScreen() {
             <div className="flex items-center justify-between mb-12">
                <div className="flex items-center gap-3">
                   <div className="w-2 h-6 bg-brand-primary rounded-full" />
-                  <h3 className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.3em]">Operational Level</h3>
+                  <h3 className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.3em]">{t('growth_score')}</h3>
                </div>
                <div className="text-[10px] font-mono text-slate-600">INTEL_VERSION_4.2.0</div>
             </div>
@@ -93,7 +93,7 @@ export default function DashboardScreen() {
                   </div>
                </div>
                <div className="pb-6">
-                  <div className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% EFFICIENCY</div>
+                  <div className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% {t('productivity')}</div>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[240px]">
                     Current trajectory indicates mastery in **Consistency Patterns**. Maintain neural stability for 3 days to unlock Tier 2.
                   </p>
@@ -104,7 +104,7 @@ export default function DashboardScreen() {
           <div className="flex items-center gap-8 pt-12 border-t border-white/[0.03]">
              <div className="flex -space-x-4">
                {[1,2,3,4].map(i => (
-                 <div key={i} className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-900 group-hover:translate-x-1 transition-transform cursor-pointer" />
+                 <div key={i} className="w-10 h-10 rounded-xl bg-slate-800 border-2 border-slate-900 group-hover:translate-x-1 transition-transform cursor-pointer" />
                ))}
              </div>
              <div className="flex-1 h-[2px] bg-slate-800 rounded-full overflow-hidden">
@@ -125,12 +125,12 @@ export default function DashboardScreen() {
              className="command-card bg-orange-600/10 border-orange-500/20 flex flex-col justify-between"
            >
               <div className="flex justify-between items-start">
-                 <div className="text-[9px] font-mono font-black text-orange-500 uppercase tracking-widest">Streak Intensity</div>
+                 <div className="text-[9px] font-mono font-black text-orange-500 uppercase tracking-widest">{t('streak')} Intensity</div>
                  <Flame size={16} className="text-orange-500" />
               </div>
               <div>
                  <div className="text-6xl font-display font-black text-white leading-none">12.</div>
-                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">Consecutive Cycles</div>
+                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">{t('streak')} AT_NODE_X</div>
               </div>
            </motion.div>
 
@@ -139,7 +139,7 @@ export default function DashboardScreen() {
              className="command-card !p-0 overflow-hidden flex"
            >
               <div className="flex-1 p-6 flex flex-col justify-between">
-                <div className="text-[9px] font-mono font-black text-brand-secondary uppercase tracking-widest">Active Objectives</div>
+                <div className="text-[9px] font-mono font-black text-brand-secondary uppercase tracking-widest">{t('active_goals')}</div>
                 <div>
                   <div className="text-5xl font-display font-black text-white">{activeGoals}</div>
                   <div className="w-full bg-slate-800 h-1 mt-3 rounded-full overflow-hidden">
@@ -154,7 +154,7 @@ export default function DashboardScreen() {
         {/* Secondary Modules */}
         <motion.div className="md:col-span-2 command-card flex flex-col justify-between hover:bg-slate-900/80">
             <div className="flex justify-between items-start">
-              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">Consistency</span>
+              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('momentum')}</span>
               <Activity size={16} className="text-emerald-500" />
             </div>
             <div className="py-2">
@@ -168,12 +168,12 @@ export default function DashboardScreen() {
           className="md:col-span-2 command-card flex flex-col justify-between cursor-pointer group"
         >
             <div className="flex justify-between items-start">
-              <span className="text-[9px] font-mono font-black text-purple-500 uppercase tracking-widest">System Logs</span>
+              <span className="text-[9px] font-mono font-black text-purple-500 uppercase tracking-widest">{t('journal')}</span>
               <BookText size={16} className="text-purple-500" />
             </div>
             <div className="text-6xl font-display font-black text-white">{entries.length}</div>
             <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest group-hover:text-white transition-colors">
-               Fetch Archives <ChevronRight size={12} />
+               ACCESS_ARCHIVES <ChevronRight size={12} />
             </div>
         </motion.div>
 
@@ -195,7 +195,7 @@ export default function DashboardScreen() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
            <div>
              <h2 className="text-4xl font-display font-black text-white tracking-tighter">Reliability Matrix.</h2>
-             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">Multi-Cycle Performance Distribution</span>
+             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">Performance Data Stream</span>
            </div>
            
            <div className="flex gap-10 border-l border-white/[0.04] pl-10">

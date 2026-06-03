@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, X, Trash2, Check, Minus, Hash, Flame, Sparkles, TrendingUp, ChevronRight } from 'lucide-react';
+import { useI18n } from '../../core/store/useI18n';
 import { useHabitStore } from './stores/habitStore';
 import { HabitStatus, HabitType, Habit } from '../../core/types';
 import { motion, AnimatePresence } from 'motion/react';
@@ -12,6 +13,8 @@ export default function HabitsScreen() {
   const [type, setType] = useState<HabitType>(HabitType.BINARY);
   const [targetValue, setTargetValue] = useState<number>(1);
   const [unit, setUnit] = useState('');
+  
+  const { t } = useI18n();
   
   const today = new Date().toISOString().split('T')[0];
 
@@ -49,7 +52,7 @@ export default function HabitsScreen() {
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Neural Mapping // Rituals</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">System Patterns.</h1>
+          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('habits')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}
@@ -69,7 +72,7 @@ export default function HabitsScreen() {
                </div>
                <div>
                   <h2 className="text-xs font-mono font-black text-white uppercase tracking-[0.2em]">Ascending Loops</h2>
-                  <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mt-0.5">Primary Growth Directives</span>
+                  <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mt-0.5">{t('daily_habits')} // Growth</span>
                </div>
             </div>
             <div className="text-[10px] font-mono text-slate-600 tracking-tighter">{goodHabits.length} ACTIVE_NODES</div>
@@ -88,6 +91,7 @@ export default function HabitsScreen() {
                   log={getLog(h.id)} 
                   onLog={(s, v) => logHabit(h.id, s, today, v)} 
                   onDelete={() => deleteHabit(h.id)}
+                  t={t}
                 />
               </motion.div>
             ))}
@@ -103,7 +107,7 @@ export default function HabitsScreen() {
                </div>
                <div>
                   <h2 className="text-xs font-mono font-black text-white uppercase tracking-[0.2em]">Descending Loops</h2>
-                  <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mt-0.5">Friction Reduction Protocols</span>
+                  <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mt-0.5">Pattern Friction // Mitigation</span>
                </div>
             </div>
           </div>
@@ -121,6 +125,7 @@ export default function HabitsScreen() {
                   log={getLog(h.id)} 
                   onLog={(s, v) => logHabit(h.id, s, today, v)} 
                   onDelete={() => deleteHabit(h.id)}
+                  t={t}
                 />
               </motion.div>
             ))}
@@ -144,7 +149,7 @@ export default function HabitsScreen() {
             >
               <button 
                 onClick={() => setShowAdd(false)} 
-                className="absolute top-10 right-10 w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500 hover:text-white transition-all"
+                className="absolute top-10 right-10 w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl"
               >
                 <X size={20} />
               </button>
@@ -171,13 +176,13 @@ export default function HabitsScreen() {
                     <div className="grid grid-cols-2 gap-3 p-1.5 bg-slate-950 rounded-2xl border border-white/[0.03]">
                       <button 
                         onClick={() => setIsGood(true)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${isGood ? 'bg-brand-primary text-slate-950' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${isGood ? 'bg-brand-primary text-slate-950 shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
                         Ascend
                       </button>
                       <button 
                         onClick={() => setIsGood(false)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${!isGood ? 'bg-rose-500 text-slate-950' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${!isGood ? 'bg-rose-500 text-slate-950 shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
                         Descend
                       </button>
@@ -188,13 +193,13 @@ export default function HabitsScreen() {
                     <div className="grid grid-cols-2 gap-3 p-1.5 bg-slate-950 rounded-2xl border border-white/[0.03]">
                       <button 
                         onClick={() => setType(HabitType.BINARY)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.BINARY ? 'bg-slate-800 text-white' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.BINARY ? 'bg-slate-800 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
                         Toggle
                       </button>
                       <button 
                         onClick={() => setType(HabitType.QUANTITATIVE)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.QUANTITATIVE ? 'bg-slate-800 text-white' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.QUANTITATIVE ? 'bg-slate-800 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
                         Value
                       </button>
@@ -253,7 +258,7 @@ export default function HabitsScreen() {
   );
 }
 
-function HabitItem({ habit, log, onLog, onDelete }: { habit: Habit, log?: any, onLog: (s: HabitStatus, v?: number) => void, onDelete: () => void }) {
+function HabitItem({ habit, log, onLog, onDelete, t }: { habit: Habit, log?: any, onLog: (s: HabitStatus, v?: number) => void, onDelete: () => void, t: any }) {
   const status = log?.status;
   const isDone = status === HabitStatus.DONE;
 
@@ -284,7 +289,7 @@ function HabitItem({ habit, log, onLog, onDelete }: { habit: Habit, log?: any, o
               <h3 className={`text-3xl font-display font-black tracking-tighter transition-all ${isDone ? 'text-white' : 'text-slate-500'}`}>
                 {habit.title}
               </h3>
-              {isDone && <span className="text-[9px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] bg-brand-primary/10 px-3 py-1 rounded-sm border border-brand-primary/20">LOGGED</span>}
+              {isDone && <span className="text-[9px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] bg-brand-primary/10 px-3 py-1 rounded-sm border border-brand-primary/20">{t('logged')}</span>}
             </div>
             
             {habit.type === HabitType.QUANTITATIVE ? (
@@ -310,11 +315,11 @@ function HabitItem({ habit, log, onLog, onDelete }: { habit: Habit, log?: any, o
               <div className="flex items-center gap-8 mt-3">
                  <div className="flex items-center gap-2 text-orange-500">
                     <Flame size={14} fill="currentColor" />
-                    <span className="text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">12_CYCLE_STREAK</span>
+                    <span className="text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">12_{t('streak')}</span>
                  </div>
                  <div className="flex items-center gap-2 text-brand-secondary">
                     <TrendingUp size={14} />
-                    <span className="text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">+4.2%_MOMENTUM</span>
+                    <span className="text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">+4.2%_{t('momentum')}</span>
                  </div>
               </div>
             )}
