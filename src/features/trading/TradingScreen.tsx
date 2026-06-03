@@ -90,19 +90,19 @@ export default function TradingScreen() {
 
   return (
     <div className="flex flex-col h-full bg-slate-950 p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid" dir={dir}>
-      <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">{t('market_intel')}</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('market_matrix')}.</h1>
+          <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter">{t('market_matrix')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}
-          className="bg-brand-secondary w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-brand-secondary/20 active:scale-95 transition-all hover:scale-105"
+          className="bg-brand-secondary w-full md:w-16 h-14 md:h-16 rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-brand-secondary/20 active:scale-95 transition-all hover:scale-105"
         >
-          <Plus size={32} />
+          <Plus size={24} md:size={32} />
         </button>
       </header>
 
@@ -112,10 +112,10 @@ export default function TradingScreen() {
            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-all text-emerald-500">
               <TrendingUp size={64} />
            </div>
-           <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest mb-4 block">Win_Execution_Ratio</span>
-           <div className="flex items-baseline gap-4">
-              <span className="text-5xl font-mono font-black text-emerald-500 tracking-tighter">{stats.winRate}%</span>
-              <span className="text-[10px] font-mono text-slate-700 uppercase tracking-widest">Efficiency</span>
+           <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest mb-3 md:mb-4 block">Win_Execution_Ratio</span>
+           <div className="flex items-baseline gap-3 md:gap-4">
+              <span className="text-3xl md:text-5xl font-mono font-black text-emerald-500 tracking-tighter">{stats.winRate}%</span>
+              <span className="text-[8px] md:text-[10px] font-mono text-slate-700 uppercase tracking-widest">Efficiency</span>
            </div>
          </div>
          
@@ -321,17 +321,17 @@ export default function TradingScreen() {
                 </div>
               </div>
 
-              <div className="flex gap-6">
+              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                 <button 
                   onClick={handleAdd}
                   disabled={!newTrade.symbol || !newTrade.entry_price}
-                  className="flex-[2] bg-brand-secondary hover:bg-blue-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.2em] py-8 rounded-[2rem] transition-all shadow-2xl shadow-brand-secondary/20 active:scale-95"
+                  className="w-full md:flex-[2] bg-brand-secondary hover:bg-blue-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.2em] py-5 md:py-8 rounded-xl md:rounded-[2rem] transition-all shadow-2xl shadow-brand-secondary/20 active:scale-95"
                 >
                   {t('commit_data')}
                 </button>
                 <button 
                   onClick={() => setShowAdd(false)}
-                  className="flex-1 bg-slate-800 py-8 rounded-[2rem] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
+                  className="w-full md:flex-1 bg-slate-800 py-5 md:py-8 rounded-xl md:rounded-[2rem] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
                 >
                   {t('abort_action')}
                 </button>

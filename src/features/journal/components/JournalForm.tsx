@@ -53,21 +53,21 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
   return (
     <form onSubmit={handleSubmit} className="flex flex-col h-full bg-surface-base overflow-hidden data-grid">
       <div className="flex-1 overflow-y-auto pb-40 scrollbar-hide">
-        <div className="max-w-4xl mx-auto p-12 space-y-24">
+        <div className="max-w-4xl mx-auto p-4 md:p-12 space-y-16 md:space-y-24">
           
           {/* Header Metadata - Industrial Style */}
-          <section className="flex flex-col md:flex-row md:items-center justify-between gap-12 pt-8">
-            <div className="space-y-4">
+          <section className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 pt-4 md:pt-8">
+            <div className="space-y-3 md:space-y-4">
               <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] block ml-1">Archive_Timestamp</span>
               <input 
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-slate-950/50 border border-white/[0.04] rounded-xl p-4 text-brand-primary font-mono font-bold text-sm outline-none focus:border-brand-primary/20 transition-all uppercase tracking-widest shadow-xl"
+                className="w-full md:w-auto bg-slate-950/50 border border-white/[0.04] rounded-xl p-3 md:p-4 text-brand-primary font-mono font-bold text-xs md:text-sm outline-none focus:border-brand-primary/20 transition-all uppercase tracking-widest shadow-xl"
               />
             </div>
             
-            <div className="flex gap-10 border-l border-white/[0.03] pl-12">
+            <div className="flex gap-4 md:gap-10 border-t md:border-t-0 md:border-l border-white/[0.03] pt-6 md:pt-0 md:pl-12">
                <RangeInput icon={<Star size={14} />} label="Neuro_Vibe" value={mood} min={1} max={10} onChange={setMood} color="emerald" t={t} />
                <RangeInput icon={<Zap size={14} />} label="Energy_LVL" value={energy} min={1} max={10} onChange={setEnergy} color="blue" t={t} />
             </div>
@@ -81,7 +81,7 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="THE_CORE_THEME..."
-              className="w-full bg-transparent text-7xl font-display font-black text-white placeholder:text-slate-900 outline-none border-b border-white/[0.05] pb-12 focus:border-brand-primary/20 transition-all tracking-tighter"
+              className="w-full bg-transparent text-3xl md:text-7xl font-display font-black text-white placeholder:text-slate-900 outline-none border-b border-white/[0.05] pb-6 md:pb-12 focus:border-brand-primary/20 transition-all tracking-tighter"
             />
           </section>
 
@@ -94,7 +94,7 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
           </section>
 
           {/* Main Thought Space */}
-          <section className="space-y-8">
+          <section className="space-y-6 md:space-y-8">
             <div className="flex items-center justify-between px-1">
                <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em]">Extended_Narrative_Log</span>
                <span className="text-[9px] font-mono font-black text-slate-850 uppercase tracking-widest">{content.length} CHARS_BUFFERED</span>
@@ -103,7 +103,7 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="COMMIT NARRATIVE STREAM TO CORE ARCHIVE..."
-              className="w-full bg-slate-950 border border-white/[0.03] rounded-3xl p-12 text-slate-300 text-3xl font-medium leading-[1.7] focus:border-brand-primary/20 outline-none resize-none min-h-[700px] transition-all selection:bg-brand-primary/20 font-sans shadow-2xl"
+              className="w-full bg-slate-950 border border-white/[0.03] rounded-3xl p-6 md:p-12 text-slate-300 text-lg md:text-3xl font-medium leading-[1.7] focus:border-brand-primary/20 outline-none resize-none min-h-[400px] md:min-h-[700px] transition-all selection:bg-brand-primary/20 font-sans shadow-2xl"
             />
           </section>
 
@@ -141,18 +141,18 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-12 bg-slate-950/90 backdrop-blur-3xl border-t border-white/[0.03] flex gap-10 z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-4 md:p-12 bg-slate-950/90 backdrop-blur-3xl border-t border-white/[0.03] flex flex-col md:flex-row gap-4 md:gap-10 z-50">
         <button 
           type="submit"
           disabled={loading || !title || !content}
-          className="flex-[3] bg-brand-primary hover:bg-emerald-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.4em] py-8 rounded-[2rem] transition-all shadow-2xl shadow-brand-primary/20 active:scale-95"
+          className="w-full md:flex-[3] bg-brand-primary hover:bg-emerald-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.4em] py-5 md:py-8 rounded-xl md:rounded-[2rem] transition-all shadow-2xl shadow-brand-primary/20 active:scale-95"
         >
           {loading ? 'COMMITTING_SNAPSHOT...' : 'COMMIT_ARCHIVE_DATA'}
         </button>
         <button 
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-slate-900 border border-white/[0.03] hover:bg-slate-850 text-slate-600 hover:text-white font-mono font-black uppercase tracking-[0.3em] py-8 rounded-[2rem] transition-all"
+          className="w-full md:flex-1 bg-slate-900 border border-white/[0.03] hover:bg-slate-850 text-slate-600 hover:text-white font-mono font-black uppercase tracking-[0.3em] py-5 md:py-8 rounded-xl md:rounded-[2rem] transition-all"
         >
           ABORT
         </button>

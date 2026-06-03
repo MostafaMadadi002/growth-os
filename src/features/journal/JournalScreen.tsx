@@ -174,22 +174,22 @@ export default function JournalScreen() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-hidden data-grid">
-      <header className="mb-16 flex justify-between items-end">
+    <div className="flex flex-col h-full bg-surface-base p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid">
+      <header className="mb-10 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-3 md:mb-4">
             <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_10px_#a855f7]" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Intelligence Archive // Neural Logs</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('journal')}.</h1>
+          <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter">{t('journal')}.</h1>
         </div>
-        <div className="flex items-center gap-4">
-           <button className="w-16 h-16 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
-             <Filter size={20} />
+        <div className="flex items-center gap-4 w-full md:w-auto">
+           <button className="flex-1 md:flex-none w-auto md:w-16 h-14 md:h-16 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
+             <Filter size={18} md:size={20} />
            </button>
            <button 
              onClick={() => setViewMode('CREATE')}
-             className="bg-brand-primary p-6 rounded-2xl text-slate-950 shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all hover:bg-emerald-400 group"
+             className="flex-[2] md:flex-none bg-brand-primary p-4 md:p-6 rounded-2xl text-slate-950 shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all hover:bg-emerald-400 group flex items-center justify-center"
            >
              <Plus size={24} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" />
            </button>

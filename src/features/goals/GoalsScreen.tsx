@@ -158,7 +158,7 @@ export default function GoalsScreen() {
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse shadow-[0_0_10px_#3b82f6]" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Strategic Operations // Sync</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('goals')}.</h1>
+          <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter">{t('goals')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}

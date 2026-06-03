@@ -55,22 +55,22 @@ export default function DashboardScreen() {
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter leading-none"
+            className="text-4xl md:text-7xl font-display font-black text-white tracking-tighter leading-none"
           >
             {t('dashboard')}.
           </motion.h1>
         </div>
         
-        <div className="flex gap-8 md:gap-12 border-t md:border-t-0 md:border-l border-white/[0.05] pt-6 md:pt-0 md:pl-12 w-full md:w-auto items-center">
-            <div className="text-right">
+        <div className="flex gap-6 md:gap-12 border-t md:border-t-0 md:border-l border-white/[0.05] pt-6 md:pt-0 md:pl-12 w-full md:w-auto items-center justify-between md:justify-start">
+            <div className="text-left md:text-right">
               <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('local_time') || 'LOCAL_TIME'}</span>
-              <div className="text-xl md:text-2xl font-mono font-medium text-white tracking-tight">
+              <div className="text-lg md:text-2xl font-mono font-medium text-white tracking-tight">
                 {new Date().toLocaleTimeString('en-US', { hour12: false })}
               </div>
             </div>
             <div className="text-right">
               <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">UPTIME_NODE</span>
-              <div className="text-xl md:text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
+              <div className="text-lg md:text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
             </div>
         </div>
       </header>
@@ -97,18 +97,18 @@ export default function DashboardScreen() {
                <div className="text-[8px] md:text-[10px] font-mono text-slate-600">STABILITY_LOCK_v4</div>
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-10">
+            <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-10">
                <div className="relative">
-                  <h2 className="text-8xl md:text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
+                  <h2 className="text-7xl md:text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
                     {todayPoints}
                   </h2>
-                  <div className="absolute -right-4 top-2 md:top-4 text-brand-primary">
-                    <ArrowUpRight size={32} md:size={48} strokeWidth={3} />
+                  <div className="absolute -right-4 top-1 md:top-4 text-brand-primary">
+                    <ArrowUpRight size={24} md:size={48} strokeWidth={3} />
                   </div>
                </div>
-               <div className="pb-2 md:pb-6">
-                  <div className="text-[9px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% {t('productivity')}</div>
-                  <p className="text-slate-500 text-xs md:text-sm font-medium leading-relaxed max-w-[240px]">
+               <div className="pb-1 md:pb-6">
+                  <div className="text-[8px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-1 md:mb-2">+12.4% {t('productivity')}</div>
+                  <p className="text-slate-500 text-[10px] md:text-sm font-medium leading-relaxed max-w-[240px]">
                     {t('trajectory_message')}
                   </p>
                </div>
@@ -143,8 +143,8 @@ export default function DashboardScreen() {
                  <Activity size={16} className="text-emerald-500" />
               </div>
               <div>
-                 <div className="text-6xl font-display font-black text-white leading-none">{tradingWinRate}%</div>
-                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">{t('trading')} OPERATIONAL_STAT</div>
+                 <div className="text-4xl md:text-6xl font-display font-black text-white leading-none">{tradingWinRate}%</div>
+                 <div className="text-[8px] md:text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-1 md:mt-2">{t('trading')} OPERATIONAL_STAT</div>
               </div>
            </motion.div>
 
@@ -152,11 +152,11 @@ export default function DashboardScreen() {
              whileHover={{ y: -4 }}
              className="command-card !p-0 overflow-hidden flex"
            >
-              <div className="flex-1 p-6 flex flex-col justify-between">
+              <div className="flex-1 p-4 md:p-6 flex flex-col justify-between">
                 <div className="text-[9px] font-mono font-black text-brand-secondary uppercase tracking-widest">{t('active_goals')}</div>
                 <div>
-                  <div className="text-5xl font-display font-black text-white">{activeGoals}</div>
-                  <div className="w-full bg-slate-800 h-1 mt-3 rounded-full overflow-hidden">
+                  <div className="text-4xl md:text-5xl font-display font-black text-white">{activeGoals}</div>
+                  <div className="w-full bg-slate-800 h-1 mt-2 md:mt-3 rounded-full overflow-hidden">
                     <div className="w-1/3 h-full bg-brand-secondary" />
                   </div>
                 </div>
@@ -174,7 +174,7 @@ export default function DashboardScreen() {
             <div className="py-2">
                <ProgressRing progress={habitConsistency} size={90} strokeWidth={8} color="#10b981" label="" />
             </div>
-            <div className="text-white font-black font-display text-4xl">{habitConsistency}%</div>
+            <div className="text-white font-black font-display text-3xl md:text-4xl">{habitConsistency}%</div>
         </motion.div>
 
         <motion.div 
@@ -185,7 +185,7 @@ export default function DashboardScreen() {
               <span className="text-[9px] font-mono font-black text-purple-500 uppercase tracking-widest">{t('journal')}</span>
               <BookText size={16} className="text-purple-500" />
             </div>
-            <div className="text-6xl font-display font-black text-white">{entries.length}</div>
+            <div className="text-5xl md:text-6xl font-display font-black text-white">{entries.length}</div>
             <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest group-hover:text-white transition-colors">
                {t('access_archives')} <ChevronRight size={12} />
             </div>

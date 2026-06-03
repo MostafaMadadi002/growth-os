@@ -52,7 +52,7 @@ export default function HabitsScreen() {
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Neural Mapping // Rituals</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('habits')}.</h1>
+          <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter">{t('habits')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}

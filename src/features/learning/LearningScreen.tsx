@@ -67,7 +67,7 @@ export default function LearningScreen() {
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">{t('knowledge_repository')}</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('learning')}.</h1>
+          <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter">{t('learning')}.</h1>
         </div>
         <div className="flex gap-4 w-full md:w-auto">
            <button 
