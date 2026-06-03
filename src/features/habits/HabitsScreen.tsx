@@ -45,18 +45,18 @@ export default function HabitsScreen() {
   const badHabits = habits.filter(h => !h.is_good);
 
   return (
-    <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-hidden data-grid">
-      <header className="mb-16 flex justify-between items-end">
+    <div className="flex flex-col h-full bg-surface-base p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid">
+      <header className="mb-12 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-3 md:mb-4">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Neural Mapping // Rituals</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('habits')}.</h1>
+          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('habits')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}
-          className="bg-brand-primary p-6 rounded-2xl text-slate-950 shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all hover:bg-emerald-400 group"
+          className="bg-brand-primary p-4 md:p-6 rounded-2xl text-slate-950 shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all hover:bg-emerald-400 group"
         >
           <Plus size={24} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" />
         </button>
@@ -263,45 +263,45 @@ function HabitItem({ habit, log, onLog, onDelete, t }: { habit: Habit, log?: any
   const isDone = status === HabitStatus.DONE;
 
   return (
-    <div className={`command-card flex items-center justify-between group transition-all relative overflow-hidden ${isDone ? 'border-brand-primary/20 bg-brand-primary/[0.02]' : ''}`}>
+    <div className={`command-card flex flex-col sm:flex-row sm:items-center justify-between group transition-all relative overflow-hidden gap-6 ${isDone ? 'border-brand-primary/20 bg-brand-primary/[0.02]' : ''} !p-6`}>
       {isDone && (
         <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 blur-3xl rounded-full pointer-events-none" />
       )}
       
-      <div className="flex items-center gap-8 relative z-10 w-full">
+      <div className="flex items-center gap-6 md:gap-8 relative z-10 w-full">
          <button 
            onClick={() => {
              if (habit.type === HabitType.BINARY) {
                onLog(isDone ? HabitStatus.MISSED : HabitStatus.DONE);
              }
            }}
-           className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-700 ${isDone ? (habit.is_good ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/20 scale-105' : 'bg-rose-500 text-slate-950 shadow-2xl shadow-rose-500/20 scale-105') : 'bg-slate-950 text-slate-700 border border-white/[0.04] hover:border-white/10 hover:bg-slate-900'}`}
+           className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center transition-all duration-700 shrink-0 ${isDone ? (habit.is_good ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/20 scale-105' : 'bg-rose-500 text-slate-950 shadow-2xl shadow-rose-500/20 scale-105') : 'bg-slate-950 text-slate-700 border border-white/[0.04] hover:border-white/10 hover:bg-slate-900'}`}
          >
            {habit.type === HabitType.QUANTITATIVE ? (
-             <Hash size={24} />
+             <Hash size={20} md:size={24} />
            ) : (
-             isDone ? <Check size={36} strokeWidth={3} /> : <Minus size={24} />
+             isDone ? <Check size={28} md:size={36} strokeWidth={3} /> : <Minus size={20} md:size={24} />
            )}
          </button>
          
          <div className="flex-1">
-            <div className="flex items-center gap-4 mb-2">
-              <h3 className={`text-3xl font-display font-black tracking-tighter transition-all ${isDone ? 'text-white' : 'text-slate-500'}`}>
+            <div className="flex items-center gap-3 md:gap-4 mb-1 md:mb-2 flex-wrap">
+              <h3 className={`text-xl md:text-3xl font-display font-black tracking-tighter transition-all ${isDone ? 'text-white' : 'text-slate-500'}`}>
                 {habit.title}
               </h3>
-              {isDone && <span className="text-[9px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] bg-brand-primary/10 px-3 py-1 rounded-sm border border-brand-primary/20">{t('logged')}</span>}
+              {isDone && <span className="text-[8px] md:text-[9px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] bg-brand-primary/10 px-2 md:px-3 py-1 rounded-sm border border-brand-primary/20 shrink-0">{t('logged')}</span>}
             </div>
             
             {habit.type === HabitType.QUANTITATIVE ? (
-               <div className="flex items-center gap-6 mt-4">
-                  <div className="flex items-center gap-3 bg-slate-950 rounded-xl px-5 py-2.5 border border-white/[0.03]">
+               <div className="flex items-center gap-4 md:gap-6 mt-3 md:mt-4">
+                  <div className="flex items-center gap-2 md:gap-3 bg-slate-950 rounded-xl px-3 md:px-5 py-2 md:py-2.5 border border-white/[0.03]">
                     <input 
                       type="number"
                       value={log?.value || 0}
                       onChange={e => onLog(HabitStatus.DONE, Number(e.target.value))}
-                      className="w-12 bg-transparent text-brand-primary font-mono font-black outline-none text-center text-lg"
+                      className="w-8 md:w-12 bg-transparent text-brand-primary font-mono font-black outline-none text-center text-base md:text-lg"
                     />
-                    <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest pt-1">/ {habit.target_value} {habit.unit}</span>
+                    <span className="text-[8px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest pt-1 shrink-0">/ {habit.target_value} {habit.unit}</span>
                   </div>
                   <div className="h-1 flex-1 bg-slate-950 rounded-full overflow-hidden border border-white/5">
                      <motion.div 
@@ -312,26 +312,26 @@ function HabitItem({ habit, log, onLog, onDelete, t }: { habit: Habit, log?: any
                   </div>
                </div>
             ) : (
-              <div className="flex items-center gap-8 mt-3">
+              <div className="flex items-center gap-6 md:gap-8 mt-2 md:mt-3">
                  <div className="flex items-center gap-2 text-orange-500">
-                    <Flame size={14} fill="currentColor" />
-                    <span className="text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">12_{t('streak')}</span>
+                    <Flame size={12} md:size={14} fill="currentColor" />
+                    <span className="text-[8px] md:text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">12_{t('streak')}</span>
                  </div>
                  <div className="flex items-center gap-2 text-brand-secondary">
-                    <TrendingUp size={14} />
-                    <span className="text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">+4.2%_{t('momentum')}</span>
+                    <TrendingUp size={12} md:size={14} />
+                    <span className="text-[8px] md:text-[9px] font-mono font-black uppercase tracking-[0.2em] pt-0.5">+4.2%_{t('momentum')}</span>
                  </div>
               </div>
             )}
          </div>
       </div>
       
-      <div className="flex items-center gap-4 relative z-10 ml-6">
+      <div className="flex items-center justify-end gap-4 relative z-10 sm:ml-6 border-t sm:border-t-0 border-white/5 pt-4 sm:pt-0">
         <button 
           onClick={onDelete} 
-          className="p-4 opacity-0 group-hover:opacity-100 text-slate-700 hover:text-rose-500 transition-all hover:bg-rose-500/5 rounded-xl border border-transparent hover:border-rose-500/10"
+          className="p-3 md:p-4 opacity-100 sm:opacity-0 group-hover:opacity-100 text-slate-650 hover:text-rose-500 transition-all hover:bg-rose-500/5 rounded-xl border border-transparent hover:border-rose-500/10"
         >
-          <Trash2 size={20} />
+          <Trash2 size={18} md:size={20} />
         </button>
       </div>
     </div>

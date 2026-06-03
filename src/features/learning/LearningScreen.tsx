@@ -60,56 +60,56 @@ export default function LearningScreen() {
   const totalMinutes = sessions.reduce((acc, s) => acc + s.duration_minutes, 0);
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 p-8 md:p-12 overflow-hidden data-grid" dir={dir}>
-      <header className="mb-12 flex justify-between items-end">
+    <div className="flex flex-col h-full bg-slate-950 p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid" dir={dir}>
+      <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">{t('knowledge_repository')}</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('learning')}.</h1>
+          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('learning')}.</h1>
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 w-full md:w-auto">
            <button 
              onClick={() => setView('COURSE_ADD')}
-             className="command-card !p-5 bg-slate-900/50 hover:bg-slate-800 border-white/5 text-slate-400 hover:text-white transition-all flex items-center gap-3"
+             className="flex-1 md:flex-none command-card !p-4 md:!p-5 bg-slate-900/50 hover:bg-slate-800 border-white/5 text-slate-400 hover:text-white transition-all flex items-center justify-center gap-3"
            >
-             <GraduationCap size={20} />
+             <GraduationCap size={18} md:size={20} />
              <span className="text-[10px] font-mono font-black uppercase tracking-widest">{t('new_course')}</span>
            </button>
            <button 
              onClick={() => setView('SESSION_ADD')}
-             className="bg-brand-primary w-16 h-16 rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-brand-primary/20 hover:scale-105 active:scale-95 transition-all"
+             className="bg-brand-primary w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-brand-primary/20 hover:scale-105 active:scale-95 transition-all shrink-0"
            >
-             <Plus size={32} />
+             <Plus size={28} md:size={32} />
            </button>
         </div>
       </header>
 
       {/* Stats Bento */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
          <StatBlock 
             label={t('study_time_matrix')} 
             value={`${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`} 
-            icon={<Clock size={24} />} 
+            icon={<Clock size={20} md:size={24} />} 
             color="text-brand-primary" 
          />
          <StatBlock 
             label={t('active_course_nodes')} 
             value={courses.length.toString()} 
-            icon={<Layers size={24} />} 
+            icon={<Layers size={20} md:size={24} />} 
             color="text-brand-secondary" 
          />
          <StatBlock 
             label={t('weekly_throughput')} 
-            value={`${sessions.filter(s => new Date(s.date) > new Date(Date.now() - 7 * 86400000)).length} ${t('session_count')}`} 
-            icon={<Activity size={24} />} 
+            value={`${sessions.filter(s => new Date(s.date) > new Date(Date.now() - 7 * 86400000)).length}`} 
+            icon={<Activity size={20} md:size={24} />} 
             color="text-orange-500" 
          />
          <StatBlock 
             label={t('synaptic_integrity')} 
             value="92%" 
-            icon={<Zap size={24} />} 
+            icon={<Zap size={20} md:size={24} />} 
             color="text-purple-500" 
          />
       </div>
@@ -185,19 +185,19 @@ export default function LearningScreen() {
 
           <div className="space-y-4">
              {sessions.map(s => (
-               <div key={s.id} className="command-card group hover:bg-slate-900/80 flex items-center gap-8 py-5">
-                  <div className="w-14 h-14 bg-slate-950 border border-white/5 rounded-2xl flex items-center justify-center text-brand-primary shadow-xl group-hover:scale-105 transition-all">
-                     <BookOpen size={24} />
+               <div key={s.id} className="command-card group hover:bg-slate-900/80 flex items-center gap-4 md:gap-8 py-4 md:py-5 !p-6">
+                  <div className="w-12 h-12 md:w-14 md:h-14 bg-slate-950 border border-white/5 rounded-2xl flex items-center justify-center text-brand-primary shadow-xl group-hover:scale-105 transition-all shrink-0">
+                     <BookOpen size={20} md:size={24} />
                   </div>
-                  <div className="flex-1">
-                     <h4 className="text-xl font-display font-black text-white tracking-tighter group-hover:text-brand-primary transition-colors">{s.title}</h4>
-                     <p className="text-[9px] font-mono text-slate-600 uppercase tracking-widest mt-1">{new Date(s.date).toLocaleDateString(dir === 'rtl' ? 'fa-IR' : 'en-US', { day: 'numeric', month: 'long' })} // {s.category}</p>
+                  <div className="flex-1 min-w-0">
+                     <h4 className="text-lg md:text-xl font-display font-black text-white tracking-tighter group-hover:text-brand-primary transition-colors truncate">{s.title}</h4>
+                     <p className="text-[8px] md:text-[9px] font-mono text-slate-600 uppercase tracking-widest mt-1 truncate">{new Date(s.date).toLocaleDateString(dir === 'rtl' ? 'fa-IR' : 'en-US', { day: 'numeric', month: 'long' })} // {s.category}</p>
                   </div>
-                  <div className="flex items-center gap-3 px-6 h-10 bg-slate-950 border border-white/5 rounded-xl">
-                     <Clock size={12} className="text-slate-700" />
-                     <span className="text-[10px] font-mono font-black text-white uppercase tracking-widest">{s.duration_minutes}m</span>
+                  <div className="flex items-center gap-2 md:gap-3 px-3 md:px-6 h-8 md:h-10 bg-slate-950 border border-white/5 rounded-xl shrink-0">
+                     <Clock size={10} md:size={12} className="text-slate-700" />
+                     <span className="text-[8px] md:text-[10px] font-mono font-black text-white uppercase tracking-widest">{s.duration_minutes}m</span>
                   </div>
-                  <div className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center text-slate-900 group-hover:text-white transition-all">
+                  <div className="hidden sm:flex w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/5 items-center justify-center text-slate-900 group-hover:text-white transition-all shrink-0">
                      <ChevronRight size={18} />
                   </div>
                </div>
@@ -260,12 +260,12 @@ export default function LearningScreen() {
 
 function StatBlock({ label, value, icon, color }: { label: string, value: string, icon: any, color: string }) {
   return (
-    <div className="command-card relative overflow-hidden group">
-       <div className={`absolute -right-4 -top-4 p-8 opacity-5 group-hover:scale-110 group-hover:opacity-10 transition-all ${color}`}>
+    <div className="command-card relative overflow-hidden group !p-4 md:!p-6">
+       <div className={`absolute -right-4 -top-4 p-6 md:p-8 opacity-5 group-hover:scale-110 group-hover:opacity-10 transition-all ${color}`}>
           {icon}
        </div>
-       <span className="text-[9px] font-mono font-black text-slate-650 uppercase tracking-widest mb-4 block group-hover:text-slate-500 transition-colors">{label}</span>
-       <div className="text-4xl font-mono font-black text-white tracking-tighter">{value}</div>
+       <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-650 uppercase tracking-widest mb-2 md:mb-4 block group-hover:text-slate-500 transition-colors truncate">{label}</span>
+       <div className="text-2xl md:text-4xl font-mono font-black text-white tracking-tighter">{value}</div>
     </div>
   );
 }
@@ -282,14 +282,14 @@ function Modal({ title, children, onClose }: { title: string, children: React.Re
       <motion.div 
         initial={{ scale: 0.95, y: 40 }}
         animate={{ scale: 1, y: 0 }}
-        className="bg-slate-900 border border-white/[0.05] w-full max-w-4xl rounded-[3rem] p-16 shadow-2xl relative"
+        className="bg-slate-900 border border-white/[0.05] w-full max-w-4xl rounded-[2rem] md:rounded-[3rem] p-6 md:p-16 shadow-2xl relative max-h-[90vh] overflow-y-auto scrollbar-hide"
       >
-        <button onClick={onClose} className="absolute top-12 right-12 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
-          <X size={24} />
+        <button onClick={onClose} className="absolute top-6 right-6 md:top-12 md:right-12 w-10 h-10 md:w-14 md:h-14 bg-slate-800 rounded-xl md:rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
+          <X size={20} md:size={24} />
         </button>
-        <div className="mb-12">
-            <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-4 block">{t('input_protocol')}</span>
-            <h3 className="text-5xl font-display font-black text-white tracking-tighter">{title}</h3>
+        <div className="mb-8 md:mb-12">
+            <span className="text-[8px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-3 md:mb-4 block">{t('input_protocol')}</span>
+            <h3 className="text-3xl md:text-5xl font-display font-black text-white tracking-tighter">{title}</h3>
         </div>
         {children}
       </motion.div>

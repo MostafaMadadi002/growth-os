@@ -70,49 +70,49 @@ export default function GoalsScreen() {
       <motion.div 
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="flex flex-col h-full bg-slate-950 p-6 overflow-hidden data-grid"
+        className="flex flex-col h-full bg-slate-950 p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid"
       >
-        <header className="flex items-center justify-between mb-10">
+        <header className="flex items-center justify-between mb-8 md:mb-10">
            <button 
              onClick={() => setSelectedGoal(null)} 
-             className="flex items-center text-slate-500 gap-3 hover:text-white transition-colors"
+             className="flex items-center text-slate-500 gap-2 md:gap-3 hover:text-white transition-colors"
            >
-             <div className="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center border border-white/5">
-                <ChevronLeft size={20} />
+             <div className="w-8 h-8 md:w-10 md:h-10 bg-slate-900 rounded-xl md:rounded-2xl flex items-center justify-center border border-white/5">
+                <ChevronLeft size={16} md:size={20} />
              </div>
-             <span className="text-[10px] font-mono font-black uppercase tracking-widest">EXIT_NODE // {t('dashboard')}</span>
+             <span className="text-[9px] md:text-[10px] font-mono font-black uppercase tracking-widest">EXIT_NODE</span>
            </button>
-           <button className="p-3 bg-slate-900 border border-white/5 rounded-2xl text-slate-500">
-             <MoreHorizontal size={20} />
+           <button className="p-2 md:p-3 bg-slate-900 border border-white/5 rounded-xl md:rounded-2xl text-slate-500">
+             <MoreHorizontal size={16} md:size={20} />
            </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide pb-32">
+        <div className="flex-1">
           {/* Hero Objective Card */}
-          <div className="command-card !p-12 mb-8 relative overflow-hidden">
+          <div className="command-card !p-8 md:!p-12 mb-8 relative overflow-hidden">
             <div className={`absolute top-0 right-0 p-12 opacity-5 scale-150 ${getCategoryColor(selectedGoal.category)} rounded-full blur-[80px]`} />
             
             <div className="flex flex-col items-center text-center relative z-10">
-               <div className={`w-24 h-24 ${getCategoryColor(selectedGoal.category)} rounded-3xl flex items-center justify-center text-slate-950 mb-10 shadow-2xl relative`}>
+               <div className={`w-16 h-16 md:w-24 md:h-24 ${getCategoryColor(selectedGoal.category)} rounded-2xl md:rounded-3xl flex items-center justify-center text-slate-950 mb-6 md:mb-10 shadow-2xl relative`}>
                   {getCategoryIcon(selectedGoal.category)}
                   <div className="absolute inset-0 bg-white/20 blur-xl rounded-full opacity-30" />
                </div>
-               <h1 className="text-5xl font-display font-black text-white mb-4 tracking-tighter">{selectedGoal.title}</h1>
-               <div className="flex items-center gap-4 text-slate-500 mb-12 text-[10px] font-mono font-black uppercase tracking-widest">
-                  <span className="bg-slate-950 px-5 py-2 rounded-lg border border-white/5">{selectedGoal.level}_HORIZON</span>
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-800" />
+               <h1 className="text-3xl md:text-5xl font-display font-black text-white mb-3 md:mb-4 tracking-tighter">{selectedGoal.title}</h1>
+               <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-4 text-slate-500 mb-8 md:mb-12 text-[8px] md:text-[10px] font-mono font-black uppercase tracking-widest">
+                  <span className="bg-slate-950 px-3 md:px-5 py-1.5 md:py-2 rounded-lg border border-white/5">{selectedGoal.level}_HORIZON</span>
+                  <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-slate-800" />
                   <span className="flex items-center gap-2">
-                    <Calendar size={14} className="text-brand-primary" />
+                    <Calendar size={12} md:size={14} className="text-brand-primary" />
                     ACTIVATED: {new Date(selectedGoal.start_date || '').toLocaleDateString()}
                   </span>
                </div>
                
-               <div className="w-full space-y-5">
-                  <div className="flex justify-between items-end px-2">
-                     <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">Objective_Saturation</span>
-                     <span className="text-3xl font-mono font-black text-brand-primary">{Math.round(progress)}%</span>
+               <div className="w-full space-y-4 md:space-y-5">
+                  <div className="flex justify-between items-end px-1 md:px-2">
+                     <span className="text-[8px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">Objective_Saturation</span>
+                     <span className="text-2xl md:text-3xl font-mono font-black text-brand-primary">{Math.round(progress)}%</span>
                   </div>
-                  <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                  <div className="w-full h-2 md:h-3 bg-slate-950 rounded-full overflow-hidden border border-white/5">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
@@ -151,18 +151,18 @@ export default function GoalsScreen() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-hidden data-grid">
-      <header className="mb-16 flex justify-between items-end">
+    <div className="flex flex-col h-full bg-surface-base p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid">
+      <header className="mb-12 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-3 md:mb-4">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse shadow-[0_0_10px_#3b82f6]" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Strategic Operations // Sync</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('goals')}.</h1>
+          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('goals')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}
-          className="bg-brand-primary p-6 rounded-2xl text-slate-950 shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all hover:bg-emerald-400 group"
+          className="bg-brand-primary p-4 md:p-6 rounded-2xl text-slate-950 shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all hover:bg-emerald-400 group"
         >
           <Plus size={24} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" />
         </button>
@@ -181,11 +181,11 @@ export default function GoalsScreen() {
                animate={{ opacity: 1, scale: 1 }}
                transition={{ delay: idx * 0.05 }}
                onClick={() => setSelectedGoal(g)}
-               className="command-card cursor-pointer group relative overflow-hidden flex flex-col md:flex-row gap-12 items-center"
+               className="command-card cursor-pointer group relative overflow-hidden flex flex-col lg:flex-row gap-8 lg:gap-12 items-center !p-6 md:!p-8"
              >
                <div className="relative">
-                  <div className={`w-32 h-32 ${getCategoryColor(g.category)} rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl group-hover:scale-105 transition-transform duration-500`}>
-                    {React.cloneElement(getCategoryIcon(g.category) as React.ReactElement, { size: 36, strokeWidth: 2.5 })}
+                  <div className={`w-24 h-24 md:w-32 md:h-32 ${getCategoryColor(g.category)} rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl group-hover:scale-105 transition-transform duration-500`}>
+                    {React.cloneElement(getCategoryIcon(g.category) as React.ReactElement, { size: 30, md: 36, strokeWidth: 2.5 })}
                   </div>
                   <div className="absolute -bottom-2 -right-2 bg-slate-950 border border-white/10 rounded-lg px-2 py-1.5 flex items-center gap-2 shadow-2xl">
                      <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
@@ -193,25 +193,25 @@ export default function GoalsScreen() {
                   </div>
                </div>
 
-               <div className="flex-1 text-center md:text-left">
-                  <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                    <span className="text-[10px] font-mono font-black text-brand-secondary uppercase tracking-[0.3em] bg-brand-secondary/10 px-4 py-1 rounded-sm border border-brand-secondary/20">{g.level}</span>
+               <div className="flex-1 text-center lg:text-left">
+                  <div className="flex items-center justify-center lg:justify-start gap-4 mb-3 md:mb-4">
+                    <span className="text-[9px] md:text-[10px] font-mono font-black text-brand-secondary uppercase tracking-[0.3em] bg-brand-secondary/10 px-3 md:px-4 py-1 rounded-sm border border-brand-secondary/20">{g.level}</span>
                     <div className="w-1 h-3 bg-slate-800 rounded-full" />
-                    <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{g.category}</span>
+                    <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{g.category}</span>
                   </div>
-                  <h2 className="text-5xl font-display font-black text-white mb-3 tracking-tighter group-hover:text-brand-primary transition-colors">{g.title}</h2>
-                  <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xl">Tactical objective tracking growth through consistent milestone execution and automated performance logs.</p>
+                  <h2 className="text-3xl md:text-5xl font-display font-black text-white mb-3 tracking-tighter group-hover:text-brand-primary transition-colors">{g.title}</h2>
+                  <p className="text-slate-500 text-xs md:text-sm font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">Tactical objective tracking growth through consistent milestone execution and automated performance logs.</p>
                </div>
 
-               <div className="flex flex-col items-end gap-6 pt-4 md:pt-0">
-                  <div className="flex -space-x-3">
+               <div className="flex flex-col items-center lg:items-end gap-4 md:gap-6 pt-4 lg:pt-0">
+                  <div className="flex -space-x-2 md:-space-x-3">
                      {(g.milestones?.slice(0, 4) || []).map((m, i) => (
-                       <div key={i} className={`w-12 h-12 rounded-xl border-2 border-slate-950 flex items-center justify-center text-white transition-all shadow-xl ${m.is_completed ? 'bg-brand-primary' : 'bg-slate-900 border-white/5 opacity-50 shadow-inner'}`}>
-                         {m.is_completed ? <CheckCircle2 size={18} strokeWidth={3} /> : <div className="text-[10px] font-mono font-black">{i+1}</div>}
+                       <div key={i} className={`w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 border-slate-950 flex items-center justify-center text-white transition-all shadow-xl ${m.is_completed ? 'bg-brand-primary' : 'bg-slate-900 border-white/5 opacity-50 shadow-inner'}`}>
+                         {m.is_completed ? <CheckCircle2 size={16} md:size={18} strokeWidth={3} /> : <div className="text-[8px] md:text-[10px] font-mono font-black">{i+1}</div>}
                        </div>
                      ))}
                   </div>
-                  <div className="flex items-center gap-3 text-slate-600 text-[9px] font-mono font-black uppercase tracking-[0.3em]">
+                  <div className="flex items-center gap-3 text-slate-600 text-[8px] md:text-[9px] font-mono font-black uppercase tracking-[0.3em]">
                      MANIFEST_LINK <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-500" />
                   </div>
                </div>

@@ -89,18 +89,18 @@ export default function TradingScreen() {
   const stats = calculateStats();
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 p-6 overflow-hidden data-grid" dir={dir}>
-      <header className="mb-10 flex justify-between items-end mr-4">
+    <div className="flex flex-col h-full bg-slate-950 p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid" dir={dir}>
+      <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">{t('market_intel')}</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('market_matrix')}.</h1>
+          <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter">{t('market_matrix')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}
-          className="bg-brand-secondary w-16 h-16 rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-brand-secondary/20 active:scale-95 transition-all hover:scale-105"
+          className="bg-brand-secondary w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-brand-secondary/20 active:scale-95 transition-all hover:scale-105"
         >
           <Plus size={32} />
         </button>
@@ -179,49 +179,49 @@ export default function TradingScreen() {
          <div className="text-[9px] font-mono font-bold text-slate-700 uppercase tracking-[0.2em]">{trades.length} REGISTERED_PROTOCOLS</div>
       </div>
 
-      <main className="space-y-6 flex-1 overflow-y-auto pb-32 scrollbar-hide pr-2">
-        {trades.map((t, idx) => (
+      <main className="space-y-4 md:space-y-6 flex-1 pr-2">
+        {trades.map((trade, idx) => (
           <motion.div 
-            key={t.id} 
+            key={trade.id} 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
-            onClick={() => setSelectedTrade(t)}
-            className="command-card cursor-pointer group hover:bg-slate-900/80 transition-all flex flex-col md:flex-row gap-8 items-center"
+            onClick={() => setSelectedTrade(trade)}
+            className="command-card cursor-pointer group hover:bg-slate-900/80 transition-all flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-center !p-6"
           >
-             <div className="flex items-center gap-8 flex-1">
-                <div className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 shadow-2xl transition-all group-hover:scale-105 ${getStatusColor(t.status)}`}>
-                   {t.status === TradeStatus.WIN ? <TrendingUp size={36} strokeWidth={2.5} /> : t.status === TradeStatus.LOSS ? <TrendingDown size={36} strokeWidth={2.5} /> : <Activity size={36} strokeWidth={2.5} />}
+             <div className="flex items-center gap-6 md:gap-8 flex-1">
+                <div className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center border-2 shadow-2xl transition-all group-hover:scale-105 shrink-0 ${getStatusColor(trade.status)}`}>
+                   {trade.status === TradeStatus.WIN ? <TrendingUp size={24} md:size={36} strokeWidth={2.5} /> : trade.status === TradeStatus.LOSS ? <TrendingDown size={24} md:size={36} strokeWidth={2.5} /> : <Activity size={24} md:size={36} strokeWidth={2.5} />}
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-2">
-                    <h3 className="text-3xl font-display font-black text-white tracking-tighter group-hover:text-brand-secondary transition-colors uppercase">
-                      {t.symbol}
+                  <div className="flex items-center gap-3 md:gap-4 mb-2">
+                    <h3 className="text-xl md:text-3xl font-display font-black text-white tracking-tighter group-hover:text-brand-secondary transition-colors uppercase">
+                      {trade.symbol}
                     </h3>
-                    <span className="text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-3 py-1 rounded-sm border border-white/5">{t.market_type}</span>
+                    <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-2 md:px-3 py-1 rounded-sm border border-white/5">{trade.market_type}</span>
                   </div>
-                  <div className="flex flex-wrap gap-6 mt-3">
-                     <TradeStat label="Entry_Point" value={t.entry_price.toString()} icon={<Target size={12} />} />
-                     <TradeStat label="Stop_Loss" value={t.stop_loss?.toString() || '0'} color="text-rose-500" icon={<AlertTriangle size={12} />} />
-                     <TradeStat label="Target_Exit" value={t.target_price?.toString() || '0'} color="text-emerald-500" icon={<Zap size={12} />} />
+                  <div className="flex flex-wrap gap-4 md:gap-6 mt-2 md:mt-3">
+                     <TradeStat label="Entry" value={trade.entry_price.toString()} icon={<Target size={12} />} />
+                     <TradeStat label="SL" value={trade.stop_loss?.toString() || '0'} color="text-rose-500" icon={<AlertTriangle size={12} />} />
+                     <TradeStat label="TP" value={trade.target_price?.toString() || '0'} color="text-emerald-500" icon={<Zap size={12} />} />
                   </div>
                 </div>
              </div>
 
-             <div className="flex items-center gap-8 border-l border-white/5 pl-8 h-16">
-                <div className="text-right">
-                   <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest block mb-1">Leverage // Vol</span>
-                   <span className="text-lg font-mono font-black text-white">{t.leverage || '1'}x // {t.lot_size || '0'}</span>
+             <div className="flex items-center justify-between lg:justify-end gap-6 md:gap-8 border-t lg:border-t-0 lg:border-l border-white/5 pt-6 lg:pt-0 lg:pl-8">
+                <div className="text-left lg:text-right">
+                   <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest block mb-1">{t('leverage_vol')}</span>
+                   <span className="text-base md:text-lg font-mono font-black text-white">{trade.leverage || '1'}x // {trade.lot_size || '0'}</span>
                 </div>
-                <div className="w-px h-10 bg-white/5" />
-                <div className={`w-32 py-3 rounded-xl border flex items-center justify-center text-[10px] font-mono font-black uppercase tracking-[0.2em] shadow-lg ${getStatusColor(t.status)}`}>
-                   {t.status}
+                <div className="hidden md:block w-px h-10 bg-white/5" />
+                <div className={`flex-1 md:flex-none md:w-32 py-2 md:py-3 rounded-xl border flex items-center justify-center text-[8px] md:text-[10px] font-mono font-black uppercase tracking-[0.2em] shadow-lg ${getStatusColor(trade.status)}`}>
+                   {trade.status}
                 </div>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); removeTrade(t.id); }} 
-                  className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-600 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100"
+                  onClick={(e) => { e.stopPropagation(); removeTrade(trade.id); }} 
+                  className="w-10 h-10 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-600 hover:text-rose-500 transition-all opacity-100 lg:opacity-0 group-hover:opacity-100"
                 >
-                  <Trash2 size={18} />
+                  <Trash2 size={16} />
                 </button>
              </div>
           </motion.div>
@@ -246,21 +246,21 @@ export default function TradingScreen() {
             <motion.div 
               initial={{ scale: 0.95, y: 40 }}
               animate={{ scale: 1, y: 0 }}
-              className="bg-slate-900 border border-white/[0.05] w-full max-w-4xl rounded-[3rem] p-16 shadow-2xl relative overflow-y-auto max-h-[90vh] scrollbar-hide"
+              className="bg-slate-900 border border-white/[0.05] w-full max-w-4xl rounded-[2rem] md:rounded-[3rem] p-6 md:p-16 shadow-2xl relative overflow-y-auto max-h-[90vh] scrollbar-hide"
             >
               <button 
                 onClick={() => setShowAdd(false)} 
-                className="absolute top-12 right-12 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl"
+                className="absolute top-6 right-6 md:top-12 md:right-12 w-10 h-10 md:w-14 md:h-14 bg-slate-800 rounded-xl md:rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl"
               >
-                <X size={24} />
+                <X size={20} md:size={24} />
               </button>
 
-              <div className="mb-12">
-                 <span className="text-[10px] font-mono font-black text-brand-secondary uppercase tracking-[0.4em] mb-4 block">{t('market_deployment_init')}</span>
-                 <h3 className="text-5xl font-display font-black text-white tracking-tighter">{t('deploy_op')}.</h3>
+              <div className="mb-8 md:mb-12">
+                 <span className="text-[9px] md:text-[10px] font-mono font-black text-brand-secondary uppercase tracking-[0.4em] mb-3 md:mb-4 block">{t('market_deployment_init')}</span>
+                 <h3 className="text-3xl md:text-5xl font-display font-black text-white tracking-tighter">{t('deploy_op')}.</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-10 md:mb-16">
                 <div className="space-y-10">
                    <div className="space-y-4">
                       <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('operating_domain') || 'OPERATING_DOMAIN'}</label>

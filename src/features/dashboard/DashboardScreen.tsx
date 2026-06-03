@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useHabitStore } from '../habits/stores/habitStore';
 import { useGoalStore } from '../goals/stores/goalStore';
 import { useJournalStore } from '../journal/stores/journalStore';
+import { useTradingStore } from '../trading/stores/tradingStore';
 import { useActivityStore } from '../../core/stores/activityStore';
 import { useI18n } from '../../core/store/useI18n';
 import { Flame, Target, BookText, Zap, ChevronRight, Trophy, ArrowUpRight, Activity } from 'lucide-react';
@@ -9,56 +10,67 @@ import { motion } from 'motion/react';
 import { ProgressRing } from '../../components/ProgressRing';
 
 export default function DashboardScreen() {
-  const { habits } = useHabitStore();
+  const { habits, todayLogs } = useHabitStore();
   const { goals } = useGoalStore();
   const { entries } = useJournalStore();
+  const { trades } = useTradingStore();
   const { todayPoints, heatmapData, fetchTodayPoints, fetchHeatmapData } = useActivityStore();
   const { t, dir, language } = useI18n();
 
   useEffect(() => {
     fetchTodayPoints();
     fetchHeatmapData(30);
-  }, [habits, goals, entries, fetchTodayPoints, fetchHeatmapData]);
+  }, [fetchTodayPoints, fetchHeatmapData]);
 
   const activeGoals = goals.filter(g => g.status === 'ACTIVE').length;
   const heatmapArray = Object.entries(heatmapData).sort((a, b) => b[0].localeCompare(a[0])).reverse();
 
-  // Stats for the Bento grid
-  const habitConsistency = habits.length > 0 ? 84 : 0; 
-  const tradingWinRate = 65; // Mock for secondary card
+  // Dynamic calculations
+  const habitConsistency = habits.length > 0 
+    ? Math.round((Object.values(todayLogs).filter(l => l.status === 'DONE').length / habits.length) * 100) 
+    : 0;
+
+  const tradingWinRate = trades.length > 0 
+    ? Math.round((trades.filter(t => t.pnl_amount && t.pnl_amount > 0).length / trades.length) * 100) 
+    : 0;
+
+  const totalPossiblePoints = habits.length * 10;
+  const reliabilityAvg = totalPossiblePoints > 0 
+    ? Math.min(100, Math.round((todayPoints / totalPossiblePoints) * 100)) 
+    : 0;
 
   return (
-    <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-y-auto pb-40 data-grid scrollbar-hide">
+    <div className="flex flex-col h-full bg-surface-base p-4 md:p-12 overflow-y-auto pb-40 data-grid scrollbar-hide">
       {/* Dynamic Header - Industrial Style */}
-      <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+      <header className="mb-12 md:mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
         <div>
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-3 mb-4"
+            className="flex items-center gap-3 mb-2 md:mb-4"
           >
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_10px_#10b981]" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Node-01 // {t('welcome')}</span>
+            <span className="text-[9px] md:text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Node-01 // {t('welcome')}</span>
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-7xl font-display font-black text-white tracking-tighter leading-none"
+            className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter leading-none"
           >
             {t('dashboard')}.
           </motion.h1>
         </div>
         
-        <div className="flex gap-12 border-l border-white/[0.05] pl-12 h-16 items-center">
+        <div className="flex gap-8 md:gap-12 border-t md:border-t-0 md:border-l border-white/[0.05] pt-6 md:pt-0 md:pl-12 w-full md:w-auto items-center">
             <div className="text-right">
-              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('local_time') || 'LOCAL_TIME'}</span>
-              <div className="text-2xl font-mono font-medium text-white tracking-tight">
+              <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('local_time') || 'LOCAL_TIME'}</span>
+              <div className="text-xl md:text-2xl font-mono font-medium text-white tracking-tight">
                 {new Date().toLocaleTimeString('en-US', { hour12: false })}
               </div>
             </div>
             <div className="text-right">
-              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">UPTIME_NODE</span>
-              <div className="text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
+              <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">UPTIME_NODE</span>
+              <div className="text-xl md:text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
             </div>
         </div>
       </header>
@@ -70,33 +82,33 @@ export default function DashboardScreen() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="md:col-span-4 md:row-span-2 command-card relative overflow-hidden group min-h-[400px] flex flex-col justify-between"
+          className="md:col-span-4 md:row-span-2 command-card relative overflow-hidden group min-h-[340px] md:min-h-[400px] flex flex-col justify-between !p-6 md:!p-12"
         >
           <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-1000">
             <Zap size={300} strokeWidth={1} />
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center justify-between mb-8 md:mb-12">
                <div className="flex items-center gap-3">
                   <div className="w-2 h-6 bg-brand-primary rounded-full" />
                   <h3 className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.3em]">{t('growth_score')}</h3>
                </div>
-               <div className="text-[10px] font-mono text-slate-600">STABILITY_LOCK_v4</div>
+               <div className="text-[8px] md:text-[10px] font-mono text-slate-600">STABILITY_LOCK_v4</div>
             </div>
 
-            <div className="flex items-end gap-10">
+            <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-10">
                <div className="relative">
-                  <h2 className="text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
+                  <h2 className="text-8xl md:text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
                     {todayPoints}
                   </h2>
-                  <div className="absolute -right-4 top-4 text-brand-primary">
-                    <ArrowUpRight size={48} strokeWidth={3} />
+                  <div className="absolute -right-4 top-2 md:top-4 text-brand-primary">
+                    <ArrowUpRight size={32} md:size={48} strokeWidth={3} />
                   </div>
                </div>
-               <div className="pb-6">
-                  <div className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% {t('productivity')}</div>
-                  <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[240px]">
+               <div className="pb-2 md:pb-6">
+                  <div className="text-[9px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% {t('productivity')}</div>
+                  <p className="text-slate-500 text-xs md:text-sm font-medium leading-relaxed max-w-[240px]">
                     {t('trajectory_message')}
                   </p>
                </div>
@@ -192,22 +204,22 @@ export default function DashboardScreen() {
 
       </div>
 
-      {/* Strategic Grid (Reliability Matrix) */}
-      <section className="command-card !p-12 border-white/[0.04]">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+        {/* Strategic Grid (Reliability Matrix) */}
+      <section className="command-card !p-6 md:!p-12 border-white/[0.04]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8 mb-8 md:mb-12">
            <div>
-             <h2 className="text-4xl font-display font-black text-white tracking-tighter">{t('consistency_matrix')}.</h2>
+             <h2 className="text-3xl md:text-4xl font-display font-black text-white tracking-tighter">{t('consistency_matrix')}.</h2>
              <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">{t('continuous_monitoring')}</span>
            </div>
            
-           <div className="flex gap-10 border-l border-white/[0.04] pl-10">
+           <div className="flex gap-8 md:gap-10 border-t md:border-t-0 md:border-l border-white/[0.04] pt-6 md:pt-0 md:pl-10">
               <div className="text-right">
                 <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Peak_Output</span>
-                <span className="text-white font-mono font-bold">142_VAL</span>
+                <span className="text-white font-mono font-bold">{Math.max(...heatmapArray.map(m => m[1] as number), 0)} PTS</span>
               </div>
               <div className="text-right">
                 <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">{t('efficiency')}</span>
-                <span className="text-brand-primary font-mono font-bold">94.8%</span>
+                <span className="text-brand-primary font-mono font-bold">{reliabilityAvg}%</span>
               </div>
            </div>
         </div>

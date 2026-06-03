@@ -83,50 +83,52 @@ export default function App() {
           {renderScreen()}
         </main>
 
-        {/* Professional Industrial Navigation */}
-        <nav className="industrial-nav h-24 px-8 flex items-center justify-around z-30">
-          <TabButton 
-            active={activeTab === 'Dashboard'} 
-            onClick={() => setActiveTab('Dashboard')}
-            icon={<LayoutDashboard size={22} />}
-            label={t('dashboard')}
-          />
-          <TabButton 
-            active={activeTab === 'Journal'} 
-            onClick={() => setActiveTab('Journal')}
-            icon={<BookText size={22} />}
-            label={t('journal')}
-          />
-          <TabButton 
-            active={activeTab === 'Goals'} 
-            onClick={() => setActiveTab('Goals')}
-            icon={<Target size={22} />}
-            label={t('goals')}
-          />
-          <TabButton 
-            active={activeTab === 'Habits'} 
-            onClick={() => setActiveTab('Habits')}
-            icon={<Activity size={22} />}
-            label={t('habits')}
-          />
-          <TabButton 
-            active={activeTab === 'Trading'} 
-            onClick={() => setActiveTab('Trading')}
-            icon={<Terminal size={22} />}
-            label={t('trading')}
-          />
-          <TabButton 
-            active={activeTab === 'Learning'} 
-            onClick={() => setActiveTab('Learning')}
-            icon={<GraduationCap size={22} />}
-            label={t('learning')}
-          />
-          <TabButton 
-            active={activeTab === 'Profile'} 
-            onClick={() => setActiveTab('Profile')}
-            icon={<User size={22} />}
-            label={t('profile')}
-          />
+        {/* Bottom Navigation - Horizontal Scroll on Mobile */}
+        <nav className="industrial-nav h-24 px-4 md:px-8 flex items-center justify-between md:justify-around z-30 overflow-x-auto scrollbar-hide shrink-0">
+          <div className="flex items-center min-w-max gap-2 md:gap-0 mx-auto">
+            <TabButton 
+              active={activeTab === 'Dashboard'} 
+              onClick={() => setActiveTab('Dashboard')}
+              icon={<LayoutDashboard size={20} md:size={22} />}
+              label={t('dashboard')}
+            />
+            <TabButton 
+              active={activeTab === 'Journal'} 
+              onClick={() => setActiveTab('Journal')}
+              icon={<BookText size={20} md:size={22} />}
+              label={t('journal')}
+            />
+            <TabButton 
+              active={activeTab === 'Goals'} 
+              onClick={() => setActiveTab('Goals')}
+              icon={<Target size={20} md:size={22} />}
+              label={t('goals')}
+            />
+            <TabButton 
+              active={activeTab === 'Habits'} 
+              onClick={() => setActiveTab('Habits')}
+              icon={<Activity size={20} md:size={22} />}
+              label={t('habits')}
+            />
+            <TabButton 
+              active={activeTab === 'Trading'} 
+              onClick={() => setActiveTab('Trading')}
+              icon={<Terminal size={20} md:size={22} />}
+              label={t('trading')}
+            />
+            <TabButton 
+              active={activeTab === 'Learning'} 
+              onClick={() => setActiveTab('Learning')}
+              icon={<GraduationCap size={20} md:size={22} />}
+              label={t('learning')}
+            />
+            <TabButton 
+              active={activeTab === 'Profile'} 
+              onClick={() => setActiveTab('Profile')}
+              icon={<User size={20} md:size={22} />}
+              label={t('profile')}
+            />
+          </div>
         </nav>
       </div>
     </QueryClientProvider>
