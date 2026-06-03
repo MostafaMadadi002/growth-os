@@ -1,70 +1,86 @@
-import { supabase } from '../../../core/services/supabase';
 import { BigGoal, Milestone } from '../../../core/types';
+import { goalRepository } from '../repositories/goalRepository';
 
-const GOALS_LOCAL = 'growthos_goals_backup';
-
-const getGoals = (): BigGoal[] => JSON.parse(localStorage.getItem(GOALS_LOCAL) || '[]');
-const saveGoals = (g: BigGoal[]) => localStorage.setItem(GOALS_LOCAL, JSON.stringify(g));
-
+/**
+ * GoalService orchestrates the business logic for goals.
+ * It uses the GoalRepository for persistence and will eventually 
+ * trigger the ActivityService for point calculations and achievements.
+ */
 export const goalService = {
-  async getAllGoals() {
-    try {
-      const { data, error } = await supabase.from('big_goals').select('*');
-      if (error) throw error;
-      return (data as BigGoal[]).map(g => ({ ...g, milestones: g.milestones || [] }));
-    } catch (e) {
-      return getGoals().map(g => ({ ...g, milestones: g.milestones || [] }));
-    }
+  async getAllGoals(): Promise<BigGoal[]> {
+    // Return only non-deleted goals
+    return goalRepository.getGoals().filter(g => !g.deleted_at);
   },
 
-  async createGoal(goal: Omit<BigGoal, 'id' | 'user_id' | 'status'>) {
-    const status = 'ACTIVE';
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error();
-      const { data, error } = await supabase.from('big_goals').insert([{ ...goal, user_id: user.id, status }]).select().single();
-      if (error) throw error;
-      return { ...data, milestones: data.milestones || [] } as BigGoal;
-    } catch (e) {
-      const g: BigGoal = { 
-        ...goal, 
-        id: Math.random().toString(36).substring(2,11), 
-        user_id: 'guest', 
-        status,
-        milestones: goal.milestones || []
-      } as BigGoal;
-      saveGoals([...getGoals(), g]);
-      return g;
-    }
+  async createGoal(goal: Omit<BigGoal, 'id' | 'user_id' | 'status' | 'created_at' | 'updated_at' | 'visibility'>): Promise<BigGoal> {
+    const newGoal: BigGoal = {
+      ...goal,
+      id: Math.random().toString(36).substring(2, 11),
+      user_id: 'guest', // To be replaced with auth user id
+      status: 'ACTIVE',
+      visibility: 'private',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      milestones: goal.milestones || []
+    };
+
+    goalRepository.addGoal(newGoal);
+    
+    // TODO: Trigger ActivityService.logActivity('GOAL_CREATED', 'Goal', newGoal.id)
+    
+    return newGoal;
   },
 
-  async updateGoal(id: string, updates: Partial<BigGoal>) {
-    try {
-      const { data, error } = await supabase.from('big_goals').update(updates).eq('id', id).select().single();
-      if (error) throw error;
-      return { ...data, milestones: data.milestones || [] } as BigGoal;
-    } catch (e) {
-      const goals = getGoals();
-      const idx = goals.findIndex(g => g.id === id);
-      if (idx > -1) {
-        goals[idx] = { ...goals[idx], ...updates };
-        if (updates.milestones) goals[idx].milestones = updates.milestones;
-        saveGoals(goals);
-        return goals[idx];
-      }
-      throw e;
+  async updateGoal(id: string, updates: Partial<BigGoal>): Promise<BigGoal> {
+    const updated = goalRepository.updateGoal(id, updates);
+    if (!updated) throw new Error('Goal not found');
+    
+    // Check if status changed to COMPLETED
+    if (updates.status === 'COMPLETED') {
+      // TODO: Trigger ActivityService.logActivity('GOAL_COMPLETED', 'Goal', id)
     }
+
+    return updated;
   },
 
-  async toggleMilestone(goalId: string, milestoneId: string) {
-    const goals = await this.getAllGoals();
-    const goal = goals.find(g => g.id === goalId);
+  async deleteGoal(id: string): Promise<void> {
+    goalRepository.softDeleteGoal(id);
+  },
+
+  async toggleMilestone(goalId: string, milestoneId: string): Promise<BigGoal> {
+    const goal = goalRepository.getGoalById(goalId);
     if (!goal) throw new Error('Goal not found');
 
-    const updatedMilestones = (goal.milestones || []).map(m => 
-      m.id === milestoneId ? { ...m, is_completed: !m.is_completed } : m
-    );
+    const updatedMilestones = (goal.milestones || []).map(m => {
+      if (m.id === milestoneId) {
+        const newState = !m.is_completed;
+        if (newState) {
+          // TODO: Trigger ActivityService.logActivity('MILESTONE_COMPLETED', 'Milestone', milestoneId)
+        }
+        return { ...m, is_completed: newState };
+      }
+      return m;
+    });
 
+    const updated = await this.updateGoal(goalId, { milestones: updatedMilestones });
+    return updated;
+  },
+
+  async addMilestone(goalId: string, title: string): Promise<BigGoal> {
+    const goal = goalRepository.getGoalById(goalId);
+    if (!goal) throw new Error('Goal not found');
+
+    const newMilestone: Milestone = {
+      id: Math.random().toString(36).substring(2, 9),
+      goal_id: goalId,
+      title,
+      is_completed: false,
+      created_at: new Date().toISOString()
+    };
+
+    const updatedMilestones = [...(goal.milestones || []), newMilestone];
     return this.updateGoal(goalId, { milestones: updatedMilestones });
   }
 };
+
+

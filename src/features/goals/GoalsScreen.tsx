@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, ChevronLeft, Target, CheckCircle2, Circle, Trophy, Star, Book, Activity, Briefcase, X } from 'lucide-react';
-import { useGoalStore } from './store/useGoalStore';
+import { useGoalStore } from './stores/goalStore';
 import { BigGoal, GoalLevel, Milestone } from '../../core/types';
 
 export default function GoalsScreen() {
