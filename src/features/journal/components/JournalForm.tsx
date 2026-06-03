@@ -48,23 +48,23 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col h-full bg-slate-950 overflow-hidden">
+    <form onSubmit={handleSubmit} className="flex flex-col h-full bg-surface-base overflow-hidden data-grid">
       <div className="flex-1 overflow-y-auto pb-40 scrollbar-hide">
-        <div className="max-w-4xl mx-auto p-10 space-y-20">
+        <div className="max-w-4xl mx-auto p-12 space-y-24">
           
-          {/* Header Metadata */}
-          <section className="flex flex-col md:flex-row md:items-center justify-between gap-8 mt-10">
+          {/* Header Metadata - Industrial Style */}
+          <section className="flex flex-col md:flex-row md:items-center justify-between gap-12 pt-8">
             <div className="space-y-4">
-              <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] block ml-1">Archive Date</label>
+              <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] block ml-1">Archive_Timestamp</span>
               <input 
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-slate-900/50 border border-white/5 rounded-2xl p-4 text-emerald-500 font-bold text-sm outline-none focus:border-emerald-500/30 transition-all"
+                className="bg-slate-950/50 border border-white/[0.04] rounded-xl p-4 text-brand-primary font-mono font-bold text-sm outline-none focus:border-brand-primary/20 transition-all uppercase tracking-widest"
               />
             </div>
             
-            <div className="flex gap-4">
+            <div className="flex gap-8 border-l border-white/[0.03] pl-12">
                <RangeInput icon={<Star size={14} />} label="Vibe" value={mood} min={1} max={10} onChange={setMood} color="emerald" />
                <RangeInput icon={<Zap size={14} />} label="NRG" value={energy} min={1} max={10} onChange={setEnergy} color="blue" />
             </div>
@@ -72,65 +72,65 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
 
           {/* Primary Subject */}
           <section className="space-y-4">
-            <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] block ml-1">Subject Narrative</label>
+            <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] block ml-1">Subject_Narrative</span>
             <input 
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="The core theme of your day..."
-              className="w-full bg-transparent text-6xl font-display font-black text-white placeholder:text-slate-900 outline-none border-b border-white/5 pb-8 focus:border-emerald-500/20 transition-all tracking-tighter"
+              placeholder="THE_CORE_THEME_INITIALIZATION..."
+              className="w-full bg-transparent text-7xl font-display font-black text-white placeholder:text-slate-900 outline-none border-b border-white/[0.03] pb-10 focus:border-brand-primary/20 transition-all tracking-tighter uppercase"
             />
           </section>
 
           {/* Qualitative Features */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             <EditorialField icon={<Heart className="text-rose-500" size={16} />} label="Gratitude" value={gratitude} onChange={setGratitude} placeholder="Recalling appreciation..." />
-             <EditorialField icon={<Sparkles className="text-yellow-500" size={16} />} label="Breakthrough" value={achievement} onChange={setAchievement} placeholder="Marking a local victory..." />
-             <EditorialField icon={<AlertTriangle className="text-orange-500" size={16} />} label="Resistance" value={challenge} onChange={setChallenge} placeholder="Naming the friction..." />
-             <EditorialField icon={<Lightbulb className="text-emerald-500" size={16} />} label="Synthesis" value={lesson} onChange={setLesson} placeholder="The consolidated lesson..." />
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
+             <EditorialField icon={<Heart className="text-rose-500" size={16} />} label="Gratitude" value={gratitude} onChange={setGratitude} placeholder="APPRECIATION_LOG..." />
+             <EditorialField icon={<Sparkles className="text-brand-primary" size={16} />} label="Breakthrough" value={achievement} onChange={setAchievement} placeholder="LOCAL_VICTORY_CAPTURED..." />
+             <EditorialField icon={<AlertTriangle className="text-orange-500" size={16} />} label="Resistance" value={challenge} onChange={setChallenge} placeholder="FRICTION_POINT_IDENTIFIED..." />
+             <EditorialField icon={<Lightbulb className="text-brand-secondary" size={16} />} label="Synthesis" value={lesson} onChange={setLesson} placeholder="CONSOLIDATED_INTELLIGENCE..." />
           </section>
 
           {/* Main Thought Space */}
           <section className="space-y-6">
             <div className="flex items-center justify-between px-1">
-               <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Extended Reflection</label>
-               <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">{content.length} CHARS</span>
+               <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em]">Extended_Reflection_Space</span>
+               <span className="text-[9px] font-mono font-black text-slate-850 uppercase tracking-widest">{content.length} BYTES_WRITTEN</span>
             </div>
             <textarea 
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Write without judgment. Let the cognitive stream settle on the page..."
-              className="w-full bg-slate-900/30 border border-white/5 rounded-[3rem] p-12 text-slate-200 text-2xl font-medium leading-[1.6] focus:border-white/10 outline-none resize-none min-h-[500px] transition-all selection:bg-emerald-500/20"
+              placeholder="COMMIT YOUR COGNITIVE STREAM TO THE ARCHIVE..."
+              className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl p-12 text-slate-300 text-2xl font-medium leading-[1.8] focus:border-brand-primary/10 outline-none resize-none min-h-[600px] transition-all selection:bg-brand-primary/20 font-sans"
             />
           </section>
 
           {/* Classification */}
-          <section className="space-y-6">
-             <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] block ml-1">Pattern Tags</label>
+          <section className="space-y-8">
+             <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] block ml-1">Log_Classification_Tags</span>
              <div className="flex flex-wrap gap-4">
                 {tags.map(t => (
-                  <motion.span 
-                    initial={{ opacity: 0, scale: 0.8 }}
+                   <motion.span 
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     key={t} 
-                    className="bg-slate-900 border border-white/5 text-[10px] font-black text-slate-400 px-4 py-2 rounded-full flex items-center gap-3 uppercase tracking-widest"
+                    className="bg-slate-900 border border-white/[0.04] text-[9px] font-mono font-black text-slate-500 px-5 py-2.5 rounded-sm flex items-center gap-4 uppercase tracking-[0.2em] group"
                   >
-                    {t}
+                    #{t}
                     <button type="button" onClick={() => setTags(tags.filter(tg => tg !== t))} className="hover:text-rose-500 transition-colors">
-                      <X size={14} />
+                      <X size={12} />
                     </button>
                   </motion.span>
                 ))}
-                <div className="flex items-center gap-2 bg-slate-950 border border-white/5 rounded-full px-4 py-1.5 focus-within:border-emerald-500/30 transition-all">
+                <div className="flex items-center gap-3 bg-slate-950 border border-white/[0.04] rounded-sm px-6 py-2 focus-within:border-brand-primary/30 transition-all">
                   <input 
                     value={tagInput}
                     onChange={e => setTagInput(e.target.value)}
                     onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                    placeholder="Classify..."
-                    className="bg-transparent text-[10px] font-black text-white uppercase tracking-widest outline-none w-24"
+                    placeholder="TAG_INPUT..."
+                    className="bg-transparent text-[9px] font-mono font-black text-white uppercase tracking-widest outline-none w-32 placeholder:text-slate-900"
                   />
                   <button type="button" onClick={addTag} className="text-slate-800 hover:text-white transition-colors">
-                    <Tag size={14} />
+                    <Tag size={12} />
                   </button>
                 </div>
              </div>
@@ -138,20 +138,20 @@ export default function JournalForm({ initialData, onSubmit, onCancel, loading }
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-8 bg-slate-950/80 backdrop-blur-3xl border-t border-white/5 flex gap-6 z-50">
+      <div className="fixed bottom-0 left-0 right-0 p-10 bg-slate-950/90 backdrop-blur-3xl border-t border-white/[0.03] flex gap-8 z-50">
         <button 
           type="submit"
           disabled={loading || !title || !content}
-          className="flex-[3] bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 text-slate-950 font-black uppercase tracking-[0.2em] py-6 rounded-[2.5rem] transition-all shadow-2xl shadow-emerald-500/10"
+          className="flex-[3] bg-brand-primary hover:bg-emerald-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.3em] py-8 rounded-2xl transition-all shadow-2xl shadow-brand-primary/10 active:scale-95"
         >
-          {loading ? 'Committing...' : 'Commit to Archive'}
+          {loading ? 'COMMITTING_DATA...' : 'COMMIT_LOG_TO_HUB'}
         </button>
         <button 
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-slate-900 hover:bg-slate-800 text-slate-500 font-black uppercase tracking-widest py-6 rounded-[2.5rem] transition-colors"
+          className="flex-1 bg-slate-900 border border-white/[0.03] hover:bg-slate-850 text-slate-600 hover:text-white font-mono font-black uppercase tracking-[0.2em] py-8 rounded-2xl transition-all"
         >
-          Discard
+          DISCARD
         </button>
       </div>
     </form>

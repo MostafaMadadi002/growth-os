@@ -4,7 +4,7 @@ import { useGoalStore } from '../goals/stores/goalStore';
 import { useJournalStore } from '../journal/stores/journalStore';
 import { useActivityStore } from '../../core/stores/activityStore';
 import { useI18n } from '../../core/store/useI18n';
-import { Flame, Target, BookText, Zap, ChevronRight, Trophy, ArrowUpRight } from 'lucide-react';
+import { Flame, Target, BookText, Zap, ChevronRight, Trophy, ArrowUpRight, Activity } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ProgressRing } from '../../components/ProgressRing';
 
@@ -28,176 +28,209 @@ export default function DashboardScreen() {
   const goalProgress = 42;
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 p-6 overflow-y-auto pb-32">
-      {/* Dynamic Header */}
-      <header className="mb-12 flex justify-between items-end">
+    <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-y-auto pb-40 data-grid scrollbar-hide">
+      {/* Dynamic Header - Industrial Style */}
+      <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
         <div>
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2 mb-2"
+            className="flex items-center gap-3 mb-4"
           >
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">System Online</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_10px_#10b981]" />
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Node-01 // Strategic Command</span>
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-display font-black text-white tracking-tighter"
+            className="text-7xl font-display font-black text-white tracking-tighter leading-none"
           >
-            {t('welcome')}
+            Terminal.
           </motion.h1>
         </div>
-        <div className="text-right hidden sm:block">
-           <div className="text-3xl font-display font-black text-white">12:42</div>
-           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Growth Cycle #42</div>
+        
+        <div className="flex gap-12 border-l border-white/[0.05] pl-12 h-16 items-center">
+            <div className="text-right">
+              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">Local Time</span>
+              <div className="text-2xl font-mono font-medium text-white tracking-tight">12:42:08</div>
+            </div>
+            <div className="text-right">
+              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">Uptime</span>
+              <div className="text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
+            </div>
         </div>
       </header>
 
-      {/* Bento Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      {/* Bento Grid Command Center */}
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-12">
         
-        {/* Main Score Card (Large) */}
+        {/* Prime Objective Progress (High Impact) */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="md:col-span-2 md:row-span-2 bg-slate-900 border border-white/5 rounded-[3.5rem] p-10 relative overflow-hidden group shadow-2xl"
+          className="md:col-span-4 md:row-span-2 command-card relative overflow-hidden group min-h-[400px] flex flex-col justify-between"
         >
-          <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
-            <Zap size={200} className="text-emerald-500" />
+          <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-1000">
+            <Zap size={300} strokeWidth={1} />
           </div>
-          
-          <div className="relative z-10 flex flex-col h-full justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
-                  <Trophy size={24} />
-                </div>
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Growth Index</span>
-              </div>
-              <div className="flex items-baseline gap-4">
-                <h2 className="text-8xl font-display font-black text-white leading-none">{todayPoints}</h2>
-                <div className="flex items-center gap-1 text-emerald-500 font-black text-sm">
-                  <ArrowUpRight size={16} />
-                  +12%
-                </div>
-              </div>
-              <p className="text-slate-500 text-sm mt-4 font-medium max-w-[200px]">
-                You are in the top 5% of consistency this week.
-              </p>
-            </div>
-            
-            <div className="mt-12 flex items-center gap-6">
-               <div className="flex -space-x-3">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className={`w-8 h-8 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-white`}>
-                      {String.fromCharCode(64 + i)}
-                    </div>
-                  ))}
+
+          <div>
+            <div className="flex items-center justify-between mb-12">
+               <div className="flex items-center gap-3">
+                  <div className="w-2 h-6 bg-brand-primary rounded-full" />
+                  <h3 className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.3em]">Operational Level</h3>
                </div>
-               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Community Leaderboard</span>
+               <div className="text-[10px] font-mono text-slate-600">INTEL_VERSION_4.2.0</div>
+            </div>
+
+            <div className="flex items-end gap-10">
+               <div className="relative">
+                  <h2 className="text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
+                    {todayPoints}
+                  </h2>
+                  <div className="absolute -right-4 top-4 text-brand-primary">
+                    <ArrowUpRight size={48} strokeWidth={3} />
+                  </div>
+               </div>
+               <div className="pb-6">
+                  <div className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% EFFICIENCY</div>
+                  <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[240px]">
+                    Current trajectory indicates mastery in **Consistency Patterns**. Maintain neural stability for 3 days to unlock Tier 2.
+                  </p>
+               </div>
             </div>
           </div>
-        </motion.div>
 
-        {/* Streak Card */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-orange-500 border border-orange-400/20 rounded-[3.5rem] p-8 flex flex-col justify-between shadow-2xl shadow-orange-500/10 group"
-        >
-          <div className="flex justify-between items-start">
-             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-white">
-                <Flame size={24} />
+          <div className="flex items-center gap-8 pt-12 border-t border-white/[0.03]">
+             <div className="flex -space-x-4">
+               {[1,2,3,4].map(i => (
+                 <div key={i} className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-900 group-hover:translate-x-1 transition-transform cursor-pointer" />
+               ))}
              </div>
-             <ArrowUpRight className="text-white/50 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-          </div>
-          <div>
-            <div className="text-5xl font-display font-black text-white leading-none mb-1">12</div>
-            <div className="text-[10px] font-bold text-white/70 uppercase tracking-widest">Day Streak</div>
-          </div>
-        </motion.div>
-
-        {/* Habits Consistency */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-slate-900 border border-white/5 rounded-[3.5rem] p-8 flex flex-col items-center justify-center group"
-        >
-          <ProgressRing progress={habitConsistency} size={110} strokeWidth={10} color="#10b981" label="Habits" />
-          <div className="mt-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Consistency</div>
-        </motion.div>
-
-        {/* Goals Progress */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-blue-600 border border-blue-500/20 rounded-[3.5rem] p-8 flex flex-col justify-between group"
-        >
-          <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-white">
-             <Target size={24} />
-          </div>
-          <div>
-            <div className="text-4xl font-display font-black text-white leading-none mb-1">{activeGoals}</div>
-            <div className="text-[10px] font-bold text-white/70 uppercase tracking-widest">Active Goals</div>
+             <div className="flex-1 h-[2px] bg-slate-800 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: '74%' }}
+                  className="h-full bg-brand-primary shadow-[0_0_15px_#10b981]" 
+                />
+             </div>
+             <span className="text-[10px] font-mono font-black text-white">74% PK.</span>
           </div>
         </motion.div>
 
-        {/* Journal Summary */}
+        {/* Tactical Metrics (Dense) */}
+        <div className="md:col-span-2 grid grid-cols-1 gap-6">
+           <motion.div 
+             whileHover={{ y: -4 }}
+             className="command-card bg-orange-600/10 border-orange-500/20 flex flex-col justify-between"
+           >
+              <div className="flex justify-between items-start">
+                 <div className="text-[9px] font-mono font-black text-orange-500 uppercase tracking-widest">Streak Intensity</div>
+                 <Flame size={16} className="text-orange-500" />
+              </div>
+              <div>
+                 <div className="text-6xl font-display font-black text-white leading-none">12.</div>
+                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">Consecutive Cycles</div>
+              </div>
+           </motion.div>
+
+           <motion.div 
+             whileHover={{ y: -4 }}
+             className="command-card !p-0 overflow-hidden flex"
+           >
+              <div className="flex-1 p-6 flex flex-col justify-between">
+                <div className="text-[9px] font-mono font-black text-brand-secondary uppercase tracking-widest">Active Objectives</div>
+                <div>
+                  <div className="text-5xl font-display font-black text-white">{activeGoals}</div>
+                  <div className="w-full bg-slate-800 h-1 mt-3 rounded-full overflow-hidden">
+                    <div className="w-1/3 h-full bg-brand-secondary" />
+                  </div>
+                </div>
+              </div>
+              <div className="w-1 bg-brand-secondary shadow-[0_0_20px_#3b82f6]" />
+           </motion.div>
+        </div>
+
+        {/* Secondary Modules */}
+        <motion.div className="md:col-span-2 command-card flex flex-col justify-between hover:bg-slate-900/80">
+            <div className="flex justify-between items-start">
+              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">Consistency</span>
+              <Activity size={16} className="text-emerald-500" />
+            </div>
+            <div className="py-2">
+               <ProgressRing progress={habitConsistency} size={90} strokeWidth={8} color="#10b981" label="" />
+            </div>
+            <div className="text-white font-black font-display text-4xl">{habitConsistency}%</div>
+        </motion.div>
+
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-slate-900 border border-white/5 rounded-[3.5rem] p-8 flex flex-col justify-between group relative overflow-hidden"
+          onClick={() => {}} 
+          className="md:col-span-2 command-card flex flex-col justify-between cursor-pointer group"
         >
-          <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:scale-110 transition-transform">
-            <BookText size={80} />
-          </div>
-          <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-500">
-             <BookText size={24} />
-          </div>
-          <div>
-            <div className="text-4xl font-display font-black text-white leading-none mb-1">{entries.length}</div>
-            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Journal Entries</div>
-          </div>
+            <div className="flex justify-between items-start">
+              <span className="text-[9px] font-mono font-black text-purple-500 uppercase tracking-widest">System Logs</span>
+              <BookText size={16} className="text-purple-500" />
+            </div>
+            <div className="text-6xl font-display font-black text-white">{entries.length}</div>
+            <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest group-hover:text-white transition-colors">
+               Fetch Archives <ChevronRight size={12} />
+            </div>
+        </motion.div>
+
+        <motion.div className="md:col-span-2 command-card bg-slate-900/80 border-white/[0.08] flex items-center justify-center">
+           <div className="text-center">
+              <div className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mb-4">Neural Readiness</div>
+              <div className="text-3xl font-display font-black text-brand-primary">OPTIMAL</div>
+              <div className="mt-4 flex gap-1 justify-center">
+                 {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-3 bg-brand-primary rounded-full shadow-[0_0_8px_#10b981]" />)}
+                 {[1,2,3].map(i => <div key={i} className="w-1 h-3 bg-slate-800 rounded-full" />)}
+              </div>
+           </div>
         </motion.div>
 
       </div>
 
-      {/* Activity Heatmap Grid */}
-      <section className="bg-slate-900/50 border border-white/5 rounded-[3.5rem] p-10 mb-8 backdrop-blur-sm">
-        <div className="flex items-center justify-between mb-10">
+      {/* Strategic Grid (Reliability Matrix) */}
+      <section className="command-card !p-12 border-white/[0.04]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
            <div>
-             <h2 className="text-2xl font-display font-black text-white tracking-tight">Consistency Matrix</h2>
-             <p className="text-slate-500 text-xs mt-1">Your activity distribution across the last 30 days.</p>
+             <h2 className="text-4xl font-display font-black text-white tracking-tighter">Reliability Matrix.</h2>
+             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">Multi-Cycle Performance Distribution</span>
            </div>
-           <button className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest hover:text-emerald-400 transition-colors">
-             Full Analysis <ChevronRight size={14} />
-           </button>
+           
+           <div className="flex gap-10 border-l border-white/[0.04] pl-10">
+              <div className="text-right">
+                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Peak_Output</span>
+                <span className="text-white font-mono font-bold">142_VAL</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Stability_Avg</span>
+                <span className="text-brand-primary font-mono font-bold">94.8%</span>
+              </div>
+           </div>
         </div>
         
-        <div className="grid grid-cols-7 sm:grid-cols-10 lg:grid-cols-15 gap-3" dir="ltr">
+        <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-15 xl:grid-cols-20 gap-2.5" dir="ltr">
            {heatmapArray.map(([date, points], i) => (
              <motion.div 
                key={date} 
-               initial={{ scale: 0, opacity: 0 }}
-               animate={{ scale: 1, opacity: 1 }}
-               transition={{ delay: i * 0.01 + 0.5 }}
-               title={`${date}: ${points} points`}
-               className={`aspect-square rounded-xl transition-all duration-500 hover:scale-110 cursor-help ${
-                 points >= 100 ? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 
-                 points >= 50 ? 'bg-emerald-500/60' : 
-                 points >= 25 ? 'bg-emerald-500/30' : 
-                 points > 0 ? 'bg-emerald-500/10' : 'bg-slate-850'
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               transition={{ delay: i * 0.005 + 0.5 }}
+               className={`aspect-square rounded-[2px] transition-all duration-300 hover:scale-150 cursor-crosshair border border-white/5 relative group ${
+                 points >= 100 ? 'bg-brand-primary shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 
+                 points >= 50 ? 'bg-brand-primary/60' : 
+                 points >= 25 ? 'bg-brand-primary/30' : 
+                 points > 0 ? 'bg-brand-primary/10 border-brand-primary/5' : 'bg-slate-950 opacity-20'
                }`} 
-             />
+             >
+               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-950 border border-white/10 rounded text-[8px] font-mono font-black text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                  {date} // {points} PTS
+               </div>
+             </motion.div>
            ))}
         </div>
       </section>
-
     </div>
   );
 }

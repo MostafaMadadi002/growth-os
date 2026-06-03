@@ -62,84 +62,93 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 p-6 overflow-y-auto scrollbar-hide pb-32">
-      <header className="mb-12 flex justify-between items-end">
+    <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-y-auto scrollbar-hide pb-40 data-grid">
+      <header className="mb-16 flex justify-between items-end">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Operator Identity</span>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary shadow-[0_0_10px_#10b981]" />
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Operator Identity // Personal Hub</span>
           </div>
-          <h1 className="text-5xl font-display font-black text-white tracking-tighter">Profile</h1>
+          <h1 className="text-6xl font-display font-black text-white tracking-tighter">Profile.</h1>
         </div>
         <button 
           onClick={() => signOut()}
-          className="w-14 h-14 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center border border-rose-500/10 hover:bg-rose-500 hover:text-slate-950 transition-all"
+          className="w-16 h-16 bg-rose-500/5 text-rose-500 rounded-2xl flex items-center justify-center border border-rose-500/10 hover:bg-rose-500 hover:text-slate-950 transition-all group"
         >
-          <LogOut size={22} />
+          <LogOut size={24} className="group-hover:-translate-x-1 transition-transform" />
         </button>
       </header>
 
-      <div className="space-y-10">
-        {/* Prime Identity Card */}
-        <div className="bg-slate-900 border border-white/5 p-10 rounded-[4rem] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="space-y-12">
+        {/* Prime Identity Card - Industrial Style */}
+        <div className="command-card group relative p-12 overflow-hidden flex flex-col md:flex-row items-center gap-12">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none" />
           
-          <div className="flex items-center gap-8 mb-10 relative z-10">
-            <div className="w-24 h-24 bg-gradient-to-tr from-emerald-500 to-emerald-300 rounded-[2.5rem] flex items-center justify-center text-slate-950 text-4xl font-display font-black shadow-2xl shadow-emerald-500/30 ring-8 ring-emerald-500/10">
-              {user?.email?.[0].toUpperCase()}
-            </div>
-            <div>
-              <h2 className="text-3xl font-display font-black text-white tracking-tighter mb-1">
-                {user?.email?.split('@')[0]}
-              </h2>
-              <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase tracking-widest bg-slate-950 px-4 py-2 rounded-full border border-white/5">
-                <Cloud size={14} className="text-emerald-500" />
-                Multi-Node Active
-              </div>
+          <div className="relative">
+            <div className="w-32 h-32 bg-slate-950 border border-white/10 rounded-2xl flex items-center justify-center text-brand-primary text-5xl font-display font-black shadow-2xl relative z-10 group-hover:scale-105 transition-transform duration-500">
+               {user?.email?.[0].toUpperCase()}
+               <div className="absolute inset-0 bg-brand-primary/10 blur-2xl rounded-full opacity-50" />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 relative z-10">
+          <div className="flex-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-4 mb-3">
+              <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] bg-brand-primary/10 px-4 py-1.5 rounded-sm border border-brand-primary/20">Operational_Active</span>
+              <div className="w-1 h-3 bg-slate-800 rounded-full" />
+              <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest hidden md:inline">Tier_Prime_Operator</span>
+            </div>
+            <h2 className="text-5xl font-display font-black text-white tracking-tight leading-tight">
+              {user?.email?.split('@')[0].toUpperCase()}
+            </h2>
+            <div className="flex items-center justify-center md:justify-start gap-3 mt-4 text-slate-500">
+              <Mail size={14} className="text-brand-secondary" />
+              <span className="text-xs font-mono font-bold">{user?.email}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
             <IdentityMetric label="Activation" value={new Date(user?.created_at || '').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} icon={<Calendar size={14} />} />
-            <IdentityMetric label="Tier" value="Prime Operator" icon={<Award size={14} />} />
+            <IdentityMetric label="Status" value="Verified" icon={<Shield size={14} />} />
           </div>
         </div>
 
         {/* Global Configuration */}
         <section>
-          <div className="flex items-center gap-3 mb-6 px-4">
-            <div className="w-1.5 h-6 bg-slate-800 rounded-full" />
-            <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">Global Configuration</h3>
+          <div className="flex items-center gap-4 mb-10 px-6">
+            <div className="w-2 h-2 rounded-full bg-slate-800" />
+            <h3 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">System Control Panel</h3>
+            <div className="h-[1px] flex-1 bg-white/[0.03]" />
           </div>
           
-          <div className="bg-slate-900 border border-white/5 rounded-[3.5rem] overflow-hidden">
-             <MenuButton icon={<Mail />} label="Communication Hub" sub="Change archival email address" />
-             <MenuButton icon={<Bell />} label="Alert Management" sub="Notification threshold & triggers" />
-             <MenuButton icon={<Lock />} label="Instance Security" sub="Factor-2 authentication & keys" />
-             <MenuButton icon={<Globe />} label="Data Residency" sub="Regional storage preferences" />
+          <div className="command-card !p-0 overflow-hidden divide-y divide-white/[0.04]">
+             <MenuButton icon={<Mail />} label="Communication Core" sub="Configure archival destination & recovery keys" />
+             <MenuButton icon={<Bell />} label="Telemetry Config" sub="Adjust notification thresholds & priority logs" />
+             <MenuButton icon={<Lock />} label="Security Protocol" sub="Multi-factor authentication & hardware tokens" />
+             <MenuButton icon={<Globe />} label="Data Geometry" sub="Manage cloud residency & sync regions" />
              
              <button 
                 onClick={onDevRequest}
-                className="w-full p-8 flex items-center justify-between hover:bg-emerald-500/5 transition-all group"
+                className="w-full p-10 flex items-center justify-between hover:bg-brand-primary/[0.02] transition-all group"
               >
-                <div className="flex items-center gap-5">
-                   <div className="w-14 h-14 bg-slate-950 border border-white/5 rounded-[1.5rem] flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
+                <div className="flex items-center gap-8">
+                   <div className="w-16 h-16 bg-slate-950 border border-white/5 rounded-2xl flex items-center justify-center text-brand-primary group-hover:scale-110 transition-all duration-500">
                       <Activity size={24} />
                    </div>
                    <div className="text-left">
-                     <div className="text-white text-lg font-bold group-hover:text-emerald-400">Developer Console</div>
-                     <div className="text-slate-500 text-xs font-medium uppercase tracking-widest">Internal Health Metrics</div>
+                     <div className="text-white text-xl font-display font-black tracking-tight group-hover:text-brand-primary transition-colors">System Diagnostics</div>
+                     <div className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest mt-1">Direct Kernel Access // Metrics</div>
                    </div>
                 </div>
-                <ChevronRight size={20} className="text-slate-800 group-hover:text-white transition-all" />
+                <ChevronRight size={24} className="text-slate-850 group-hover:text-white transition-all duration-500" />
               </button>
           </div>
         </section>
 
-        {/* System Details */}
-        <section className="px-6 py-10 rounded-[3rem] bg-slate-900/30 border border-white/5 border-dashed text-center">
-           <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.4em] mb-2">GrowthOS Kernel v4.0.2-RC1</p>
-           <p className="text-[10px] font-black text-slate-800 uppercase tracking-widest">Built for High-Level Execution</p>
+        {/* System Details - Technical Style */}
+        <section className="p-16 rounded-3xl border border-white/[0.04] bg-slate-950/40 relative overflow-hidden text-center backdrop-blur-sm">
+           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-[1px] bg-brand-primary/20" />
+           <p className="text-[11px] font-mono font-black text-slate-600 uppercase tracking-[0.5em] mb-4">Growth_Command_OS // Kernel_v4.2.0-PRO_MAX</p>
+           <p className="text-[9px] font-mono font-bold text-slate-800 uppercase tracking-[0.3em]">Optimized for industrial scale personal growth // High level execution only</p>
         </section>
       </div>
     </div>
@@ -148,29 +157,30 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
 
 function IdentityMetric({ label, value, icon }: { label: string, value: string, icon: any }) {
   return (
-    <div className="bg-slate-950 p-6 rounded-[2.5rem] border border-white/5">
-       <div className="flex items-center gap-2 mb-2 text-slate-600">
+    <div className="bg-slate-950/50 p-6 rounded-xl border border-white/[0.03]">
+       <div className="flex items-center gap-3 mb-3 text-slate-700">
           {icon}
-          <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
+          <span className="text-[8px] font-mono font-bold uppercase tracking-[0.2em] pt-0.5">{label}_LOG</span>
        </div>
-       <div className="text-white font-black text-lg font-display">{value}</div>
+       <div className="text-white font-mono font-black text-xs uppercase tracking-widest">{value}</div>
     </div>
   );
 }
 
 function MenuButton({ icon, label, sub }: { icon: any, label: string, sub: string }) {
   return (
-    <button className="w-full p-8 flex items-center justify-between hover:bg-white/[0.02] transition-all border-b border-white/[0.03] group last:border-0">
-      <div className="flex items-center gap-5">
-         <div className="w-14 h-14 bg-slate-950 border border-white/5 rounded-[1.5rem] flex items-center justify-center text-slate-500 group-hover:text-white transition-colors">
-            {React.cloneElement(icon, { size: 22 })}
+    <button className="w-full p-10 flex items-center justify-between hover:bg-white/[0.01] transition-all group overflow-hidden relative">
+      <div className="flex items-center gap-8 relative z-10">
+         <div className="w-16 h-16 bg-slate-950 border border-white/[0.04] rounded-2xl flex items-center justify-center text-slate-700 group-hover:text-brand-secondary transition-all">
+            {React.cloneElement(icon, { size: 24, strokeWidth: 1.5 })}
          </div>
          <div className="text-left">
-           <div className="text-white text-lg font-bold">{label}</div>
-           <div className="text-slate-600 text-xs font-medium">{sub}</div>
+           <div className="text-white text-xl font-display font-black tracking-tight mb-1">{label}</div>
+           <div className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest group-hover:text-slate-400 transition-colors">{sub}</div>
          </div>
       </div>
-      <ChevronRight size={20} className="text-slate-800 group-hover:text-white group-hover:translate-x-1 transition-all" />
+      <ChevronRight size={24} className="text-slate-900 group-hover:text-white group-hover:translate-x-1 transition-all relative z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-secondary/0 to-brand-secondary/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
     </button>
   );
 }

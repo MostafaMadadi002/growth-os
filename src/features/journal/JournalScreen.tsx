@@ -170,40 +170,42 @@ export default function JournalScreen() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 p-6 overflow-hidden">
-      <header className="mb-12 flex justify-between items-end">
+    <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-hidden data-grid">
+      <header className="mb-16 flex justify-between items-end">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Archive Management</span>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_10px_#a855f7]" />
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Intelligence Archive // Neural Logs</span>
           </div>
-          <h1 className="text-5xl font-display font-black text-white tracking-tighter">Journals</h1>
+          <h1 className="text-6xl font-display font-black text-white tracking-tighter">System Logs.</h1>
         </div>
         <div className="flex items-center gap-4">
-           <button className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500">
-             <Filter size={18} />
+           <button className="w-16 h-16 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all">
+             <Filter size={20} />
            </button>
            <button 
              onClick={() => setViewMode('CREATE')}
-             className="bg-emerald-500 p-5 rounded-[2rem] text-slate-950 shadow-2xl shadow-emerald-500/20 active:scale-95 transition-all"
+             className="bg-brand-primary p-6 rounded-2xl text-slate-950 shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all hover:bg-emerald-400 group"
            >
-             <Plus size={24} strokeWidth={3} />
+             <Plus size={24} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" />
            </button>
         </div>
       </header>
 
-      <div className="mb-10 relative group">
-        <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-emerald-500 transition-colors" size={20} />
+      <div className="mb-12 relative group max-w-2xl">
+        <div className="absolute left-6 top-1/2 -translate-y-1/2 pointer-events-none">
+           <Search size={18} className="text-slate-700 group-focus-within:text-brand-primary transition-colors" />
+        </div>
         <input 
           type="text"
-          placeholder="Query archives by title, content or intent..."
+          placeholder="Query logs // Search intent or narrative..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-slate-900/50 border border-white/5 rounded-[2.5rem] py-6 pl-16 pr-8 text-white font-bold outline-none focus:border-white/10 transition-all placeholder:text-slate-800"
+          className="w-full bg-slate-950/50 border border-white/[0.03] rounded-2xl py-6 pl-16 pr-8 text-white font-mono font-bold text-xs uppercase tracking-widest outline-none focus:border-brand-primary/20 transition-all placeholder:text-slate-850"
         />
       </div>
 
-      <main className="flex-1 overflow-y-auto scrollbar-hide pb-32">
+      <main className="flex-1 overflow-y-auto scrollbar-hide pb-40">
         <AnimatePresence mode="popLayout">
           {filteredEntries.map((entry, idx) => (
             <motion.div
@@ -211,6 +213,7 @@ export default function JournalScreen() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
+              className="mb-4"
             >
               <JournalListItem 
                 entry={entry} 
@@ -224,9 +227,9 @@ export default function JournalScreen() {
         </AnimatePresence>
 
         {filteredEntries.length === 0 && !isLoading && (
-          <div className="flex flex-col items-center justify-center py-24 text-slate-800">
-            <Book size={80} strokeWidth={1} className="mb-6 opacity-10" />
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-10">Archive Empty</p>
+          <div className="flex flex-col items-center justify-center py-32 text-slate-850">
+            <Book size={100} strokeWidth={1} className="mb-8 opacity-20" />
+            <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] opacity-40">Archive Empty // No Data Captured</p>
           </div>
         )}
       </main>
