@@ -55,8 +55,8 @@ export default function JournalScreen() {
       >
         <header className="p-8 flex items-center justify-between border-b border-white/5">
           <div>
-            <h2 className="text-3xl font-display font-black text-white tracking-tighter">New Archive Initialization</h2>
-            <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-[0.4em] mt-1">Capture state temporal snapshot</p>
+            <h2 className="text-3xl font-display font-black text-white tracking-tighter">{t('new_archive')}.</h2>
+            <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-[0.4em] mt-1">{t('capture_state') || 'Capture state temporal snapshot'}</p>
           </div>
           <button onClick={() => setViewMode('LIST')} className="w-14 h-14 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
             <X size={24}/>
@@ -78,7 +78,7 @@ export default function JournalScreen() {
       >
         <header className="p-8 flex items-center justify-between border-b border-white/5">
            <div>
-            <h2 className="text-3xl font-display font-black text-white tracking-tighter">Modify Log Entry</h2>
+            <h2 className="text-3xl font-display font-black text-white tracking-tighter">{t('modify_log')}</h2>
             <p className="text-slate-500 text-[10px] font-mono font-bold uppercase tracking-[0.4em] mt-1">Adjusting neural archival data</p>
           </div>
           <button onClick={() => setViewMode('DETAIL')} className="w-14 h-14 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
@@ -114,7 +114,7 @@ export default function JournalScreen() {
             <div className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center shadow-lg">
                <ArrowLeft size={20} />
             </div>
-            <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em]">EXIT_LOG_VIEW</span>
+            <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em]">{t('exit_log')}</span>
           </button>
           <div className="flex gap-4">
             <button onClick={() => setViewMode('EDIT')} className="w-14 h-14 bg-slate-900 border border-white/5 text-emerald-500 rounded-2xl flex items-center justify-center hover:bg-slate-800 transition-all shadow-xl">

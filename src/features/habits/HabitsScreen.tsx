@@ -71,7 +71,7 @@ export default function HabitsScreen() {
                   <Sparkles size={20} />
                </div>
                <div>
-                  <h2 className="text-xs font-mono font-black text-white uppercase tracking-[0.2em]">Ascending Loops</h2>
+                  <h2 className="text-xs font-mono font-black text-white uppercase tracking-[0.2em]">{t('habits_good')}</h2>
                   <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mt-0.5">{t('daily_habits')} // Growth</span>
                </div>
             </div>
@@ -106,7 +106,7 @@ export default function HabitsScreen() {
                   <Flame size={20} />
                </div>
                <div>
-                  <h2 className="text-xs font-mono font-black text-white uppercase tracking-[0.2em]">Descending Loops</h2>
+                  <h2 className="text-xs font-mono font-black text-white uppercase tracking-[0.2em]">{t('habits_bad')}</h2>
                   <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mt-0.5">Pattern Friction // Mitigation</span>
                </div>
             </div>
@@ -155,8 +155,8 @@ export default function HabitsScreen() {
               </button>
               
               <div className="mb-12">
-                <span className="text-[10px] font-mono font-bold text-brand-primary uppercase tracking-[0.4em] block mb-4">New Protocol Initialization</span>
-                <h3 className="text-5xl font-display font-black text-white tracking-tighter">Define Ritual.</h3>
+                <span className="text-[10px] font-mono font-bold text-brand-primary uppercase tracking-[0.4em] block mb-4">Protocol Initialization</span>
+                <h3 className="text-5xl font-display font-black text-white tracking-tighter">{t('define_ritual') || 'Define Ritual'}.</h3>
               </div>
               
               <div className="space-y-10 mb-16">
@@ -241,13 +241,13 @@ export default function HabitsScreen() {
                   disabled={!newTitle}
                   className="flex-[2] bg-brand-primary hover:bg-emerald-400 py-6 rounded-2xl font-mono font-black text-slate-950 uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/10 active:scale-95 transition-all disabled:opacity-30"
                 >
-                  Confirm Protocol
+                  {t('commit_data')}
                 </button>
                 <button 
                   onClick={() => setShowAdd(false)}
                   className="flex-1 bg-slate-800 py-6 rounded-2xl font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
                 >
-                  Discard
+                  {t('abort_action')}
                 </button>
               </div>
             </motion.div>

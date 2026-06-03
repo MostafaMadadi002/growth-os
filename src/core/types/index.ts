@@ -95,11 +95,24 @@ export interface GoalSession {
 export interface LearningSession {
   id: string;
   user_id: string;
+  course_id?: string;
   title: string;
   category: string; // Course, Book, etc.
   duration_minutes: number;
   date: string;
   notes?: string;
+}
+
+export interface Course {
+  id: string;
+  user_id: string;
+  title: string;
+  units: number;
+  total_sessions: number;
+  sessions_per_week: number;
+  start_date: string;
+  end_date?: string;
+  created_at: string;
 }
 
 export interface Workout {

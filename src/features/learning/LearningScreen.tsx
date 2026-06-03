@@ -1,101 +1,332 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, BookOpen, Clock, GraduationCap } from 'lucide-react';
+import { Plus, BookOpen, Clock, GraduationCap, Target, Layers, Calendar, ChevronRight, X, Layout, Book, Activity, CheckCircle2, Zap } from 'lucide-react';
 import { useLearningStore } from './store/useLearningStore';
+import { useI18n } from '../../core/store/useI18n';
+import { Course, LearningSession } from '../../core/types';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function LearningScreen() {
-  const { sessions, fetchSessions, addSession } = useLearningStore();
-  const [showAdd, setShowAdd] = useState(false);
-  const [title, setTitle] = useState('');
-  const [duration, setDuration] = useState(30);
+  const { sessions, courses, fetchData, addSession, addCourse } = useLearningStore();
+  const { t, dir } = useI18n();
+  const [view, setView] = useState<'OVERVIEW' | 'COURSE_ADD' | 'SESSION_ADD'>('OVERVIEW');
+  
+  const [newCourse, setNewCourse] = useState<Partial<Course>>({
+    title: '',
+    units: 2,
+    total_sessions: 24,
+    sessions_per_week: 3,
+    start_date: new Date().toISOString().split('T')[0]
+  });
+
+  const [newSession, setNewSession] = useState<Partial<LearningSession>>({
+    title: '',
+    duration_minutes: 45,
+    category: 'STUDY',
+    course_id: ''
+  });
 
   useEffect(() => {
-    fetchSessions();
-  }, [fetchSessions]);
+    fetchData();
+  }, [fetchData]);
 
-  const handleAdd = async () => {
-    if (!title) return;
-    await addSession({
-        title,
-        category: 'Course',
-        duration_minutes: duration,
-        date: new Date().toISOString()
+  const handleAddCourse = async () => {
+    if (!newCourse.title) return;
+    await addCourse(newCourse as any);
+    setView('OVERVIEW');
+    setNewCourse({
+        title: '',
+        units: 2,
+        total_sessions: 24,
+        sessions_per_week: 3,
+        start_date: new Date().toISOString().split('T')[0]
     });
-    setTitle('');
-    setShowAdd(false);
+  };
+
+  const handleAddSession = async () => {
+    if (!newSession.title) return;
+    await addSession({
+        ...newSession,
+        date: new Date().toISOString()
+    } as any);
+    setView('OVERVIEW');
+    setNewSession({
+        title: '',
+        duration_minutes: 45,
+        category: 'STUDY',
+        course_id: ''
+    });
   };
 
   const totalMinutes = sessions.reduce((acc, s) => acc + s.duration_minutes, 0);
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 p-6" dir="rtl">
-      <header className="mb-10 flex justify-between items-center text-right">
-        <h1 className="text-4xl font-black text-white">یادگیری</h1>
-        <button onClick={() => setShowAdd(true)} className="bg-emerald-500 p-4 rounded-2xl text-white shadow-lg shadow-emerald-500/20">
-          <Plus size={24} />
-        </button>
+    <div className="flex flex-col h-full bg-slate-950 p-8 md:p-12 overflow-hidden data-grid" dir={dir}>
+      <header className="mb-12 flex justify-between items-end">
+        <div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Knowledge Repository // Synaptic Data</span>
+          </div>
+          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('learning')}.</h1>
+        </div>
+        <div className="flex gap-4">
+           <button 
+             onClick={() => setView('COURSE_ADD')}
+             className="command-card !p-5 bg-slate-900/50 hover:bg-slate-800 border-white/5 text-slate-400 hover:text-white transition-all flex items-center gap-3"
+           >
+             <GraduationCap size={20} />
+             <span className="text-[10px] font-mono font-black uppercase tracking-widest">+ New Course</span>
+           </button>
+           <button 
+             onClick={() => setView('SESSION_ADD')}
+             className="bg-brand-primary w-16 h-16 rounded-2xl flex items-center justify-center text-slate-950 shadow-2xl shadow-brand-primary/20 hover:scale-105 active:scale-95 transition-all"
+           >
+             <Plus size={32} />
+           </button>
+        </div>
       </header>
 
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl mb-8 flex items-center justify-between">
-         <div className="text-right">
-            <span className="text-slate-500 text-sm block mb-1">زمان کل مطالعه</span>
-            <span className="text-3xl font-black text-white">{Math.floor(totalMinutes / 60)}h {totalMinutes % 60}m</span>
-         </div>
-         <div className="w-14 h-14 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center">
-            <GraduationCap size={30} />
-         </div>
+      {/* Stats Bento */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+         <StatBlock 
+            label="Study_Time_Matrix" 
+            value={`${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`} 
+            icon={<Clock size={24} />} 
+            color="text-brand-primary" 
+         />
+         <StatBlock 
+            label="Active_Course_Nodes" 
+            value={courses.length.toString()} 
+            icon={<Layers size={24} />} 
+            color="text-brand-secondary" 
+         />
+         <StatBlock 
+            label="Weekly_Throughput" 
+            value={`${sessions.filter(s => new Date(s.date) > new Date(Date.now() - 7 * 86400000)).length} Sessions`} 
+            icon={<Activity size={24} />} 
+            color="text-orange-500" 
+         />
+         <StatBlock 
+            label="Synaptic_Integrity" 
+            value="92%" 
+            icon={<Zap size={24} />} 
+            color="text-purple-500" 
+         />
       </div>
 
-      <main className="space-y-4 flex-1 overflow-y-auto pb-24">
-        {sessions.map(s => (
-          <div key={s.id} className="bg-slate-900 border border-slate-800 p-5 rounded-3xl flex items-center justify-between">
-             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-emerald-500">
-                   <BookOpen size={24} />
-                </div>
-                <div className="text-right">
-                  <h3 className="text-xl font-bold text-white">{s.title}</h3>
-                  <p className="text-sm text-slate-500">{new Date(s.date).toLocaleDateString('fa-IR')}</p>
-                </div>
-             </div>
-             <div className="flex items-center gap-2 text-slate-400">
-                <Clock size={16} />
-                <span className="font-bold">{s.duration_minutes}m</span>
-             </div>
+      <main className="flex-1 overflow-y-auto mb-32 pr-2 scrollbar-hide space-y-12">
+        {/* Active Curriculum */}
+        <section>
+          <div className="flex items-center gap-4 mb-8">
+             <div className="h-px flex-1 bg-white/[0.03]" />
+             <span className="text-[10px] font-mono font-bold text-slate-700 uppercase tracking-[0.4em]">Active_Curriculum_Map</span>
+             <div className="h-px flex-1 bg-white/[0.03]" />
           </div>
-        ))}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+             {courses.map(course => (
+               <motion.div 
+                 key={course.id}
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 className="command-card group relative overflow-hidden"
+               >
+                  <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-all">
+                    <GraduationCap size={80} />
+                  </div>
+                  <div className="flex justify-between items-start mb-6">
+                     <div>
+                        <h3 className="text-3xl font-display font-black text-white tracking-tighter mb-2 group-hover:text-brand-primary transition-colors">{course.title}</h3>
+                        <div className="flex gap-4">
+                           <span className="text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-2 py-1 rounded-sm">{course.units} UNITS</span>
+                           <span className="text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-2 py-1 rounded-sm">{course.sessions_per_week} SES/WEEK</span>
+                        </div>
+                     </div>
+                     <div className="text-right">
+                        <span className="text-2xl font-mono font-black text-white">12/32</span>
+                        <span className="text-[8px] font-mono font-bold text-slate-600 block uppercase tracking-widest">SESSIONS_COMPLETE</span>
+                     </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                     <div className="flex justify-between text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">
+                        <span>Course_Progress</span>
+                        <span>37.5%</span>
+                     </div>
+                     <div className="h-1.5 w-full bg-slate-950 rounded-full border border-white/5 overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: '37.5%' }}
+                          className="h-full bg-brand-primary"
+                        />
+                     </div>
+                  </div>
+               </motion.div>
+             ))}
+             {courses.length === 0 && (
+               <button 
+                 onClick={() => setView('COURSE_ADD')}
+                 className="command-card border-dashed border-white/10 bg-transparent flex flex-col items-center justify-center py-20 text-slate-800 hover:text-slate-400 hover:shadow-2xl hover:border-brand-primary/20 transition-all group"
+               >
+                  <Plus size={48} className="mb-6 opacity-40 group-hover:scale-110 transition-transform" />
+                  <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em]">Initialize_Digital_Curriculum</span>
+               </button>
+             )}
+          </div>
+        </section>
+
+        {/* Temporal Logs */}
+        <section>
+          <div className="flex items-center gap-4 mb-8">
+             <div className="h-px flex-1 bg-white/[0.03]" />
+             <span className="text-[10px] font-mono font-bold text-slate-700 uppercase tracking-[0.4em]">Temporal_Session_Buffer</span>
+             <div className="h-px flex-1 bg-white/[0.03]" />
+          </div>
+
+          <div className="space-y-4">
+             {sessions.map(s => (
+               <div key={s.id} className="command-card group hover:bg-slate-900/80 flex items-center gap-8 py-5">
+                  <div className="w-14 h-14 bg-slate-950 border border-white/5 rounded-2xl flex items-center justify-center text-brand-primary shadow-xl group-hover:scale-105 transition-all">
+                     <BookOpen size={24} />
+                  </div>
+                  <div className="flex-1">
+                     <h4 className="text-xl font-display font-black text-white tracking-tighter group-hover:text-brand-primary transition-colors">{s.title}</h4>
+                     <p className="text-[9px] font-mono text-slate-600 uppercase tracking-widest mt-1">{new Date(s.date).toLocaleDateString(dir === 'rtl' ? 'fa-IR' : 'en-US', { day: 'numeric', month: 'long' })} // {s.category}</p>
+                  </div>
+                  <div className="flex items-center gap-3 px-6 h-10 bg-slate-950 border border-white/5 rounded-xl">
+                     <Clock size={12} className="text-slate-700" />
+                     <span className="text-[10px] font-mono font-black text-white uppercase tracking-widest">{s.duration_minutes}m</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center text-slate-900 group-hover:text-white transition-all">
+                     <ChevronRight size={18} />
+                  </div>
+               </div>
+             ))}
+          </div>
+        </section>
       </main>
 
-      {showAdd && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-6">
-          <div className="bg-slate-900 border border-slate-700 w-full max-w-md rounded-3xl p-8 shadow-2xl">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">جلسه یادگیری جدید</h3>
-            <div className="space-y-4 mb-8">
-              <input 
-                placeholder="عنوان (دوره، کتاب، ...)"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-2xl p-4 text-white outline-none focus:border-emerald-500 text-right"
-              />
-              <div className="space-y-2">
-                <label className="text-sm text-slate-500">مدت زمان ({duration} دقیقه)</label>
-                <input 
-                  type="range"
-                  min="5"
-                  max="120"
-                  step="5"
-                  value={duration}
-                  onChange={e => setDuration(parseInt(e.target.value))}
-                  className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
-                />
-              </div>
+      {/* Modals */}
+      <AnimatePresence>
+        {view === 'COURSE_ADD' && (
+          <Modal title="Deploy Curriculum Node" onClose={() => setView('OVERVIEW')}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+               <div className="space-y-8">
+                  <InputField label="Course_Identifier" value={newCourse.title!} onChange={v => setNewCourse({...newCourse, title: v})} placeholder="e.g. ADVANCED_REACT_SYSTEMS" />
+                  <div className="grid grid-cols-2 gap-6">
+                    <InputField label="Unit_Credit" value={newCourse.units?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, units: parseInt(v)})} />
+                    <InputField label="Sessions_WK" value={newCourse.sessions_per_week?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, sessions_per_week: parseInt(v)})} />
+                  </div>
+               </div>
+               <div className="space-y-8">
+                  <InputField label="Total_Session_Volume" value={newCourse.total_sessions?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, total_sessions: parseInt(v)})} />
+                  <InputField label="Initialization_Date" value={newCourse.start_date!} type="date" onChange={v => setNewCourse({...newCourse, start_date: v})} />
+               </div>
             </div>
-            <div className="flex gap-4">
-              <button onClick={handleAdd} className="flex-[2] bg-emerald-500 py-4 rounded-2xl font-bold text-white">ثبت</button>
-              <button onClick={() => setShowAdd(false)} className="flex-1 bg-slate-800 py-4 rounded-2xl font-bold text-slate-400">لغو</button>
+            <FormActions onSubmit={handleAddCourse} onAbort={() => setView('OVERVIEW')} submitLabel="Deploy_Curriculum" />
+          </Modal>
+        )}
+
+        {view === 'SESSION_ADD' && (
+          <Modal title="Commit Knowledge Snapshot" onClose={() => setView('OVERVIEW')}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+               <div className="space-y-8">
+                  <InputField label="Session_Context" value={newSession.title!} onChange={v => setNewSession({...newSession, title: v})} placeholder="Topic of focus..." />
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Linked_Parent_Course</label>
+                    <select 
+                      value={newSession.course_id}
+                      onChange={e => setNewSession({...newSession, course_id: e.target.value})}
+                      className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl p-6 text-white text-sm font-black outline-none focus:border-brand-primary/30 transition-all appearance-none"
+                    >
+                      <option value="">INDEPENDENT_RESEARCH</option>
+                      {courses.map(c => (
+                        <option key={c.id} value={c.id}>{c.title}</option>
+                      ))}
+                    </select>
+                  </div>
+               </div>
+               <div className="space-y-8">
+                  <InputField label="Duration_Minutes" value={newSession.duration_minutes?.toString() || ''} type="number" onChange={v => setNewSession({...newSession, duration_minutes: parseInt(v)})} />
+               </div>
             </div>
-          </div>
+            <FormActions onSubmit={handleAddSession} onAbort={() => setView('OVERVIEW')} submitLabel="Commit_Snapshot" />
+          </Modal>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function StatBlock({ label, value, icon, color }: { label: string, value: string, icon: any, color: string }) {
+  return (
+    <div className="command-card relative overflow-hidden group">
+       <div className={`absolute -right-4 -top-4 p-8 opacity-5 group-hover:scale-110 group-hover:opacity-10 transition-all ${color}`}>
+          {icon}
+       </div>
+       <span className="text-[9px] font-mono font-black text-slate-650 uppercase tracking-widest mb-4 block group-hover:text-slate-500 transition-colors">{label}</span>
+       <div className="text-4xl font-mono font-black text-white tracking-tighter">{value}</div>
+    </div>
+  );
+}
+
+function Modal({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-slate-950/98 backdrop-blur-3xl z-50 flex items-center justify-center p-6"
+    >
+      <motion.div 
+        initial={{ scale: 0.95, y: 40 }}
+        animate={{ scale: 1, y: 0 }}
+        className="bg-slate-900 border border-white/[0.05] w-full max-w-4xl rounded-[3rem] p-16 shadow-2xl relative"
+      >
+        <button onClick={onClose} className="absolute top-12 right-12 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl">
+          <X size={24} />
+        </button>
+        <div className="mb-12">
+            <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-4 block">System_Input_Protocol</span>
+            <h3 className="text-5xl font-display font-black text-white tracking-tighter">{title}</h3>
         </div>
-      )}
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function InputField({ label, value, onChange, placeholder, type = "text" }: { label: string, value: string, onChange: (v: string) => void, placeholder?: string, type?: string }) {
+  return (
+    <div className="space-y-4">
+      <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{label}</label>
+      <input 
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl p-6 text-white text-xl font-black outline-none focus:border-brand-primary/30 transition-all placeholder:text-slate-850"
+      />
+    </div>
+  );
+}
+
+function FormActions({ onSubmit, onAbort, submitLabel }: { onSubmit: () => void, onAbort: () => void, submitLabel: string }) {
+  const { t } = useI18n();
+  return (
+    <div className="flex gap-6">
+      <button 
+        onClick={onSubmit}
+        className="flex-[2] bg-brand-primary hover:bg-emerald-400 text-slate-950 font-mono font-black uppercase tracking-[0.2em] py-8 rounded-[2rem] transition-all shadow-2xl shadow-brand-primary/20 active:scale-95"
+      >
+        {submitLabel}
+      </button>
+      <button 
+        onClick={onAbort}
+        className="flex-1 bg-slate-800 py-8 rounded-[2rem] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
+      >
+        {t('abort_action')}
+      </button>
     </div>
   );
 }

@@ -79,8 +79,11 @@ export default function TradingScreen() {
     
     // Simple profit/loss simulation if pnl not recorded
     const totalPnl = trades.reduce((acc, t) => acc + (t.pnl_amount || 0), 0);
+    const openPositions = trades.filter(t => t.status === TradeStatus.OPEN).length;
+    const cryptoOps = trades.filter(t => t.market_type === MarketType.CRYPTO).length;
+    const forexOps = trades.filter(t => t.market_type === MarketType.FOREX).length;
     
-    return { winRate, totalOps: trades.length, totalPnl, wins, losses };
+    return { winRate, totalOps: trades.length, totalPnl, wins, losses, openPositions, cryptoOps, forexOps };
   };
 
   const stats = calculateStats();
@@ -91,9 +94,9 @@ export default function TradingScreen() {
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Market Intelligence // Operations Log</span>
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Market Intelligence // Op_Flow</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">Market Matrix.</h1>
+          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('market_matrix')}.</h1>
         </div>
         <button 
           onClick={() => setShowAdd(true)}
@@ -131,13 +134,32 @@ export default function TradingScreen() {
            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-all text-brand-primary">
               <Wallet size={64} />
            </div>
-           <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest mb-4 block">Aggregated_PNL_Output</span>
+           <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest mb-4 block">{t('pnl')}</span>
            <div className="flex items-baseline gap-4">
               <span className={`text-5xl font-mono font-black tracking-tighter ${stats.totalPnl >= 0 ? 'text-brand-primary' : 'text-rose-500'}`}>
                 {stats.totalPnl >= 0 ? '+' : ''}{stats.totalPnl.toFixed(1)}$
               </span>
-              <span className="text-[10px] font-mono text-slate-700 uppercase tracking-widest">Net_Result</span>
+              <span className="text-[10px] font-mono text-slate-700 uppercase tracking-widest">{t('operational')} NET</span>
            </div>
+         </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+         <div className="command-card !py-4 flex justify-between items-center group">
+            <span className="text-[9px] font-mono font-bold text-slate-600 uppercase transition-colors group-hover:text-slate-400">{t('open')}</span>
+            <span className="text-xl font-mono font-black text-blue-500">{stats.openPositions}</span>
+         </div>
+         <div className="command-card !py-4 flex justify-between items-center group">
+            <span className="text-[9px] font-mono font-bold text-slate-600 uppercase transition-colors group-hover:text-slate-400">{t('crypto')}</span>
+            <span className="text-xl font-mono font-black text-orange-500">{stats.cryptoOps}</span>
+         </div>
+         <div className="command-card !py-4 flex justify-between items-center group">
+            <span className="text-[9px] font-mono font-bold text-slate-600 uppercase transition-colors group-hover:text-slate-400">{t('forex')}</span>
+            <span className="text-xl font-mono font-black text-emerald-500">{stats.forexOps}</span>
+         </div>
+         <div className="command-card !py-4 flex justify-between items-center group">
+            <span className="text-[9px] font-mono font-bold text-slate-600 uppercase transition-colors group-hover:text-slate-400">{t('total_ops')}</span>
+            <span className="text-xl font-mono font-black text-white">{stats.totalOps}</span>
          </div>
       </div>
 
@@ -241,7 +263,7 @@ export default function TradingScreen() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
                 <div className="space-y-10">
                    <div className="space-y-4">
-                      <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Operational Domain</label>
+                      <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('operating_domain') || 'OPERATING_DOMAIN'}</label>
                       <div className="grid grid-cols-2 gap-4 p-1.5 bg-slate-950 rounded-2xl border border-white/[0.03]">
                         {Object.values(MarketType).map(m => (
                           <button 
@@ -249,14 +271,14 @@ export default function TradingScreen() {
                             onClick={() => setNewTrade({...newTrade, market_type: m})}
                             className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${newTrade.market_type === m ? 'bg-brand-secondary text-slate-950 shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                           >
-                            {m}
+                            {t(m.toLowerCase())}
                           </button>
                         ))}
                       </div>
                    </div>
 
                    <div className="space-y-4">
-                      <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Execution Status</label>
+                      <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('status') || 'EXECUTION_STATUS'}</label>
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 p-1.5 bg-slate-950 rounded-2xl border border-white/[0.03]">
                         {Object.values(TradeStatus).map(s => (
                           <button 
@@ -264,35 +286,35 @@ export default function TradingScreen() {
                             onClick={() => setNewTrade({...newTrade, status: s})}
                             className={`py-3 rounded-lg text-[8px] font-mono font-black uppercase tracking-widest transition-all ${newTrade.status === s ? 'bg-slate-800 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                           >
-                            {s}
+                            {t(s.toLowerCase())}
                           </button>
                         ))}
                       </div>
                    </div>
 
-                   <InputField label="Asset_Symbol" value={newTrade.symbol!} placeholder="e.g. BTC_USDT" onChange={v => setNewTrade({...newTrade, symbol: v.toUpperCase()})} />
-                   <InputField label="Execution_Entry" value={newTrade.entry_price?.toString() || ''} type="number" placeholder="0.00" onChange={v => setNewTrade({...newTrade, entry_price: parseFloat(v)})} />
+                   <InputField label={t('symbol') || 'Asset_Symbol'} value={newTrade.symbol!} placeholder="e.g. BTC_USDT" onChange={v => setNewTrade({...newTrade, symbol: v.toUpperCase()})} />
+                   <InputField label={t('entry_price') || 'Execution_Entry'} value={newTrade.entry_price?.toString() || ''} type="number" placeholder="0.00" onChange={v => setNewTrade({...newTrade, entry_price: parseFloat(v)})} />
                 </div>
 
                 <div className="space-y-8">
                    <div className="grid grid-cols-2 gap-6">
-                      <InputField label="Stop_Loss" value={newTrade.stop_loss?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, stop_loss: parseFloat(v)})} color="focus:border-rose-500/30" />
-                      <InputField label="Take_Profit" value={newTrade.target_price?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, target_price: parseFloat(v)})} color="focus:border-emerald-500/30" />
+                      <InputField label={t('stop_loss')} value={newTrade.stop_loss?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, stop_loss: parseFloat(v)})} color="focus:border-rose-500/30" />
+                      <InputField label={t('take_profit')} value={newTrade.target_price?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, target_price: parseFloat(v)})} color="focus:border-emerald-500/30" />
                    </div>
 
                    <div className="grid grid-cols-2 gap-6">
-                      <InputField label={newTrade.market_type === MarketType.CRYPTO ? "Leverage" : "Lots"} value={(newTrade.market_type === MarketType.CRYPTO ? newTrade.leverage : newTrade.lot_size)?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, [newTrade.market_type === MarketType.CRYPTO ? 'leverage' : 'lot_size']: parseFloat(v)})} />
-                      <InputField label={newTrade.market_type === MarketType.CRYPTO ? "Fee" : "Spread"} value={(newTrade.market_type === MarketType.CRYPTO ? newTrade.fee : newTrade.spread)?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, [newTrade.market_type === MarketType.CRYPTO ? 'fee' : 'spread']: parseFloat(v)})} />
+                      <InputField label={newTrade.market_type === MarketType.CRYPTO ? t('leverage') : t('lot')} value={(newTrade.market_type === MarketType.CRYPTO ? newTrade.leverage : newTrade.lot_size)?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, [newTrade.market_type === MarketType.CRYPTO ? 'leverage' : 'lot_size']: parseFloat(v)})} />
+                      <InputField label={newTrade.market_type === MarketType.CRYPTO ? t('commission') : t('spread')} value={(newTrade.market_type === MarketType.CRYPTO ? newTrade.fee : newTrade.spread)?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, [newTrade.market_type === MarketType.CRYPTO ? 'fee' : 'spread']: parseFloat(v)})} />
                    </div>
 
-                   <InputField label="Volume_Base" value={newTrade.volume_base?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, volume_base: parseFloat(v)})} />
+                   <InputField label={t('volume')} value={newTrade.volume_base?.toString() || ''} type="number" onChange={v => setNewTrade({...newTrade, volume_base: parseFloat(v)})} />
                    
                    <div className="space-y-4">
-                      <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Operational Reflection</label>
+                      <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('reason')}</label>
                       <textarea 
                         value={newTrade.reflection_reason}
                         onChange={e => setNewTrade({...newTrade, reflection_reason: e.target.value})}
-                        placeholder="Define outcome causality..."
+                        placeholder={t('reason_placeholder') || "Define outcome causality..."}
                         className="w-full bg-slate-950 border border-white/[0.03] rounded-3xl p-6 text-slate-300 text-sm font-medium h-32 focus:border-brand-secondary/30 outline-none resize-none"
                       />
                    </div>
@@ -305,13 +327,13 @@ export default function TradingScreen() {
                   disabled={!newTrade.symbol || !newTrade.entry_price}
                   className="flex-[2] bg-brand-secondary hover:bg-blue-400 disabled:opacity-30 text-slate-950 font-mono font-black uppercase tracking-[0.2em] py-8 rounded-[2rem] transition-all shadow-2xl shadow-brand-secondary/20 active:scale-95"
                 >
-                  Initiate Operation_Manifest
+                  {t('commit_data')}
                 </button>
                 <button 
                   onClick={() => setShowAdd(false)}
                   className="flex-1 bg-slate-800 py-8 rounded-[2rem] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
                 >
-                  Abort
+                  {t('abort_action')}
                 </button>
               </div>
             </motion.div>

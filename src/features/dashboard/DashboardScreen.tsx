@@ -51,7 +51,7 @@ export default function DashboardScreen() {
         
         <div className="flex gap-12 border-l border-white/[0.05] pl-12 h-16 items-center">
             <div className="text-right">
-              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">LOCAL_TIME</span>
+              <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('local_time') || 'LOCAL_TIME'}</span>
               <div className="text-2xl font-mono font-medium text-white tracking-tight">
                 {new Date().toLocaleTimeString('en-US', { hour12: false })}
               </div>
@@ -82,7 +82,7 @@ export default function DashboardScreen() {
                   <div className="w-2 h-6 bg-brand-primary rounded-full" />
                   <h3 className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.3em]">{t('growth_score')}</h3>
                </div>
-               <div className="text-[10px] font-mono text-slate-600">INTEL_VERSION_4.2.0</div>
+               <div className="text-[10px] font-mono text-slate-600">STABILITY_LOCK_v4</div>
             </div>
 
             <div className="flex items-end gap-10">
@@ -97,7 +97,7 @@ export default function DashboardScreen() {
                <div className="pb-6">
                   <div className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% {t('productivity')}</div>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[240px]">
-                    Current trajectory indicates mastery in **Consistency Patterns**. Maintain neural stability for 3 days to unlock Tier 2.
+                    {language === 'fa' ? 'روند فعلی نشان‌دهنده تسلط بر الگوهای تداوم است. پایداری در پروتکل‌ها را حفظ کنید.' : 'Current trajectory indicates mastery in Consistency Patterns. Maintain target protocols.'}
                   </p>
                </div>
             </div>
@@ -132,7 +132,7 @@ export default function DashboardScreen() {
               </div>
               <div>
                  <div className="text-6xl font-display font-black text-white leading-none">{tradingWinRate}%</div>
-                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">{t('trading')} PERFORMANCE_STAT</div>
+                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">{t('trading')} OPERATIONAL_STAT</div>
               </div>
            </motion.div>
 
@@ -156,7 +156,7 @@ export default function DashboardScreen() {
         {/* Secondary Modules */}
         <motion.div className="md:col-span-2 command-card flex flex-col justify-between hover:bg-slate-900/80">
             <div className="flex justify-between items-start">
-              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('habits')} EX_MATCH</span>
+              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('habits')} EX_MAP</span>
               <Activity size={16} className="text-emerald-500" />
             </div>
             <div className="py-2">
@@ -175,14 +175,14 @@ export default function DashboardScreen() {
             </div>
             <div className="text-6xl font-display font-black text-white">{entries.length}</div>
             <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest group-hover:text-white transition-colors">
-               ACCESS_ARCHIVES <ChevronRight size={12} />
+               {language === 'fa' ? 'بایگانی تجربیات' : 'ACCESS_ARCHIVES'} <ChevronRight size={12} />
             </div>
         </motion.div>
 
         <motion.div className="md:col-span-2 command-card bg-slate-900/80 border-white/[0.08] flex items-center justify-center">
            <div className="text-center">
               <div className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mb-4">Neural Readiness</div>
-              <div className="text-3xl font-display font-black text-brand-primary">OPTIMAL</div>
+              <div className="text-3xl font-display font-black text-brand-primary uppercase">{language === 'fa' ? 'بهینه' : 'OPTIMAL'}</div>
               <div className="mt-4 flex gap-1 justify-center">
                  {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-3 bg-brand-primary rounded-full shadow-[0_0_8px_#10b981]" />)}
                  {[1,2,3].map(i => <div key={i} className="w-1 h-3 bg-slate-800 rounded-full" />)}
@@ -196,21 +196,22 @@ export default function DashboardScreen() {
       <section className="command-card !p-12 border-white/[0.04]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
            <div>
-             <h2 className="text-4xl font-display font-black text-white tracking-tighter">Consistency Matrix.</h2>
-             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">Continuous Monitoring Service</span>
+             <h2 className="text-4xl font-display font-black text-white tracking-tighter">{t('consistency_matrix')}.</h2>
+             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">{language === 'fa' ? 'سرویس نظارت مستمر' : 'Continuous Monitoring Service'}</span>
            </div>
            
            <div className="flex gap-10 border-l border-white/[0.04] pl-10">
               <div className="text-right">
-                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Peak_Daily_Points</span>
+                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Peak_Output</span>
                 <span className="text-white font-mono font-bold">142_VAL</span>
               </div>
               <div className="text-right">
-                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Ritual_Stability</span>
+                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">{t('efficiency')}</span>
                 <span className="text-brand-primary font-mono font-bold">94.8%</span>
               </div>
            </div>
         </div>
+
         
         <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-15 xl:grid-cols-20 gap-2.5" dir="ltr">
            {heatmapArray.slice(-60).map(([date, points], i) => (

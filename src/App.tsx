@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { LayoutDashboard, BookText, Target, Activity, User, Terminal } from 'lucide-react';
+import { LayoutDashboard, BookText, Target, Activity, User, Terminal, GraduationCap } from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
 import { useAuthStore } from './core/stores/authStore';
 
@@ -11,11 +11,12 @@ import GoalsScreen from './features/goals/GoalsScreen';
 import HabitsScreen from './features/habits/HabitsScreen';
 import TradingScreen from './features/trading/TradingScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
+import LearningScreen from './features/learning/LearningScreen';
 import DevDashboard from './features/dev/DevDashboard';
 
 const queryClient = new QueryClient();
 
-type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Trading' | 'Profile' | 'Dev';
+type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Trading' | 'Learning' | 'Profile' | 'Dev';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Dashboard');
@@ -33,6 +34,7 @@ export default function App() {
       case 'Goals': return <GoalsScreen />;
       case 'Habits': return <HabitsScreen />;
       case 'Trading': return <TradingScreen />;
+      case 'Learning': return <LearningScreen />;
       case 'Profile': return <ProfileScreen onDevRequest={() => setActiveTab('Dev')} />;
       case 'Dev': return <div className="h-full relative">
         <button onClick={() => setActiveTab('Profile')} className="absolute top-6 left-6 z-50 bg-slate-900/50 p-2 rounded-full text-white">
@@ -112,6 +114,12 @@ export default function App() {
             onClick={() => setActiveTab('Trading')}
             icon={<Terminal size={22} />}
             label={t('trading')}
+          />
+          <TabButton 
+            active={activeTab === 'Learning'} 
+            onClick={() => setActiveTab('Learning')}
+            icon={<GraduationCap size={22} />}
+            label={t('learning')}
           />
           <TabButton 
             active={activeTab === 'Profile'} 

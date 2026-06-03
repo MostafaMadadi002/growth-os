@@ -156,7 +156,7 @@ export default function GoalsScreen() {
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse shadow-[0_0_10px_#3b82f6]" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Strategic Operations // Focus Hub</span>
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Strategic Operations // Sync</span>
           </div>
           <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('goals')}.</h1>
         </div>
@@ -258,8 +258,8 @@ export default function GoalsScreen() {
               </button>
               
               <div className="mb-12">
-                 <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-4 block">Strategic Initiative Initialization</span>
-                 <h3 className="text-5xl font-display font-black text-white tracking-tighter">Initiate Mission.</h3>
+                 <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-4 block">Initiative Initialization</span>
+                 <h3 className="text-5xl font-display font-black text-white tracking-tighter">{t('initiate_mission') || 'Initiate Mission'}.</h3>
               </div>
               
               <div className="space-y-10 mb-16 overflow-y-auto max-h-[45vh] scrollbar-hide pr-2">
@@ -336,13 +336,13 @@ export default function GoalsScreen() {
                   disabled={!newTitle}
                   className="flex-[2] bg-brand-primary hover:bg-emerald-400 py-8 rounded-[2rem] font-mono font-black text-slate-950 uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all disabled:opacity-30"
                 >
-                  Initiate Mission_Protocol
+                  {t('commit_data')}
                 </button>
                 <button 
                   onClick={() => setShowAdd(false)}
                   className="flex-1 bg-slate-800 py-8 rounded-[2rem] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
                 >
-                  Abort
+                  {t('abort_action')}
                 </button>
               </div>
             </motion.div>

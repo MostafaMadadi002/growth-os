@@ -10,6 +10,7 @@ interface ProfileProps {
 
 export default function ProfileScreen({ onDevRequest }: ProfileProps) {
   const { user, signOut, isLoading } = useAuthStore();
+  const { t } = useI18n();
   const [showAuth, setShowAuth] = useState(false);
 
   if (isLoading) {
@@ -32,16 +33,16 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
           <CloudOff size={48} className="text-slate-600 relative z-10" />
         </motion.div>
         
-        <h2 className="text-4xl font-display font-black text-white mb-4 tracking-tighter">Localized Instance</h2>
+        <h2 className="text-4xl font-display font-black text-white mb-4 tracking-tighter">{t('localized_instance') || 'Localized Instance'}</h2>
         <p className="text-slate-500 text-base max-w-sm mb-12 leading-relaxed">
-          Your evolution is currently tethered to this local hardware. Authenticate to establish a multi-node cloud sync.
+          {t('local_evolution_desc') || 'Your evolution is currently tethered to this local hardware. Authenticate to establish a multi-node cloud sync.'}
         </p>
         
         <button 
           onClick={() => setShowAuth(true)}
           className="w-full max-w-xs bg-emerald-500 text-slate-950 font-black px-10 py-6 rounded-[2.5rem] hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/10"
         >
-          Initialize Cloud Sync
+          {t('initialize_sync') || 'Initialize Cloud Sync'}
         </button>
       </div>
     );
@@ -69,7 +70,7 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary shadow-[0_0_10px_#10b981]" />
             <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Operator Identity // Personal Hub</span>
           </div>
-          <h1 className="text-6xl font-display font-black text-white tracking-tighter">Profile.</h1>
+          <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('profile')}.</h1>
         </div>
         <button 
           onClick={() => signOut()}
