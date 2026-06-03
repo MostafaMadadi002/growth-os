@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, ChevronRight, Trash2, Edit3, X, Calendar, Book } from 'lucide-react';
-import { useJournalStore } from './store/useJournalStore';
+import { useJournalStore } from './stores/journalStore';
 import JournalListItem from './components/JournalListItem';
 import JournalForm from './components/JournalForm';
 import { JournalEntry } from '../../core/types';

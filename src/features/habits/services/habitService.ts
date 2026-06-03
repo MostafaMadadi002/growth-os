@@ -1,77 +1,60 @@
-import { supabase } from '../../../core/services/supabase';
 import { Habit, HabitLog, HabitStatus } from '../../../core/types';
+import { habitRepository } from '../repositories/habitRepository';
 
-const HABITS_LOCAL_KEY = 'growthos_habits_backup';
-const LOGS_LOCAL_KEY = 'growthos_logs_backup';
-
-const getLocalHabits = (): Habit[] => JSON.parse(localStorage.getItem(HABITS_LOCAL_KEY) || '[]');
-const saveLocalHabits = (h: Habit[]) => localStorage.setItem(HABITS_LOCAL_KEY, JSON.stringify(h));
-const getLocalLogs = (): HabitLog[] => JSON.parse(localStorage.getItem(LOGS_LOCAL_KEY) || '[]');
-const saveLocalLogs = (l: HabitLog[]) => localStorage.setItem(LOGS_LOCAL_KEY, JSON.stringify(l));
-
+/**
+ * HabitService coordinates business logic for habits.
+ */
 export const habitService = {
-  async getAllHabits() {
-    try {
-      const { data, error } = await supabase.from('habits').select('*');
-      if (error) throw error;
-      return data as Habit[];
-    } catch (e) {
-      return getLocalHabits();
-    }
+  async getAllHabits(): Promise<Habit[]> {
+    return habitRepository.getHabits().filter(h => !h.deleted_at);
   },
 
-  async getLogs(date: string) {
-    try {
-      const { data, error } = await supabase.from('habit_logs').select('*').eq('date', date);
-      if (error) throw error;
-      return data as HabitLog[];
-    } catch (e) {
-      return getLocalLogs().filter(l => l.date === date);
-    }
+  async createHabit(habit: Omit<Habit, 'id' | 'user_id' | 'created_at' | 'visibility'>): Promise<Habit> {
+    const newHabit: Habit = {
+      ...habit,
+      id: Math.random().toString(36).substring(2, 11),
+      user_id: 'guest',
+      visibility: 'private',
+      created_at: new Date().toISOString()
+    };
+
+    habitRepository.addHabit(newHabit);
+    // TODO: ActivityService.logAction('HABIT_CREATED', 'Habit', newHabit.id)
+    return newHabit;
   },
 
-  async createHabit(habit: Omit<Habit, 'id' | 'user_id' | 'created_at'>) {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not logged in');
-      const { data, error } = await supabase.from('habits').insert([{ ...habit, user_id: user.id, created_at: new Date().toISOString() }]).select().single();
-      if (error) throw error;
-      return data as Habit;
-    } catch (e) {
-      const newHabit: Habit = { 
-        ...habit, 
-        id: Math.random().toString(36).substring(2, 11), 
-        user_id: 'guest', 
-        created_at: new Date().toISOString()
-      } as Habit;
-      saveLocalHabits([...getLocalHabits(), newHabit]);
-      return newHabit;
-    }
+  async deleteHabit(id: string): Promise<void> {
+    habitRepository.softDeleteHabit(id);
   },
 
-  async logHabit(habitId: string, status: HabitStatus, date: string, value?: number) {
-    try {
-      const { data, error } = await supabase.from('habit_logs').upsert([{ habit_id: habitId, status, date, value }], { onConflict: 'habit_id,date' }).select().single();
-      if (error) throw error;
-      return data as HabitLog;
-    } catch (e) {
-      const logs = getLocalLogs();
-      const existingIdx = logs.findIndex(l => l.habit_id === habitId && l.date === date);
-      const newLog = { id: Math.random().toString(36).substring(2, 11), habit_id: habitId, status, date, value };
-      if (existingIdx > -1) logs[existingIdx] = newLog;
-      else logs.push(newLog);
-      saveLocalLogs(logs);
-      return newLog;
+  async logHabit(habitId: string, status: HabitStatus, date: string, value?: number): Promise<HabitLog> {
+    const habit = habitRepository.getHabitById(habitId);
+    if (!habit) throw new Error('Habit not found');
+
+    const log: HabitLog = {
+      id: Math.random().toString(36).substring(2, 11),
+      habit_id: habitId,
+      status,
+      value,
+      date
+    };
+
+    habitRepository.addOrUpdateLog(log);
+
+    if (status === HabitStatus.DONE) {
+      // TODO: ActivityService.logAction('HABIT_COMPLETED', 'HabitLog', log.id, points)
     }
+
+    // Refresh streak logic here in the future
+    return log;
   },
 
-  async deleteHabit(id: string) {
-    try {
-      const { error } = await supabase.from('habits').delete().eq('id', id);
-      if (error) throw error;
-    } catch (e) {
-      saveLocalHabits(getLocalHabits().filter(h => h.id !== id));
-      saveLocalLogs(getLocalLogs().filter(l => l.habit_id !== id));
-    }
+  async getLogsForHabit(habitId: string): Promise<HabitLog[]> {
+    return habitRepository.getLogsByHabitId(habitId);
+  },
+
+  async getTodayLogs(): Promise<HabitLog[]> {
+    const today = new Date().toISOString().split('T')[0];
+    return habitRepository.getLogs().filter(l => l.date === today);
   }
 };

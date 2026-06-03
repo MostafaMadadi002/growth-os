@@ -1,8 +1,8 @@
 import React from 'react';
 import { BarChart3, TrendingUp, Calendar, Zap, Info } from 'lucide-react';
-import { useHabitStore } from '../habits/store/useHabitStore';
-import { useGoalStore } from '../goals/store/useGoalStore';
-import { useTradingStore } from '../trading/store/useTradingStore';
+import { useHabitStore } from '../habits/stores/habitStore';
+import { useGoalStore } from '../goals/stores/goalStore';
+import { useTradingStore } from '../trading/stores/tradingStore';
 
 export default function AnalyticsScreen() {
   const { habits } = useHabitStore();

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, X, Trash2, Check, Minus, Hash } from 'lucide-react';
-import { useHabitStore } from './store/useHabitStore';
+import { useHabitStore } from './stores/habitStore';
 import { HabitStatus, HabitType, Habit } from '../../core/types';
 
 export default function HabitsScreen() {
-  const { habits, logs, fetchHabits, fetchLogs, addHabit, logHabit, removeHabit } = useHabitStore();
+  const { habits, todayLogs, fetchHabits, addHabit, logHabit, deleteHabit } = useHabitStore();
   const [showAdd, setShowAdd] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [isGood, setIsGood] = useState(true);
@@ -16,8 +16,7 @@ export default function HabitsScreen() {
 
   useEffect(() => {
     fetchHabits();
-    fetchLogs(today);
-  }, [fetchHabits, fetchLogs, today]);
+  }, [fetchHabits]);
 
   const handleAdd = async () => {
     if (!newTitle) return;
@@ -35,7 +34,7 @@ export default function HabitsScreen() {
   };
 
   const getLog = (habitId: string) => {
-    return logs[today]?.find(l => l.habit_id === habitId);
+    return todayLogs[habitId];
   };
 
   const goodHabits = habits.filter(h => h.is_good);
@@ -66,7 +65,7 @@ export default function HabitsScreen() {
                 habit={h} 
                 log={getLog(h.id)} 
                 onLog={(s, v) => logHabit(h.id, s, today, v)} 
-                onDelete={() => removeHabit(h.id)}
+                onDelete={() => deleteHabit(h.id)}
               />
             ))}
             {goodHabits.length === 0 && <p className="text-slate-600 text-center py-4 bg-slate-900/50 rounded-3xl border border-dashed border-slate-800 italic">No positive habits registered yet.</p>}
@@ -85,7 +84,7 @@ export default function HabitsScreen() {
                 habit={h} 
                 log={getLog(h.id)} 
                 onLog={(s, v) => logHabit(h.id, s, today, v)} 
-                onDelete={() => removeHabit(h.id)}
+                onDelete={() => deleteHabit(h.id)}
               />
             ))}
             {badHabits.length === 0 && <p className="text-slate-600 text-center py-4 bg-slate-900/50 rounded-3xl border border-dashed border-slate-800 italic">Clean as water!</p>}

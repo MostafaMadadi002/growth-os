@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, TrendingUp, TrendingDown, Activity, Trash2, X, BarChart3, Globe, Bitcoin, LineChart } from 'lucide-react';
-import { useTradingStore } from './store/useTradingStore';
+import { useTradingStore } from './stores/tradingStore';
 import { MarketType, TradeStatus, Trade } from '../../core/types';
 
 export default function TradingScreen() {

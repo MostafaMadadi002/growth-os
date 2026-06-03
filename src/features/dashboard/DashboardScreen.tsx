@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useHabitStore } from '../habits/store/useHabitStore';
-import { useGoalStore } from '../goals/store/useGoalStore';
-import { useJournalStore } from '../journal/store/useJournalStore';
+import { useHabitStore } from '../habits/stores/habitStore';
+import { useGoalStore } from '../goals/stores/goalStore';
+import { useJournalStore } from '../journal/stores/journalStore';
 import { useGrowthStore } from '../../core/store/useGrowthStore';
 import { useI18n } from '../../core/store/useI18n';
 import { Flame, Target, BookText, CheckCircle2, Zap } from 'lucide-react';

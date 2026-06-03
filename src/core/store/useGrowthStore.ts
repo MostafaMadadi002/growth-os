@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { useHabitStore } from '../../features/habits/store/useHabitStore';
-import { useGoalStore } from '../../features/goals/store/useGoalStore';
-import { useJournalStore } from '../../features/journal/store/useJournalStore';
+import { useHabitStore } from '../../features/habits/stores/habitStore';
+import { useGoalStore } from '../../features/goals/stores/goalStore';
+import { useJournalStore } from '../../features/journal/stores/journalStore';
 import { HabitStatus } from '../types';
 
 interface GrowthState {
@@ -19,7 +19,7 @@ export const useGrowthStore = create<GrowthState>((set) => ({
   lifetimeScore: 0,
 
   calculateScores: () => {
-    const { logs } = useHabitStore.getState();
+    const { todayLogs } = useHabitStore.getState();
     const { goals } = useGoalStore.getState();
     const { entries } = useJournalStore.getState();
 
@@ -29,6 +29,10 @@ export const useGrowthStore = create<GrowthState>((set) => ({
     const POINTS = {
       JOURNAL: 10,
       HABIT: 5,
+      GOAL_S: 1000,
+      GOAL_A: 500,
+      GOAL_B: 250,
+      GOAL_C: 100,
       GOAL_DAILY: 15,
       GOAL_WEEKLY: 50,
       GOAL_MONTHLY: 150,
@@ -46,11 +50,13 @@ export const useGrowthStore = create<GrowthState>((set) => ({
       if (entry.entry_date === todayStr) daily += POINTS.JOURNAL;
     });
 
-    // Habit Points
-    Object.values(logs).flat().forEach(log => {
+    // Habit Points (Today only for now due to todayLogs limitation)
+    Object.values(todayLogs).forEach(log => {
       if (log.status === HabitStatus.DONE) {
-        total += POINTS.HABIT;
-        if (log.date === todayStr) daily += POINTS.HABIT;
+        if (log.date === todayStr) {
+          daily += POINTS.HABIT;
+          total += POINTS.HABIT;
+        }
       }
     });
 
