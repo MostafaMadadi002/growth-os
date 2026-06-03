@@ -1,13 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Vazirmatn:wght@100;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
-  --color-slate-750: #1e293b;
-  --color-slate-850: #0f172a;
-  --color-slate-950: #020617;
 }
 
 @layer base {
@@ -21,10 +18,10 @@
   }
 }
 
-.glass-nav {
-  @apply bg-slate-950/80 backdrop-blur-xl border-t border-white/5;
+.bento-card {
+  @apply bg-slate-900 border border-white/5 rounded-[2.5rem] p-6 transition-all duration-300 hover:border-white/10 hover:bg-slate-900/80;
 }
 
-.active-tab-indicator {
-  @apply absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)];
+.glass-nav {
+  @apply bg-slate-950/80 backdrop-blur-xl border-t border-white/5;
 }

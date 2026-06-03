@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, ChevronRight, Trash2, Edit3, X, Calendar, Book } from 'lucide-react';
+import { Plus, Search, ChevronRight, Trash2, Edit3, X, Calendar, Book, ArrowLeft, Filter, Star, Zap } from 'lucide-react';
 import { useJournalStore } from './stores/journalStore';
 import JournalListItem from './components/JournalListItem';
 import JournalForm from './components/JournalForm';
 import { JournalEntry } from '../../core/types';
+import { motion, AnimatePresence } from 'motion/react';
 
 type ViewMode = 'LIST' | 'CREATE' | 'DETAIL' | 'EDIT';
 
 export default function JournalScreen() {
-  const { entries, isLoading, error, fetchEntries, addEntry, updateEntry, deleteEntry } = useJournalStore();
+  const { entries, isLoading, fetchEntries, addEntry, updateEntry, deleteEntry } = useJournalStore();
   const [viewMode, setViewMode] = useState<ViewMode>('LIST');
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,155 +46,214 @@ export default function JournalScreen() {
 
   if (viewMode === 'CREATE') {
     return (
-      <div className="flex flex-col h-full animate-in slide-in-from-left duration-300">
-        <header className="p-6 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-xl font-bold">ژورنال جدید</h2>
-          <button onClick={() => setViewMode('LIST')} className="p-2 bg-slate-800 rounded-xl"><X size={20}/></button>
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col h-full bg-slate-950"
+      >
+        <header className="p-8 flex items-center justify-between border-b border-white/5">
+          <div>
+            <h2 className="text-2xl font-display font-black text-white tracking-tighter">New Archival</h2>
+            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Capture this moment in time</p>
+          </div>
+          <button onClick={() => setViewMode('LIST')} className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all">
+            <X size={20}/>
+          </button>
         </header>
-        <JournalForm onSubmit={handleCreate} onCancel={() => setViewMode('LIST')} loading={isLoading} />
-      </div>
+        <div className="flex-1 overflow-y-auto">
+          <JournalForm onSubmit={handleCreate} onCancel={() => setViewMode('LIST')} loading={isLoading} />
+        </div>
+      </motion.div>
     );
   }
 
   if (viewMode === 'EDIT' && selectedEntry) {
     return (
-      <div className="flex flex-col h-full animate-in slide-in-from-left duration-300">
-        <header className="p-6 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-xl font-bold">ویرایش ژورنال</h2>
-          <button onClick={() => setViewMode('DETAIL')} className="p-2 bg-slate-800 rounded-xl"><X size={20}/></button>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col h-full bg-slate-950"
+      >
+        <header className="p-8 flex items-center justify-between border-b border-white/5">
+           <div>
+            <h2 className="text-2xl font-display font-black text-white tracking-tighter">Refine Memory</h2>
+            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Adjusting the narrative</p>
+          </div>
+          <button onClick={() => setViewMode('DETAIL')} className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all">
+            <X size={20}/>
+          </button>
         </header>
-        <JournalForm 
-          initialData={selectedEntry} 
-          onSubmit={handleEdit} 
-          onCancel={() => setViewMode('DETAIL')} 
-          loading={isLoading} 
-        />
-      </div>
+        <div className="flex-1 overflow-y-auto">
+          <JournalForm 
+            initialData={selectedEntry} 
+            onSubmit={handleEdit} 
+            onCancel={() => setViewMode('DETAIL')} 
+            loading={isLoading} 
+          />
+        </div>
+      </motion.div>
     );
   }
 
   if (viewMode === 'DETAIL' && selectedEntry) {
-    const d = new Date(selectedEntry.entry_date).toLocaleDateString('fa-IR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const formattedDate = new Date(selectedEntry.entry_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
     return (
-      <div className="flex flex-col h-full bg-slate-950 animate-in slide-in-from-bottom duration-700 overflow-y-auto" dir="rtl">
-        <header className="sticky top-0 p-6 bg-slate-950/80 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between z-50">
-          <button onClick={() => setViewMode('LIST')} className="flex items-center text-slate-500 gap-2 font-black uppercase tracking-widest text-[10px]">
-            <ChevronRight size={18} className="rotate-180" />
-            <span>BACK TO ARCHIVE</span>
+      <motion.div 
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="flex flex-col h-full bg-slate-950 overflow-y-auto"
+      >
+        <header className="sticky top-0 p-8 bg-slate-950/80 backdrop-blur-3xl border-b border-white/5 flex items-center justify-between z-50">
+          <button 
+            onClick={() => setViewMode('LIST')} 
+            className="flex items-center text-slate-500 gap-3 hover:text-white transition-colors"
+          >
+            <div className="w-10 h-10 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center">
+               <ArrowLeft size={18} />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest">Back to Archive</span>
           </button>
-          <div className="flex gap-3">
-            <button onClick={() => setViewMode('EDIT')} className="p-3 bg-slate-900 border border-white/5 text-emerald-500 rounded-2xl hover:bg-slate-800">
+          <div className="flex gap-4">
+            <button onClick={() => setViewMode('EDIT')} className="w-12 h-12 bg-slate-900 border border-white/5 text-emerald-500 rounded-2xl flex items-center justify-center hover:bg-slate-800 transition-all">
               <Edit3 size={18} />
             </button>
-            <button onClick={handleDelete} className="p-3 bg-slate-900 border border-white/5 text-rose-500 rounded-2xl hover:bg-slate-800">
+            <button onClick={handleDelete} className="w-12 h-12 bg-slate-900 border border-white/5 text-rose-500 rounded-2xl flex items-center justify-center hover:bg-slate-800 transition-all">
               <Trash2 size={18} />
             </button>
           </div>
         </header>
 
-        <main className="p-8 pb-32">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <div>
-              <div className="flex items-center text-slate-500 gap-2 text-[10px] font-black uppercase tracking-widest mb-4">
-                 <Calendar size={14} />
-                 <span>{d}</span>
-              </div>
-              <h1 className="text-5xl font-black text-white leading-tight tracking-tighter">{selectedEntry.title || 'Untitled Entry'}</h1>
+        <main className="max-w-4xl mx-auto w-full p-10 pb-40">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-16"
+          >
+            <div className="flex items-center text-slate-600 gap-2 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+               <Calendar size={14} className="text-emerald-500" />
+               <span>{formattedDate}</span>
             </div>
+            <h1 className="text-6xl font-display font-black text-white leading-[1.1] tracking-tighter mb-10">{selectedEntry.title || 'Untitled Archive'}</h1>
             
-            <div className="flex gap-4">
-              <div className="bg-slate-900 border border-white/5 p-4 rounded-3xl flex flex-col items-center min-w-[80px]">
-                 <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Mood</span>
-                 <span className="text-2xl font-black text-emerald-500">{selectedEntry.mood}/10</span>
-              </div>
-              <div className="bg-slate-900 border border-white/5 p-4 rounded-3xl flex flex-col items-center min-w-[80px]">
-                 <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Energy</span>
-                 <span className="text-2xl font-black text-blue-500">{selectedEntry.energy}/10</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-             {selectedEntry.gratitude && <DetailCard label="Gratitude" value={selectedEntry.gratitude} color="rose" />}
-             {selectedEntry.achievement && <DetailCard label="Achievement" value={selectedEntry.achievement} color="yellow" />}
-             {selectedEntry.challenge && <DetailCard label="Challenge" value={selectedEntry.challenge} color="orange" />}
-             {selectedEntry.lesson && <DetailCard label="Lesson Learned" value={selectedEntry.lesson} color="emerald" />}
-          </div>
-
-          <div className="bg-slate-900/50 border border-white/5 rounded-[3rem] p-10 shadow-2xl relative">
-            <div className="absolute top-6 right-8 opacity-5">
-               <Book size={100} />
-            </div>
-            <p className="text-slate-300 text-xl leading-relaxed whitespace-pre-wrap font-medium relative z-10">
-              {selectedEntry.content}
-            </p>
-          </div>
-
-          {selectedEntry.tags?.length > 0 && (
-            <div className="mt-12 flex flex-wrap gap-2">
-              {selectedEntry.tags.map(t => (
-                <span key={t} className="bg-white/5 border border-white/5 text-slate-400 text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest">
-                  #{t}
-                </span>
+            <div className="flex flex-wrap gap-6 p-8 bg-slate-900/50 border border-white/5 rounded-[3.5rem]">
+              <StatInsight icon={<Star className="text-emerald-500" />} label="Mood Index" value={`${selectedEntry.mood}/10`} />
+              <StatInsight icon={<Zap className="text-blue-500" />} label="Energy Level" value={`${selectedEntry.energy}/10`} />
+              <div className="flex-1" />
+              {selectedEntry.tags?.map(t => (
+                <span key={t} className="bg-slate-950 px-4 py-2 rounded-full border border-white/5 text-[10px] font-black text-slate-500 uppercase tracking-widest">#{t}</span>
               ))}
             </div>
-          )}
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+             {selectedEntry.gratitude && <EditorialFeature label="Gratitude Reflection" value={selectedEntry.gratitude} icon="🙏" />}
+             {selectedEntry.achievement && <EditorialFeature label="Growth Spike" value={selectedEntry.achievement} icon="🏆" />}
+             {selectedEntry.challenge && <EditorialFeature label="Adversity Encounter" value={selectedEntry.challenge} icon="⚔️" />}
+             {selectedEntry.lesson && <EditorialFeature label="Synthesis Lesson" value={selectedEntry.lesson} icon="💡" />}
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="prose prose-invert max-w-none"
+          >
+            <div className="text-slate-300 text-2xl font-medium leading-[1.6] whitespace-pre-wrap font-sans selection:bg-emerald-500/30">
+              {selectedEntry.content}
+            </div>
+          </motion.div>
         </main>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full p-6 bg-slate-950" dir="rtl">
-      <header className="mb-10">
-        <h1 className="text-4xl font-black text-white tracking-tight mb-8">Growth Journal</h1>
-        <div className="relative group">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors" size={20} />
-          <input 
-            type="text"
-            placeholder="Search through archives..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-900 border border-white/5 rounded-[2rem] py-5 pl-14 pr-7 text-white font-bold outline-none focus:border-emerald-500 transition-all shadow-2xl text-right placeholder:text-slate-700"
-          />
+    <div className="flex flex-col h-full bg-slate-950 p-6 overflow-hidden">
+      <header className="mb-12 flex justify-between items-end">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Archive Management</span>
+          </div>
+          <h1 className="text-5xl font-display font-black text-white tracking-tighter">Journals</h1>
+        </div>
+        <div className="flex items-center gap-4">
+           <button className="w-12 h-12 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center text-slate-500">
+             <Filter size={18} />
+           </button>
+           <button 
+             onClick={() => setViewMode('CREATE')}
+             className="bg-emerald-500 p-5 rounded-[2rem] text-slate-950 shadow-2xl shadow-emerald-500/20 active:scale-95 transition-all"
+           >
+             <Plus size={24} strokeWidth={3} />
+           </button>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto scrollbar-hide">
-        {isLoading && entries.length === 0 ? (
-          <div className="flex justify-center py-20">
-            <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(16,185,129,0.3)]"></div>
-          </div>
-        ) : filteredEntries.length > 0 ? (
-          <div className="pb-32">
-            {filteredEntries.map(entry => (
+      <div className="mb-10 relative group">
+        <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-700 group-focus-within:text-emerald-500 transition-colors" size={20} />
+        <input 
+          type="text"
+          placeholder="Query archives by title, content or intent..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full bg-slate-900/50 border border-white/5 rounded-[2.5rem] py-6 pl-16 pr-8 text-white font-bold outline-none focus:border-white/10 transition-all placeholder:text-slate-800"
+        />
+      </div>
+
+      <main className="flex-1 overflow-y-auto scrollbar-hide pb-32">
+        <AnimatePresence mode="popLayout">
+          {filteredEntries.map((entry, idx) => (
+            <motion.div
+              key={entry.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+            >
               <JournalListItem 
-                key={entry.id}
                 entry={entry} 
                 onClick={() => {
                   setSelectedEntry(entry);
                   setViewMode('DETAIL');
                 }} 
               />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-slate-700">
-            <div className="bg-slate-900 p-10 rounded-[3rem] border border-white/5 mb-8 shadow-2xl">
-              <Book size={64} strokeWidth={1} />
-            </div>
-            <p className="text-xl font-black uppercase tracking-widest mb-2">Void State</p>
-            <p className="text-sm font-bold opacity-40">Capture your first step into growth.</p>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        {filteredEntries.length === 0 && !isLoading && (
+          <div className="flex flex-col items-center justify-center py-24 text-slate-800">
+            <Book size={80} strokeWidth={1} className="mb-6 opacity-10" />
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-10">Archive Empty</p>
           </div>
         )}
       </main>
+    </div>
+  );
+}
 
-      <button 
-        onClick={() => setViewMode('CREATE')}
-        className="fixed bottom-24 left-8 bg-emerald-500 hover:bg-emerald-600 w-20 h-20 rounded-[2rem] flex items-center justify-center shadow-2xl shadow-emerald-500/40 text-white transition-all hover:scale-110 hover:-rotate-12 active:scale-95 z-50"
-      >
-        <Plus size={36} strokeWidth={4} />
-      </button>
+function StatInsight({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) {
+  return (
+    <div className="flex items-center gap-3">
+       <div className="w-10 h-10 bg-slate-950 border border-white/5 rounded-2xl flex items-center justify-center">
+          {icon}
+       </div>
+       <div>
+          <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest block">{label}</span>
+          <span className="text-xl font-display font-black text-white">{value}</span>
+       </div>
+    </div>
+  );
+}
+
+function EditorialFeature({ label, value, icon }: { label: string, value: string, icon: string }) {
+  return (
+    <div className="p-8 bg-slate-900 border border-white/5 rounded-[2.5rem] relative overflow-hidden group">
+       <div className="absolute top-0 right-0 p-6 text-2xl opacity-20 group-hover:scale-125 transition-transform">{icon}</div>
+       <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-3">{label}</span>
+       <p className="text-white font-bold text-lg leading-relaxed">{value}</p>
     </div>
   );
 }
