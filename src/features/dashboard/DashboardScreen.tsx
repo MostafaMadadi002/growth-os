@@ -13,7 +13,7 @@ export default function DashboardScreen() {
   const { goals } = useGoalStore();
   const { entries } = useJournalStore();
   const { todayPoints, heatmapData, fetchTodayPoints, fetchHeatmapData } = useActivityStore();
-  const { t, dir } = useI18n();
+  const { t, dir, language } = useI18n();
 
   useEffect(() => {
     fetchTodayPoints();
@@ -97,7 +97,7 @@ export default function DashboardScreen() {
                <div className="pb-6">
                   <div className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-2">+12.4% {t('productivity')}</div>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-[240px]">
-                    {language === 'fa' ? 'روند فعلی نشان‌دهنده تسلط بر الگوهای تداوم است. پایداری در پروتکل‌ها را حفظ کنید.' : 'Current trajectory indicates mastery in Consistency Patterns. Maintain target protocols.'}
+                    {t('trajectory_message')}
                   </p>
                </div>
             </div>
@@ -175,14 +175,14 @@ export default function DashboardScreen() {
             </div>
             <div className="text-6xl font-display font-black text-white">{entries.length}</div>
             <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest group-hover:text-white transition-colors">
-               {language === 'fa' ? 'بایگانی تجربیات' : 'ACCESS_ARCHIVES'} <ChevronRight size={12} />
+               {t('access_archives')} <ChevronRight size={12} />
             </div>
         </motion.div>
 
         <motion.div className="md:col-span-2 command-card bg-slate-900/80 border-white/[0.08] flex items-center justify-center">
            <div className="text-center">
               <div className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mb-4">Neural Readiness</div>
-              <div className="text-3xl font-display font-black text-brand-primary uppercase">{language === 'fa' ? 'بهینه' : 'OPTIMAL'}</div>
+              <div className="text-3xl font-display font-black text-brand-primary uppercase">{t('optimal')}</div>
               <div className="mt-4 flex gap-1 justify-center">
                  {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-3 bg-brand-primary rounded-full shadow-[0_0_8px_#10b981]" />)}
                  {[1,2,3].map(i => <div key={i} className="w-1 h-3 bg-slate-800 rounded-full" />)}
@@ -197,7 +197,7 @@ export default function DashboardScreen() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
            <div>
              <h2 className="text-4xl font-display font-black text-white tracking-tighter">{t('consistency_matrix')}.</h2>
-             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">{language === 'fa' ? 'سرویس نظارت مستمر' : 'Continuous Monitoring Service'}</span>
+             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">{t('continuous_monitoring')}</span>
            </div>
            
            <div className="flex gap-10 border-l border-white/[0.04] pl-10">

@@ -65,7 +65,7 @@ export default function LearningScreen() {
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Knowledge Repository // Synaptic Data</span>
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">{t('knowledge_repository')}</span>
           </div>
           <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('learning')}.</h1>
         </div>
@@ -75,7 +75,7 @@ export default function LearningScreen() {
              className="command-card !p-5 bg-slate-900/50 hover:bg-slate-800 border-white/5 text-slate-400 hover:text-white transition-all flex items-center gap-3"
            >
              <GraduationCap size={20} />
-             <span className="text-[10px] font-mono font-black uppercase tracking-widest">+ New Course</span>
+             <span className="text-[10px] font-mono font-black uppercase tracking-widest">{t('new_course')}</span>
            </button>
            <button 
              onClick={() => setView('SESSION_ADD')}
@@ -89,25 +89,25 @@ export default function LearningScreen() {
       {/* Stats Bento */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
          <StatBlock 
-            label="Study_Time_Matrix" 
+            label={t('study_time_matrix')} 
             value={`${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`} 
             icon={<Clock size={24} />} 
             color="text-brand-primary" 
          />
          <StatBlock 
-            label="Active_Course_Nodes" 
+            label={t('active_course_nodes')} 
             value={courses.length.toString()} 
             icon={<Layers size={24} />} 
             color="text-brand-secondary" 
          />
          <StatBlock 
-            label="Weekly_Throughput" 
-            value={`${sessions.filter(s => new Date(s.date) > new Date(Date.now() - 7 * 86400000)).length} Sessions`} 
+            label={t('weekly_throughput')} 
+            value={`${sessions.filter(s => new Date(s.date) > new Date(Date.now() - 7 * 86400000)).length} ${t('session_count')}`} 
             icon={<Activity size={24} />} 
             color="text-orange-500" 
          />
          <StatBlock 
-            label="Synaptic_Integrity" 
+            label={t('synaptic_integrity')} 
             value="92%" 
             icon={<Zap size={24} />} 
             color="text-purple-500" 
@@ -119,7 +119,7 @@ export default function LearningScreen() {
         <section>
           <div className="flex items-center gap-4 mb-8">
              <div className="h-px flex-1 bg-white/[0.03]" />
-             <span className="text-[10px] font-mono font-bold text-slate-700 uppercase tracking-[0.4em]">Active_Curriculum_Map</span>
+             <span className="text-[10px] font-mono font-bold text-slate-700 uppercase tracking-[0.4em]">{t('active_curriculum')}</span>
              <div className="h-px flex-1 bg-white/[0.03]" />
           </div>
 
@@ -138,19 +138,19 @@ export default function LearningScreen() {
                      <div>
                         <h3 className="text-3xl font-display font-black text-white tracking-tighter mb-2 group-hover:text-brand-primary transition-colors">{course.title}</h3>
                         <div className="flex gap-4">
-                           <span className="text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-2 py-1 rounded-sm">{course.units} UNITS</span>
-                           <span className="text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-2 py-1 rounded-sm">{course.sessions_per_week} SES/WEEK</span>
+                           <span className="text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-2 py-1 rounded-sm">{course.units} {t('units_label')}</span>
+                           <span className="text-[9px] font-mono font-black text-slate-700 bg-slate-950 px-2 py-1 rounded-sm">{course.sessions_per_week} {t('ses_week')}</span>
                         </div>
                      </div>
                      <div className="text-right">
                         <span className="text-2xl font-mono font-black text-white">12/32</span>
-                        <span className="text-[8px] font-mono font-bold text-slate-600 block uppercase tracking-widest">SESSIONS_COMPLETE</span>
+                        <span className="text-[8px] font-mono font-bold text-slate-600 block uppercase tracking-widest">{t('sessions_complete')}</span>
                      </div>
                   </div>
                   
                   <div className="space-y-4">
                      <div className="flex justify-between text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">
-                        <span>Course_Progress</span>
+                        <span>{t('course_progress')}</span>
                         <span>37.5%</span>
                      </div>
                      <div className="h-1.5 w-full bg-slate-950 rounded-full border border-white/5 overflow-hidden">
@@ -169,7 +169,7 @@ export default function LearningScreen() {
                  className="command-card border-dashed border-white/10 bg-transparent flex flex-col items-center justify-center py-20 text-slate-800 hover:text-slate-400 hover:shadow-2xl hover:border-brand-primary/20 transition-all group"
                >
                   <Plus size={48} className="mb-6 opacity-40 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em]">Initialize_Digital_Curriculum</span>
+                  <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em]">{t('init_curriculum')}</span>
                </button>
              )}
           </div>
@@ -179,7 +179,7 @@ export default function LearningScreen() {
         <section>
           <div className="flex items-center gap-4 mb-8">
              <div className="h-px flex-1 bg-white/[0.03]" />
-             <span className="text-[10px] font-mono font-bold text-slate-700 uppercase tracking-[0.4em]">Temporal_Session_Buffer</span>
+             <span className="text-[10px] font-mono font-bold text-slate-700 uppercase tracking-[0.4em]">{t('temporal_buffer')}</span>
              <div className="h-px flex-1 bg-white/[0.03]" />
           </div>
 
@@ -209,37 +209,37 @@ export default function LearningScreen() {
       {/* Modals */}
       <AnimatePresence>
         {view === 'COURSE_ADD' && (
-          <Modal title="Deploy Curriculum Node" onClose={() => setView('OVERVIEW')}>
+          <Modal title={t('deploy_node')} onClose={() => setView('OVERVIEW')}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
                <div className="space-y-8">
-                  <InputField label="Course_Identifier" value={newCourse.title!} onChange={v => setNewCourse({...newCourse, title: v})} placeholder="e.g. ADVANCED_REACT_SYSTEMS" />
+                  <InputField label={t('course_id')} value={newCourse.title!} onChange={v => setNewCourse({...newCourse, title: v})} placeholder="e.g. ADVANCED_REACT_SYSTEMS" />
                   <div className="grid grid-cols-2 gap-6">
-                    <InputField label="Unit_Credit" value={newCourse.units?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, units: parseInt(v)})} />
-                    <InputField label="Sessions_WK" value={newCourse.sessions_per_week?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, sessions_per_week: parseInt(v)})} />
+                    <InputField label={t('units_credit')} value={newCourse.units?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, units: parseInt(v)})} />
+                    <InputField label={t('ses_week')} value={newCourse.sessions_per_week?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, sessions_per_week: parseInt(v)})} />
                   </div>
                </div>
                <div className="space-y-8">
-                  <InputField label="Total_Session_Volume" value={newCourse.total_sessions?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, total_sessions: parseInt(v)})} />
-                  <InputField label="Initialization_Date" value={newCourse.start_date!} type="date" onChange={v => setNewCourse({...newCourse, start_date: v})} />
+                  <InputField label={t('sessions_vol')} value={newCourse.total_sessions?.toString() || ''} type="number" onChange={v => setNewCourse({...newCourse, total_sessions: parseInt(v)})} />
+                  <InputField label={t('init_date')} value={newCourse.start_date!} type="date" onChange={v => setNewCourse({...newCourse, start_date: v})} />
                </div>
             </div>
-            <FormActions onSubmit={handleAddCourse} onAbort={() => setView('OVERVIEW')} submitLabel="Deploy_Curriculum" />
+            <FormActions onSubmit={handleAddCourse} onAbort={() => setView('OVERVIEW')} submitLabel={t('deploy_node')} />
           </Modal>
         )}
 
         {view === 'SESSION_ADD' && (
-          <Modal title="Commit Knowledge Snapshot" onClose={() => setView('OVERVIEW')}>
+          <Modal title={t('commit_snapshot')} onClose={() => setView('OVERVIEW')}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
                <div className="space-y-8">
-                  <InputField label="Session_Context" value={newSession.title!} onChange={v => setNewSession({...newSession, title: v})} placeholder="Topic of focus..." />
+                  <InputField label={t('session_context')} value={newSession.title!} onChange={v => setNewSession({...newSession, title: v})} placeholder="Topic of focus..." />
                   <div className="space-y-4">
-                    <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Linked_Parent_Course</label>
+                    <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('linked_course')}</label>
                     <select 
                       value={newSession.course_id}
                       onChange={e => setNewSession({...newSession, course_id: e.target.value})}
                       className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl p-6 text-white text-sm font-black outline-none focus:border-brand-primary/30 transition-all appearance-none"
                     >
-                      <option value="">INDEPENDENT_RESEARCH</option>
+                      <option value="">{t('independent_res')}</option>
                       {courses.map(c => (
                         <option key={c.id} value={c.id}>{c.title}</option>
                       ))}
@@ -247,10 +247,10 @@ export default function LearningScreen() {
                   </div>
                </div>
                <div className="space-y-8">
-                  <InputField label="Duration_Minutes" value={newSession.duration_minutes?.toString() || ''} type="number" onChange={v => setNewSession({...newSession, duration_minutes: parseInt(v)})} />
+                  <InputField label={t('duration_min')} value={newSession.duration_minutes?.toString() || ''} type="number" onChange={v => setNewSession({...newSession, duration_minutes: parseInt(v)})} />
                </div>
             </div>
-            <FormActions onSubmit={handleAddSession} onAbort={() => setView('OVERVIEW')} submitLabel="Commit_Snapshot" />
+            <FormActions onSubmit={handleAddSession} onAbort={() => setView('OVERVIEW')} submitLabel={t('commit_snapshot')} />
           </Modal>
         )}
       </AnimatePresence>
@@ -271,6 +271,7 @@ function StatBlock({ label, value, icon, color }: { label: string, value: string
 }
 
 function Modal({ title, children, onClose }: { title: string, children: React.ReactNode, onClose: () => void }) {
+  const { t } = useI18n();
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -287,7 +288,7 @@ function Modal({ title, children, onClose }: { title: string, children: React.Re
           <X size={24} />
         </button>
         <div className="mb-12">
-            <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-4 block">System_Input_Protocol</span>
+            <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-4 block">{t('input_protocol')}</span>
             <h3 className="text-5xl font-display font-black text-white tracking-tighter">{title}</h3>
         </div>
         {children}

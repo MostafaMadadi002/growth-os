@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Plus, TrendingUp, TrendingDown, Activity, Trash2, X, BarChart3, 
-  Globe, Bitcoin, LineChart, Target, AlertTriangle, Wallet, ScaleChart, Edit3, 
+  Globe, Bitcoin, LineChart, Target, AlertTriangle, Wallet, Edit3, 
   ChevronDown, ChevronUp, History, Zap, CheckCircle2, MoreHorizontal
 } from 'lucide-react';
 import { useTradingStore } from './stores/tradingStore';
@@ -94,7 +94,7 @@ export default function TradingScreen() {
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Market Intelligence // Op_Flow</span>
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">{t('market_intel')}</span>
           </div>
           <h1 className="text-6xl font-display font-black text-white tracking-tighter">{t('market_matrix')}.</h1>
         </div>
@@ -256,8 +256,8 @@ export default function TradingScreen() {
               </button>
 
               <div className="mb-12">
-                 <span className="text-[10px] font-mono font-black text-brand-secondary uppercase tracking-[0.4em] mb-4 block">Market Deployment Initialization</span>
-                 <h3 className="text-5xl font-display font-black text-white tracking-tighter">Deploy Operation.</h3>
+                 <span className="text-[10px] font-mono font-black text-brand-secondary uppercase tracking-[0.4em] mb-4 block">{t('market_deployment_init')}</span>
+                 <h3 className="text-5xl font-display font-black text-white tracking-tighter">{t('deploy_op')}.</h3>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, LogOut, Cloud, CloudOff, Shield, Mail, Calendar, Award, Activity, Settings, Bell, Lock, Globe, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '../../core/stores/authStore';
+import { useI18n } from '../../core/store/useI18n';
 import { motion, AnimatePresence } from 'motion/react';
 import AuthScreen from '../auth/AuthScreen';
 
