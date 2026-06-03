@@ -34,8 +34,8 @@ export interface Habit {
   is_good: boolean;
   frequency: 'DAILY' | 'WEEKLY';
   goal_id?: string;
-  visibility: Visibility;
-  created_at: string;
+  visibility?: Visibility;
+  created_at?: string;
   deleted_at?: string;
 }
 
@@ -62,7 +62,7 @@ export interface Milestone {
   title: string;
   is_completed: boolean;
   target_date?: string;
-  created_at: string;
+  created_at?: string;
   deleted_at?: string;
 }
 
@@ -77,9 +77,9 @@ export interface BigGoal {
   end_date?: string;
   category: 'EDUCATION' | 'PERSONAL' | 'FITNESS' | 'TRADING' | 'CAREER' | 'FINANCE';
   status: 'ACTIVE' | 'COMPLETED' | 'ON_HOLD' | 'OVERDUE';
-  visibility: Visibility;
-  created_at: string;
-  updated_at: string;
+  visibility?: Visibility;
+  created_at?: string;
+  updated_at?: string;
   deleted_at?: string;
 }
 
@@ -153,9 +153,9 @@ export interface JournalEntry {
   tags: string[];
   goal_id?: string;
   attachments?: Attachment[];
-  visibility: Visibility;
-  created_at: string;
-  updated_at: string;
+  visibility?: Visibility;
+  created_at?: string;
+  updated_at?: string;
   deleted_at?: string;
 }
 
@@ -195,7 +195,7 @@ export interface ActivityRecord {
   date: string;
   goal_id?: string;
   metadata?: Record<string, any>;
-  created_at: string;
+  created_at?: string;
   deleted_at?: string;
 }
 
