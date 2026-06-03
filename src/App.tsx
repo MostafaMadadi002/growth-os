@@ -9,12 +9,13 @@ import DashboardScreen from './features/dashboard/DashboardScreen';
 import JournalScreen from './features/journal/JournalScreen';
 import GoalsScreen from './features/goals/GoalsScreen';
 import HabitsScreen from './features/habits/HabitsScreen';
+import TradingScreen from './features/trading/TradingScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
 import DevDashboard from './features/dev/DevDashboard';
 
 const queryClient = new QueryClient();
 
-type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Profile' | 'Dev';
+type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Trading' | 'Profile' | 'Dev';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Dashboard');
@@ -31,6 +32,7 @@ export default function App() {
       case 'Journal': return <JournalScreen />;
       case 'Goals': return <GoalsScreen />;
       case 'Habits': return <HabitsScreen />;
+      case 'Trading': return <TradingScreen />;
       case 'Profile': return <ProfileScreen onDevRequest={() => setActiveTab('Dev')} />;
       case 'Dev': return <div className="h-full relative">
         <button onClick={() => setActiveTab('Profile')} className="absolute top-6 left-6 z-50 bg-slate-900/50 p-2 rounded-full text-white">
@@ -104,6 +106,12 @@ export default function App() {
             onClick={() => setActiveTab('Habits')}
             icon={<Activity size={22} />}
             label={t('habits')}
+          />
+          <TabButton 
+            active={activeTab === 'Trading'} 
+            onClick={() => setActiveTab('Trading')}
+            icon={<Terminal size={22} />}
+            label={t('trading')}
           />
           <TabButton 
             active={activeTab === 'Profile'} 

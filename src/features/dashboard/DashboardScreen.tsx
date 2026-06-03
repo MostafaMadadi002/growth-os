@@ -23,9 +23,9 @@ export default function DashboardScreen() {
   const activeGoals = goals.filter(g => g.status === 'ACTIVE').length;
   const heatmapArray = Object.entries(heatmapData).sort((a, b) => b[0].localeCompare(a[0])).reverse();
 
-  // Mock consistency percentage for visualization
+  // Stats for the Bento grid
   const habitConsistency = habits.length > 0 ? 84 : 0; 
-  const goalProgress = 42;
+  const tradingWinRate = 65; // Mock for secondary card
 
   return (
     <div className="flex flex-col h-full bg-surface-base p-8 md:p-12 overflow-y-auto pb-40 data-grid scrollbar-hide">
@@ -52,7 +52,9 @@ export default function DashboardScreen() {
         <div className="flex gap-12 border-l border-white/[0.05] pl-12 h-16 items-center">
             <div className="text-right">
               <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">LOCAL_TIME</span>
-              <div className="text-2xl font-mono font-medium text-white tracking-tight">12:42:08</div>
+              <div className="text-2xl font-mono font-medium text-white tracking-tight">
+                {new Date().toLocaleTimeString('en-US', { hour12: false })}
+              </div>
             </div>
             <div className="text-right">
               <span className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">UPTIME_NODE</span>
@@ -122,15 +124,15 @@ export default function DashboardScreen() {
         <div className="md:col-span-2 grid grid-cols-1 gap-6">
            <motion.div 
              whileHover={{ y: -4 }}
-             className="command-card bg-orange-600/10 border-orange-500/20 flex flex-col justify-between"
+             className="command-card bg-emerald-600/10 border-emerald-500/20 flex flex-col justify-between"
            >
               <div className="flex justify-between items-start">
-                 <div className="text-[9px] font-mono font-black text-orange-500 uppercase tracking-widest">{t('streak')} Intensity</div>
-                 <Flame size={16} className="text-orange-500" />
+                 <div className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('win_rate')}</div>
+                 <Activity size={16} className="text-emerald-500" />
               </div>
               <div>
-                 <div className="text-6xl font-display font-black text-white leading-none">12.</div>
-                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">{t('streak')} AT_NODE_X</div>
+                 <div className="text-6xl font-display font-black text-white leading-none">{tradingWinRate}%</div>
+                 <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-2">{t('trading')} PERFORMANCE_STAT</div>
               </div>
            </motion.div>
 
@@ -154,7 +156,7 @@ export default function DashboardScreen() {
         {/* Secondary Modules */}
         <motion.div className="md:col-span-2 command-card flex flex-col justify-between hover:bg-slate-900/80">
             <div className="flex justify-between items-start">
-              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('momentum')}</span>
+              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('habits')} EX_MATCH</span>
               <Activity size={16} className="text-emerald-500" />
             </div>
             <div className="py-2">
@@ -194,24 +196,24 @@ export default function DashboardScreen() {
       <section className="command-card !p-12 border-white/[0.04]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
            <div>
-             <h2 className="text-4xl font-display font-black text-white tracking-tighter">Reliability Matrix.</h2>
-             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">Performance Data Stream</span>
+             <h2 className="text-4xl font-display font-black text-white tracking-tighter">Consistency Matrix.</h2>
+             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">Continuous Monitoring Service</span>
            </div>
            
            <div className="flex gap-10 border-l border-white/[0.04] pl-10">
               <div className="text-right">
-                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Peak_Output</span>
+                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Peak_Daily_Points</span>
                 <span className="text-white font-mono font-bold">142_VAL</span>
               </div>
               <div className="text-right">
-                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Stability_Avg</span>
+                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Ritual_Stability</span>
                 <span className="text-brand-primary font-mono font-bold">94.8%</span>
               </div>
            </div>
         </div>
         
         <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-15 xl:grid-cols-20 gap-2.5" dir="ltr">
-           {heatmapArray.map(([date, points], i) => (
+           {heatmapArray.slice(-60).map(([date, points], i) => (
              <motion.div 
                key={date} 
                initial={{ opacity: 0 }}

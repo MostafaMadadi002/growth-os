@@ -132,8 +132,11 @@ export interface Trade {
   lot_size?: number;
   fee?: number;
   spread?: number;
+  volume_base?: number; // Volume without leverage
+  pnl_amount?: number;  // Profit/Loss amount
   status: TradeStatus;
   reflection_reason?: string;
+  entry_date: string;
   closing_date?: string;
   created_at: string;
 }

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Habit, HabitLog, HabitStatus } from '../../../core/types';
 import { habitService } from '../services/habitService';
+import { activityService } from '../../../core/services/activityService';
 
 interface HabitState {
   habits: Habit[];
@@ -67,6 +68,18 @@ export const useHabitStore = create<HabitState>((set, get) => ({
   logHabit: async (habitId, status, date, value) => {
     try {
       const log = await habitService.logHabit(habitId, status, date, value);
+      const habit = get().habits.find(h => h.id === habitId);
+      
+      if (status === HabitStatus.DONE && habit) {
+        await activityService.logActivity(
+          'HABIT_COMPLETED', 
+          'Habit', 
+          habitId, 
+          ` Ritual Complete: ${habit.title}`,
+          { is_good: habit.is_good }
+        );
+      }
+
       set(state => ({
         todayLogs: { ...state.todayLogs, [habitId]: log }
       }));
