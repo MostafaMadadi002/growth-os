@@ -1,6 +1,8 @@
 import { BigGoal, Milestone } from '../../../core/types';
 import { goalRepository } from '../repositories/goalRepository';
 import { activityService } from '../../../core/services/activityService';
+import { supabase } from '../../../core/services/supabase';
+import { useAuthStore } from '../../../core/stores/authStore';
 
 /**
  * GoalService orchestrates the business logic for goals.
@@ -9,14 +11,23 @@ import { activityService } from '../../../core/services/activityService';
  */
 export const goalService = {
   async getAllGoals(): Promise<BigGoal[]> {
+    const { user } = useAuthStore.getState();
+    if (user) {
+      const { data, error } = await supabase.from('goals').select('*').eq('user_id', user.id).is('deleted_at', null);
+      if (!error && data) {
+        goalRepository.saveGoals(data); // Sync local with cloud
+        return data;
+      }
+    }
     return goalRepository.getGoals().filter(g => !g.deleted_at);
   },
 
   async createGoal(goal: Omit<BigGoal, 'id' | 'user_id' | 'status' | 'created_at' | 'updated_at' | 'visibility'>): Promise<BigGoal> {
+    const { user } = useAuthStore.getState();
     const newGoal: BigGoal = {
       ...goal,
       id: Math.random().toString(36).substring(2, 11),
-      user_id: 'guest',
+      user_id: user?.id || 'guest',
       status: 'ACTIVE',
       visibility: 'private',
       created_at: new Date().toISOString(),
@@ -25,9 +36,13 @@ export const goalService = {
     };
 
     goalRepository.addGoal(newGoal);
+
+    if (user) {
+      await supabase.from('goals').insert([newGoal]);
+    }
     
     await activityService.logActivity(
-      'CUSTOM', // Or maybe add GOAL_CREATED to type
+      'CUSTOM',
       'BigGoal',
       newGoal.id,
       `Set new goal: ${newGoal.title}`
@@ -37,9 +52,14 @@ export const goalService = {
   },
 
   async updateGoal(id: string, updates: Partial<BigGoal>): Promise<BigGoal> {
+    const { user } = useAuthStore.getState();
     const updated = goalRepository.updateGoal(id, updates);
     if (!updated) throw new Error('Goal not found');
     
+    if (user) {
+      await supabase.from('goals').update(updates).eq('id', id);
+    }
+
     if (updates.status === 'COMPLETED') {
       await activityService.logActivity(
         'GOAL_COMPLETED',
@@ -53,7 +73,11 @@ export const goalService = {
   },
 
   async deleteGoal(id: string): Promise<void> {
+    const { user } = useAuthStore.getState();
     goalRepository.softDeleteGoal(id);
+    if (user) {
+      await supabase.from('goals').update({ deleted_at: new Date().toISOString() }).eq('id', id);
+    }
   },
 
   async toggleMilestone(goalId: string, milestoneId: string): Promise<BigGoal> {

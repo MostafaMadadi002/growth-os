@@ -1,5 +1,7 @@
 import { ActivityRecord, ActivityEventType } from '../types';
 import { activityRepository } from '../repositories/activityRepository';
+import { supabase } from './supabase';
+import { useAuthStore } from '../stores/authStore';
 
 export const POINT_RULES: Record<ActivityEventType, number> = {
   JOURNAL_CREATED: 10,
@@ -22,11 +24,12 @@ export const activityService = {
     title: string,
     metadata?: Record<string, any>
   ): Promise<ActivityRecord> {
+    const { user } = useAuthStore.getState();
     const points = POINT_RULES[eventType] || 0;
     
     const record: ActivityRecord = {
       id: Math.random().toString(36).substring(2, 11),
-      user_id: 'guest',
+      user_id: user?.id || 'guest',
       title,
       event_type: eventType,
       source_type: sourceType,
@@ -39,12 +42,22 @@ export const activityService = {
 
     activityRepository.addActivity(record);
     
-    // TODO: Update user's total growth points in AuthStore
+    if (user) {
+      await supabase.from('activity_records').insert([record]);
+    }
     
     return record;
   },
 
   async getRecentActivities(): Promise<ActivityRecord[]> {
+    const { user } = useAuthStore.getState();
+    if (user) {
+      const { data, error } = await supabase.from('activity_records').select('*').eq('user_id', user.id).limit(50).order('created_at', { ascending: false });
+      if (!error && data) {
+        activityRepository.saveActivities(data);
+        return data;
+      }
+    }
     return activityRepository.getActivities().slice(0, 50);
   },
 

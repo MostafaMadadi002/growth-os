@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { LayoutDashboard, BookText, Target, Activity } from 'lucide-react';
+import { LayoutDashboard, BookText, Target, Activity, User } from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
+import { useAuthStore } from './core/stores/authStore';
 
 // MVP Features
 import DashboardScreen from './features/dashboard/DashboardScreen';
 import JournalScreen from './features/journal/JournalScreen';
 import GoalsScreen from './features/goals/GoalsScreen';
 import HabitsScreen from './features/habits/HabitsScreen';
+import ProfileScreen from './features/profile/ProfileScreen';
 
 const queryClient = new QueryClient();
 
-type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits';
+type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Profile';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Dashboard');
   const { language, dir, t, setLanguage } = useI18n();
+  const { init: initAuth } = useAuthStore();
+
+  useEffect(() => {
+    initAuth();
+  }, [initAuth]);
 
   const renderScreen = () => {
     switch (activeTab) {
@@ -23,6 +30,7 @@ export default function App() {
       case 'Journal': return <JournalScreen />;
       case 'Goals': return <GoalsScreen />;
       case 'Habits': return <HabitsScreen />;
+      case 'Profile': return <ProfileScreen />;
       default: return <DashboardScreen />;
     }
   };
@@ -79,6 +87,12 @@ export default function App() {
             onClick={() => setActiveTab('Habits')}
             icon={<Activity size={22} />}
             label={t('habits')}
+          />
+          <TabButton 
+            active={activeTab === 'Profile'} 
+            onClick={() => setActiveTab('Profile')}
+            icon={<User size={22} />}
+            label="Profile"
           />
         </nav>
       </div>
