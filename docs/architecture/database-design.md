@@ -1,164 +1,214 @@
 # GrowthOS Database Design (Phase 2)
 
-## 1. Conceptual ERD
-
-```mermaid
-erDiagram
-    USERS ||--o{ GOALS : creates
-    USERS ||--o{ HABITS : creates
-    USERS ||--o{ JOURNAL_ENTRIES : creates
-    USERS ||--o{ ACTIVITY_RECORDS : performs
-    USERS ||--o{ ACHIEVEMENTS : unlocks
-    
-    GOALS ||--o{ MILESTONES : contains
-    MILESTONES ||--o{ PROGRESS_RECORDS : tracks
-    
-    GOALS }o--o{ HABITS : "many-to-many"
-    GOALS }o--o{ JOURNAL_ENTRIES : "many-to-many"
-    
-    JOURNAL_ENTRIES ||--o{ ATTACHMENTS : has
-    ACTIVITY_RECORDS ||--o{ ATTACHMENTS : has
-```
-
-## 2. Logical ERD (Table Definitions)
-
-### Core Tables
-
-#### `profiles` (Extended User Data)
-- `id`: UUID (FK to auth.users)
-- `display_name`: TEXT
-- `email`: TEXT
-- `growth_points`: INTEGER DEFAULT 0
-- `created_at`: TIMESTAMPTZ
-
-#### `goals`
-- `id`: UUID (PK)
-- `user_id`: UUID (FK to profiles)
-- `title`: TEXT
-- `description`: TEXT
-- `category`: GOAL_CATEGORY (Enum)
-- `level`: GOAL_LEVEL (Enum)
-- `status`: GOAL_STATUS (Enum)
-- `deadline`: TIMESTAMPTZ
-- `created_at`: TIMESTAMPTZ
-
-#### `milestones`
-- `id`: UUID (PK)
-- `goal_id`: UUID (FK to goals)
-- `title`: TEXT
-- `is_completed`: BOOLEAN DEFAULT FALSE
-- `deadline`: TIMESTAMPTZ
-- `created_at`: TIMESTAMPTZ
-
-#### `progress_records`
-- `id`: UUID (PK)
-- `milestone_id`: UUID (FK to milestones)
-- `value`: NUMERIC
-- `notes`: TEXT
-- `date`: DATE
-
-#### `habits`
-- `id`: UUID (PK)
-- `user_id`: UUID (FK to profiles)
-- `title`: TEXT
-- `type`: HABIT_TYPE (BINARY, QUANTITATIVE)
-- `is_good`: BOOLEAN
-- `frequency`: FREQUENCY (DAILY, WEEKLY)
-- `created_at`: TIMESTAMPTZ
-
-#### `habit_logs`
-- `id`: UUID (PK)
-- `habit_id`: UUID (FK to habits)
-- `status`: HABIT_STATUS (DONE, PARTIAL, MISSED)
-- `value`: NUMERIC
-- `date`: DATE
-
-#### `journal_entries`
-- `id`: UUID (PK)
-- `user_id`: UUID (FK to profiles)
-- `title`: TEXT
-- `content`: TEXT
-- `mood`: INTEGER (1-10)
-- `entry_date`: DATE
-- `created_at`: TIMESTAMPTZ
-
-#### `activity_records`
-- `id`: UUID (PK)
-- `user_id`: UUID (FK to profiles)
-- `event_type`: EVENT_TYPE (JOURNAL_CREATED, etc.)
-- `source_type`: TEXT
-- `source_id`: UUID
-- `points_earned`: INTEGER
-- `created_at`: TIMESTAMPTZ
-
-#### `achievements`
-- `id`: UUID (PK)
-- `title`: TEXT
-- `description`: TEXT
-- `points_value`: INTEGER
-- `type`: ACHIEVEMENT_TYPE (SYSTEM, USER)
-- `unlocked_at`: TIMESTAMPTZ (For system global)
-
-### Junction Tables (Many-to-Many)
-
-#### `goal_habits`
-- `goal_id`: UUID (FK to goals)
-- `habit_id`: UUID (FK to habits)
-- primary key (goal_id, habit_id)
-
-#### `goal_journals`
-- `goal_id`: UUID (FK to goals)
-- `journal_id`: UUID (FK to journal_entries)
-- primary key (goal_id, journal_id)
-
-## 3. Physical Schema (PostgreSQL)
+## 1. Physical Schema (PostgreSQL)
 
 ```sql
--- Enums
+-- 1. EXTENSIONS & ENUMS
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+
+CREATE TYPE visibility_type AS ENUM ('private', 'shared', 'public');
 CREATE TYPE goal_category AS ENUM ('EDUCATION', 'PERSONAL', 'FITNESS', 'TRADING', 'CAREER', 'FINANCE');
 CREATE TYPE goal_level AS ENUM ('S', 'A', 'B', 'C');
 CREATE TYPE goal_status AS ENUM ('ACTIVE', 'COMPLETED', 'ON_HOLD', 'OVERDUE');
+CREATE TYPE habit_type AS ENUM ('BINARY', 'QUANTITATIVE');
 CREATE TYPE habit_status AS ENUM ('DONE', 'PARTIAL', 'MISSED');
-CREATE TYPE event_type AS ENUM ('JOURNAL_CREATED', 'HABIT_COMPLETED', 'GOAL_COMPLETED', 'MILESTONE_COMPLETED', 'WORKOUT_LOGGED', 'TRADE_REVIEWED', 'CUSTOM');
+CREATE TYPE frequency_type AS ENUM ('DAILY', 'WEEKLY');
+CREATE TYPE achievement_type AS ENUM ('SYSTEM', 'USER');
+CREATE TYPE activity_event_type AS ENUM (
+    'JOURNAL_CREATED', 
+    'HABIT_COMPLETED', 
+    'GOAL_COMPLETED', 
+    'MILESTONE_COMPLETED', 
+    'WORKOUT_LOGGED', 
+    'TRADE_REVIEWED', 
+    'CUSTOM'
+);
 
--- Tables
+-- 2. CORE TABLES
+
+-- User Profiles (Extends auth.users)
 CREATE TABLE profiles (
-    id UUID PRIMARY KEY REFERENCES auth.users(id),
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     email TEXT,
     display_name TEXT,
     growth_points INTEGER DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ,
+    deleted_by UUID REFERENCES auth.users(id)
 );
 
+-- Point Configuration Rules
+CREATE TABLE point_rules (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_type activity_event_type UNIQUE NOT NULL,
+    points_value INTEGER NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Goals
 CREATE TABLE goals (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES profiles(id),
+    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     description TEXT,
     category goal_category NOT NULL,
     level goal_level NOT NULL,
     status goal_status DEFAULT 'ACTIVE',
+    visibility visibility_type DEFAULT 'private',
     deadline TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ,
+    deleted_by UUID REFERENCES auth.users(id)
+);
+
+-- Milestones
+CREATE TABLE milestones (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    goal_id UUID NOT NULL REFERENCES goals(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    is_completed BOOLEAN DEFAULT FALSE,
+    deadline TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Progress Records
+CREATE TABLE progress_records (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    milestone_id UUID NOT NULL REFERENCES milestones(id) ON DELETE CASCADE,
+    value NUMERIC NOT NULL,
+    notes TEXT,
+    date DATE NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Habits
+CREATE TABLE habits (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    type habit_type DEFAULT 'BINARY',
+    is_good BOOLEAN DEFAULT TRUE,
+    frequency frequency_type DEFAULT 'DAILY',
+    visibility visibility_type DEFAULT 'private',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Habit Logs
+CREATE TABLE habit_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    habit_id UUID NOT NULL REFERENCES habits(id) ON DELETE CASCADE,
+    status habit_status NOT NULL,
+    value NUMERIC,
+    date DATE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- RLS
-ALTER TABLE goals ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users can manage their own goals" ON goals
-    FOR ALL USING (auth.uid() = user_id);
+-- Journal Entries
+CREATE TABLE journal_entries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    title TEXT,
+    content TEXT,
+    mood INTEGER CHECK (mood >= 1 AND mood <= 10),
+    visibility visibility_type DEFAULT 'private',
+    entry_date DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
 
--- Indexes
+-- Activity Records (The Unified Engine)
+CREATE TABLE activity_records (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    event_type activity_event_type NOT NULL,
+    source_type TEXT NOT NULL, -- e.g., 'JournalEntry', 'HabitLog'
+    source_id UUID NOT NULL,
+    points_earned INTEGER NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Achievements
+CREATE TABLE achievements (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    description TEXT,
+    points_value INTEGER NOT NULL,
+    type achievement_type DEFAULT 'SYSTEM',
+    icon_name TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- User Achievements (Junction)
+CREATE TABLE user_achievements (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    achievement_id UUID NOT NULL REFERENCES achievements(id) ON DELETE CASCADE,
+    unlocked_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. JUNCTION TABLES (MANY-TO-MANY)
+
+CREATE TABLE goal_habits (
+    goal_id UUID REFERENCES goals(id) ON DELETE CASCADE,
+    habit_id UUID REFERENCES habits(id) ON DELETE CASCADE,
+    PRIMARY KEY (goal_id, habit_id)
+);
+
+CREATE TABLE goal_journals (
+    goal_id UUID REFERENCES goals(id) ON DELETE CASCADE,
+    journal_id UUID REFERENCES journal_entries(id) ON DELETE CASCADE,
+    PRIMARY KEY (goal_id, journal_id)
+);
+
+-- 4. RLS POLICIES (Supabase / PostgreSQL)
+
+-- Enable RLS
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE goals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE milestones ENABLE ROW LEVEL SECURITY;
+ALTER TABLE progress_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE habits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE habit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE journal_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE activity_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_achievements ENABLE ROW LEVEL SECURITY;
+
+-- Owner Access Policy Template
+-- Profiles
+CREATE POLICY "Users can manage their own profile" ON profiles 
+    FOR ALL USING (auth.uid() = id);
+
+-- Goals
+CREATE POLICY "Users can manage their own goals" ON goals 
+    FOR ALL USING (auth.uid() = user_id AND deleted_at IS NULL);
+
+-- Others (Pattern repeats)
+CREATE POLICY "Users can manage their own journal" ON journal_entries 
+    FOR ALL USING (auth.uid() = user_id AND deleted_at IS NULL);
+
+-- 5. INDEXING STRATEGY
+
 CREATE INDEX idx_goals_user_id ON goals(user_id);
-CREATE INDEX idx_goals_category ON goals(category);
+CREATE INDEX idx_habits_user_id ON habits(user_id);
+CREATE INDEX idx_journal_user_id ON journal_entries(user_id);
+CREATE INDEX idx_activity_user_id ON activity_records(user_id);
+CREATE INDEX idx_activity_source ON activity_records(source_type, source_id);
+CREATE INDEX idx_journal_entry_date ON journal_entries(entry_date);
+CREATE INDEX idx_habit_logs_date ON habit_logs(date);
 ```
 
-## 4. Security & Performance (Supabase Context)
+## 2. Decision Summary Checklist
 
-### RLS Strategy
-- Every table containing personal user data (goals, habits, journal, records) will include a `user_id` column.
-- The standard policy will be: `CREATE POLICY "owner_access" ON "table_name" FOR ALL USING (auth.uid() = user_id);`
-
-### Indexing Strategy
-- **Foreign Keys**: All FK columns (user_id, goal_id, milestone_id) will be indexed for performance in joins.
-- **Date Filtering**: Columns like `entry_date` and `date` will be indexed to support rapid filtering for dashboards and analytics.
-- **Search**: Trigram indexes (using `pg_trgm`) may be added to `goals.title` and `journal_entries.content` for efficient keyword search.
+- [x] **Soft Delete**: Implemented via `deleted_at` across all primary entities.
+- [x] **Cascade Behavior**: Used `ON DELETE CASCADE` specifically for junction tables and child entities (Logs, Milestones).
+- [x] **Achievement Logic**: Shifted to Application Service Layer (as recommended for MVP), with schema support for `user_achievements`.
+- [x] **Points Calculation**: Snapshot-based in `activity_records`, driven by a configurable `point_rules` table.
+- [x] **Privacy & RLS**: 100% Private defaults, with `visibility` column prepared for future scaling to `shared`/`public`.
+- [x] **Enums**: Comprehensive use of PostgreSQL Types for schema integrity.

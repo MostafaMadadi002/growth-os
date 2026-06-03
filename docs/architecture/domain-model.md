@@ -8,7 +8,7 @@ The central entity for personalization and data isolation.
 
 ### 2. Goal
 Long-term objectives the user wants to achieve.
-- **Attributes**: id, user_id, title, description, category (EDUCATION, FITNESS, TRADING, CAREER, PERSONAL, FINANCE), level (S, A, B, C), status (ACTIVE, COMPLETED, ARCHIVED), deadline, created_at.
+- **Attributes**: id, user_id, title, description, category (EDUCATION, FITNESS, TRADING, CAREER, PERSONAL, FINANCE), level (S, A, B, C), status (ACTIVE, COMPLETED, ON_HOLD, OVERDUE), visibility, deadline, created_at, updated_at, deleted_at.
 - **Relationships**: 
   - 1 -> N Milestones
   - N <-> N Habits
@@ -27,7 +27,7 @@ Granular tracking of progress for a specific milestone.
 
 ### 5. Habit
 Recurring behaviors to support Goals or personal growth.
-- **Attributes**: id, user_id, title, frequency, type (GOOD, BAD), current_streak, best_streak, created_at.
+- **Attributes**: id, user_id, title, frequency (DAILY, WEEKLY), type (BINARY, QUANTITATIVE), is_good, visibility, current_streak, best_streak, created_at, deleted_at.
 - **Relationships**:
   - 1 -> N HabitLogs
   - N <-> N Goals (via junction table)
@@ -38,7 +38,7 @@ The daily execution record of a Habit.
 
 ### 7. JournalEntry
 Daily reflections, notes, or logs.
-- **Attributes**: id, user_id, content, mood, tags, date, goal_id (optional, supports Many-to-Many).
+- **Attributes**: id, user_id, content, mood, tags, date, visibility, created_at, updated_at, deleted_at.
 - **Relationships**:
   - 1 -> N Attachments
   - N <-> N Goals (via junction table)
@@ -50,7 +50,7 @@ Media or files associated with entries.
 
 ### 9. ActivityRecord (Core Event Engine)
 A unified record of all significant actions within the app.
-- **Attributes**: id, user_id, title, event_type (JOURNAL_CREATED, HABIT_COMPLETED, GOAL_COMPLETED, MILESTONE_COMPLETED, WORKOUT_LOGGED, TRADE_REVIEWED, CUSTOM), source_type, source_id, points_earned, date, metadata (JSON).
+- **Attributes**: id, user_id, title, event_type (JOURNAL_CREATED, HABIT_COMPLETED, GOAL_COMPLETED, MILESTONE_COMPLETED, WORKOUT_LOGGED, TRADE_REVIEWED, CUSTOM), source_type, source_id, points_earned, date, created_at, deleted_at, metadata (JSON).
 - **Purpose**: Feeds the Heatmap, Growth Score, and Achievement systems.
 
 ### 10. Achievement

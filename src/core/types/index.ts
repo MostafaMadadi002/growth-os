@@ -22,6 +22,8 @@ export enum HabitType {
   QUANTITATIVE = 'QUANTITATIVE'
 }
 
+export type Visibility = 'private' | 'shared' | 'public';
+
 export interface Habit {
   id: string;
   user_id: string;
@@ -32,7 +34,9 @@ export interface Habit {
   is_good: boolean;
   frequency: 'DAILY' | 'WEEKLY';
   goal_id?: string;
+  visibility: Visibility;
   created_at: string;
+  deleted_at?: string;
 }
 
 export interface HabitLog {
@@ -54,9 +58,12 @@ export enum GoalLevel {
 
 export interface Milestone {
   id: string;
+  goal_id?: string;
   title: string;
   is_completed: boolean;
   target_date?: string;
+  created_at: string;
+  deleted_at?: string;
 }
 
 export interface BigGoal {
@@ -70,6 +77,10 @@ export interface BigGoal {
   end_date?: string;
   category: 'EDUCATION' | 'PERSONAL' | 'FITNESS' | 'TRADING' | 'CAREER' | 'FINANCE';
   status: 'ACTIVE' | 'COMPLETED' | 'ON_HOLD' | 'OVERDUE';
+  visibility: Visibility;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
 }
 
 export interface GoalSession {
@@ -142,6 +153,10 @@ export interface JournalEntry {
   tags: string[];
   goal_id?: string;
   attachments?: Attachment[];
+  visibility: Visibility;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
 }
 
 export interface Attachment {
@@ -166,6 +181,7 @@ export interface Achievement {
   type: 'SYSTEM' | 'USER';
   unlocked_at: string;
   goal_id?: string;
+  deleted_at?: string;
 }
 
 export interface ActivityRecord {
@@ -179,6 +195,8 @@ export interface ActivityRecord {
   date: string;
   goal_id?: string;
   metadata?: Record<string, any>;
+  created_at: string;
+  deleted_at?: string;
 }
 
 export interface ProgressRecord {
