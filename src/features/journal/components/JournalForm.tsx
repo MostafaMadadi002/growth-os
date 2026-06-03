@@ -4,7 +4,7 @@ import { Tag, Sparkles, AlertTriangle, Lightbulb, Heart, X } from 'lucide-react'
 
 interface Props {
   initialData?: Partial<JournalEntry>;
-  onSubmit: (data: Omit<JournalEntry, 'id' | 'user_id'>) => void;
+  onSubmit: (data: Omit<JournalEntry, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'visibility'>) => void;
   onCancel: () => void;
   loading?: boolean;
 }

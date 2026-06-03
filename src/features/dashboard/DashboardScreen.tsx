@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useHabitStore } from '../habits/stores/habitStore';
 import { useGoalStore } from '../goals/stores/goalStore';
 import { useJournalStore } from '../journal/stores/journalStore';
-import { useGrowthStore } from '../../core/store/useGrowthStore';
+import { useActivityStore } from '../../core/stores/activityStore';
 import { useI18n } from '../../core/store/useI18n';
 import { Flame, Target, BookText, CheckCircle2, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -11,15 +11,21 @@ export default function DashboardScreen() {
   const { habits } = useHabitStore();
   const { goals } = useGoalStore();
   const { entries } = useJournalStore();
-  const { dailyScore, lifetimeScore, calculateScores } = useGrowthStore();
+  const { todayPoints, heatmapData, fetchTodayPoints, fetchHeatmapData } = useActivityStore();
   const { t, dir } = useI18n();
 
   useEffect(() => {
-    calculateScores();
-  }, [habits, goals, entries, calculateScores]);
+    fetchTodayPoints();
+    fetchHeatmapData(30);
+  }, [habits, goals, entries, fetchTodayPoints, fetchHeatmapData]);
 
   const activeGoals = goals.filter(g => g.status === 'ACTIVE').length;
   
+  // Convert heatmap map to sorted array (newest to oldest or vice versa)
+  const heatmapArray = Object.entries(heatmapData)
+    .sort((a, b) => b[0].localeCompare(a[0])) // Newest first for current view
+    .reverse(); // Actually, chronological is better for reading LTR boards
+
   return (
     <div className="flex flex-col h-full bg-slate-950 p-6 overflow-y-auto pb-32">
       <header className="mb-10">
@@ -40,8 +46,8 @@ export default function DashboardScreen() {
          <div className="bg-slate-900 border border-white/5 p-6 rounded-[2.5rem] relative overflow-hidden group">
            <Zap className="text-yellow-500/20 absolute -right-2 -top-2 scale-150 group-hover:scale-175 transition-transform" size={80} />
            <span className="text-slate-500 text-[10px] font-bold block mb-1 uppercase tracking-widest">{t('growth_score')}</span>
-           <span className="text-4xl font-black text-white">{dailyScore}</span>
-           <div className="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Total: {lifetimeScore}</div>
+           <span className="text-4xl font-black text-white">{todayPoints}</span>
+           <div className="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Points Earned Today</div>
          </div>
          <div className="bg-slate-900 border border-white/5 p-6 rounded-[2.5rem] flex flex-col justify-between">
            <div className="flex items-center gap-2 text-orange-500">
@@ -60,16 +66,18 @@ export default function DashboardScreen() {
         </div>
         
         <div className="flex gap-2 flex-wrap" dir="ltr">
-           {Array.from({ length: 30 }).map((_, i) => (
+           {heatmapArray.map(([date, points], i) => (
              <motion.div 
-               key={i} 
+               key={date} 
                initial={{ scale: 0 }}
                animate={{ scale: 1 }}
                transition={{ delay: i * 0.01 }}
-               className={`w-5 h-5 rounded-md ${
-                 i % 7 === 0 ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]' : 
-                 i % 4 === 0 ? 'bg-emerald-500/40' : 
-                 i % 3 === 0 ? 'bg-emerald-500/20' : 'bg-slate-800'
+               title={`${date}: ${points} points`}
+               className={`w-5 h-5 rounded-md transition-colors ${
+                 points >= 100 ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 
+                 points >= 50 ? 'bg-emerald-500/70' : 
+                 points >= 25 ? 'bg-emerald-500/40' : 
+                 points > 0 ? 'bg-emerald-500/20' : 'bg-slate-800'
                }`} 
              />
            ))}

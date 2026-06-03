@@ -1,14 +1,14 @@
 import { BigGoal, Milestone } from '../../../core/types';
 import { goalRepository } from '../repositories/goalRepository';
+import { activityService } from '../../../core/services/activityService';
 
 /**
  * GoalService orchestrates the business logic for goals.
- * It uses the GoalRepository for persistence and will eventually 
- * trigger the ActivityService for point calculations and achievements.
+ * It uses the GoalRepository for persistence and 
+ * triggers the ActivityService for point calculations and achievements.
  */
 export const goalService = {
   async getAllGoals(): Promise<BigGoal[]> {
-    // Return only non-deleted goals
     return goalRepository.getGoals().filter(g => !g.deleted_at);
   },
 
@@ -16,7 +16,7 @@ export const goalService = {
     const newGoal: BigGoal = {
       ...goal,
       id: Math.random().toString(36).substring(2, 11),
-      user_id: 'guest', // To be replaced with auth user id
+      user_id: 'guest',
       status: 'ACTIVE',
       visibility: 'private',
       created_at: new Date().toISOString(),
@@ -26,7 +26,12 @@ export const goalService = {
 
     goalRepository.addGoal(newGoal);
     
-    // TODO: Trigger ActivityService.logActivity('GOAL_CREATED', 'Goal', newGoal.id)
+    await activityService.logActivity(
+      'CUSTOM', // Or maybe add GOAL_CREATED to type
+      'BigGoal',
+      newGoal.id,
+      `Set new goal: ${newGoal.title}`
+    );
     
     return newGoal;
   },
@@ -35,9 +40,13 @@ export const goalService = {
     const updated = goalRepository.updateGoal(id, updates);
     if (!updated) throw new Error('Goal not found');
     
-    // Check if status changed to COMPLETED
     if (updates.status === 'COMPLETED') {
-      // TODO: Trigger ActivityService.logActivity('GOAL_COMPLETED', 'Goal', id)
+      await activityService.logActivity(
+        'GOAL_COMPLETED',
+        'BigGoal',
+        id,
+        `Mission Accomplished: ${updated.title}`
+      );
     }
 
     return updated;
@@ -51,18 +60,29 @@ export const goalService = {
     const goal = goalRepository.getGoalById(goalId);
     if (!goal) throw new Error('Goal not found');
 
+    let milestoneTitle = '';
     const updatedMilestones = (goal.milestones || []).map(m => {
       if (m.id === milestoneId) {
+        milestoneTitle = m.title;
         const newState = !m.is_completed;
-        if (newState) {
-          // TODO: Trigger ActivityService.logActivity('MILESTONE_COMPLETED', 'Milestone', milestoneId)
-        }
         return { ...m, is_completed: newState };
       }
       return m;
     });
 
     const updated = await this.updateGoal(goalId, { milestones: updatedMilestones });
+    
+    // Check if it was completed
+    const newlyCompleted = updated.milestones.find(m => m.id === milestoneId)?.is_completed;
+    if (newlyCompleted) {
+      await activityService.logActivity(
+        'MILESTONE_COMPLETED',
+        'Milestone',
+        milestoneId,
+        `Reached milestone: ${milestoneTitle} (${goal.title})`
+      );
+    }
+
     return updated;
   },
 
@@ -82,5 +102,6 @@ export const goalService = {
     return this.updateGoal(goalId, { milestones: updatedMilestones });
   }
 };
+
 
 

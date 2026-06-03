@@ -7,7 +7,7 @@ interface JournalState {
   isLoading: boolean;
   error: string | null;
   fetchEntries: () => Promise<void>;
-  addEntry: (entry: Omit<JournalEntry, 'id' | 'user_id'>) => Promise<void>;
+  addEntry: (entry: Omit<JournalEntry, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'visibility'>) => Promise<void>;
   updateEntry: (id: string, updates: Partial<JournalEntry>) => Promise<void>;
   deleteEntry: (id: string) => Promise<void>;
 }

@@ -1,87 +1,47 @@
-import { supabase } from '../../../core/services/supabase';
 import { JournalEntry } from '../../../core/types';
+import { journalRepository } from '../repositories/journalRepository';
+import { activityService } from '../../../core/services/activityService';
 
-const LOCAL_STORAGE_KEY = 'growthos_journal_backup';
-
-const getLocalEntries = (): JournalEntry[] => {
-  const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-  return data ? JSON.parse(data) : [];
-};
-
-const saveLocalEntries = (entries: JournalEntry[]) => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(entries));
-};
-
+/**
+ * JournalService orchestrates business logic for journaling.
+ */
 export const journalService = {
-  async getAllEntries() {
-    try {
-      const { data, error } = await supabase
-        .from('journal_entries')
-        .select('*')
-        .order('entry_date', { ascending: false });
-
-      if (error) throw error;
-      return data as JournalEntry[];
-    } catch (e) {
-      return getLocalEntries();
-    }
+  async getAllEntries(): Promise<JournalEntry[]> {
+    return journalRepository.getEntries().filter(e => !e.deleted_at);
   },
 
-  async createEntry(entry: Omit<JournalEntry, 'id' | 'user_id'>) {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not logged in');
+  async createEntry(entry: Omit<JournalEntry, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'visibility'>): Promise<JournalEntry> {
+    const newEntry: JournalEntry = {
+      ...entry,
+      id: Math.random().toString(36).substring(2, 11),
+      user_id: 'guest',
+      visibility: 'private',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      entry_date: entry.entry_date || new Date().toISOString().split('T')[0]
+    };
 
-      const { data, error } = await supabase
-        .from('journal_entries')
-        .insert([{ ...entry, user_id: user.id }])
-        .select()
-        .single();
+    journalRepository.addEntry(newEntry);
 
-      if (error) throw error;
-      return data as JournalEntry;
-    } catch (e) {
-      const newEntry: JournalEntry = {
-        ...entry,
-        id: Math.random().toString(36).substring(2, 11),
-        user_id: 'guest'
-      };
-      const local = getLocalEntries();
-      saveLocalEntries([newEntry, ...local]);
-      return newEntry;
-    }
+    // Log activity
+    await activityService.logActivity(
+      'JOURNAL_CREATED',
+      'JournalEntry',
+      newEntry.id,
+      `Journaled: ${newEntry.title || 'New Entry'}`
+    );
+
+    return newEntry;
   },
 
-  async updateEntry(id: string, updates: Partial<JournalEntry>) {
-    try {
-      const { data, error } = await supabase
-        .from('journal_entries')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data as JournalEntry;
-    } catch (e) {
-      const local = getLocalEntries();
-      const updated = local.map(ent => ent.id === id ? { ...ent, ...updates } : ent);
-      saveLocalEntries(updated);
-      return updated.find(ent => ent.id === id) as JournalEntry;
-    }
+  async updateEntry(id: string, updates: Partial<JournalEntry>): Promise<JournalEntry> {
+    const updated = journalRepository.updateEntry(id, updates);
+    if (!updated) throw new Error('Entry not found');
+    return updated;
   },
 
-  async deleteEntry(id: string) {
-    try {
-      const { error } = await supabase
-        .from('journal_entries')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-    } catch (e) {
-      const local = getLocalEntries();
-      saveLocalEntries(local.filter(ent => ent.id !== id));
-    }
+  async deleteEntry(id: string): Promise<void> {
+    journalRepository.softDeleteEntry(id);
   }
 };
+

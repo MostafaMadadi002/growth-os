@@ -1,5 +1,6 @@
 import { Habit, HabitLog, HabitStatus } from '../../../core/types';
 import { habitRepository } from '../repositories/habitRepository';
+import { activityService } from '../../../core/services/activityService';
 
 /**
  * HabitService coordinates business logic for habits.
@@ -19,7 +20,14 @@ export const habitService = {
     };
 
     habitRepository.addHabit(newHabit);
-    // TODO: ActivityService.logAction('HABIT_CREATED', 'Habit', newHabit.id)
+    
+    await activityService.logActivity(
+      'CUSTOM',
+      'Habit',
+      newHabit.id,
+      `Started new habit: ${newHabit.title}`
+    );
+    
     return newHabit;
   },
 
@@ -42,10 +50,14 @@ export const habitService = {
     habitRepository.addOrUpdateLog(log);
 
     if (status === HabitStatus.DONE) {
-      // TODO: ActivityService.logAction('HABIT_COMPLETED', 'HabitLog', log.id, points)
+      await activityService.logActivity(
+        'HABIT_COMPLETED',
+        'HabitLog',
+        log.id,
+        `Maintained consistency: ${habit.title}`
+      );
     }
 
-    // Refresh streak logic here in the future
     return log;
   },
 

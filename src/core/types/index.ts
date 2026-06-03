@@ -184,11 +184,20 @@ export interface Achievement {
   deleted_at?: string;
 }
 
+export type ActivityEventType = 
+  | 'JOURNAL_CREATED' 
+  | 'HABIT_COMPLETED' 
+  | 'GOAL_COMPLETED' 
+  | 'MILESTONE_COMPLETED' 
+  | 'WORKOUT_LOGGED' 
+  | 'TRADE_REVIEWED' 
+  | 'CUSTOM';
+
 export interface ActivityRecord {
   id: string;
   user_id: string;
   title: string;
-  event_type: 'JOURNAL_CREATED' | 'HABIT_COMPLETED' | 'GOAL_COMPLETED' | 'MILESTONE_COMPLETED' | 'WORKOUT_LOGGED' | 'TRADE_REVIEWED' | 'CUSTOM';
+  event_type: ActivityEventType;
   source_type: string; // e.g., 'JournalEntry', 'HabitLog'
   source_id: string;   // e.g., 'journal_123'
   points_earned: number;
