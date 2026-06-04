@@ -30,7 +30,7 @@ export const useTradingStore = create<TradingState>((set, get) => ({
       'Trade',
       t.id,
       `Market Operation: ${t.symbol}`,
-      { symbol: t.symbol, type: t.market_type }
+      { symbol: t.symbol, type: t.market_type, status: t.status }
     );
 
     set({ trades: [t, ...get().trades] });

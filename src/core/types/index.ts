@@ -133,22 +133,45 @@ export interface BodyMetric {
   date: string;
 }
 
+export enum TradeDirection {
+  LONG = 'LONG',
+  SHORT = 'SHORT',
+}
+
 export interface Trade {
   id: string;
   user_id: string;
   market_type: MarketType;
   symbol: string;
+  direction: TradeDirection;
   entry_price: number;
+  exit_price?: number;
   stop_loss?: number;
   target_price?: number;
   leverage?: number;
   lot_size?: number;
+  risk_percent?: number;
+  position_size?: number;
+  rr_ratio?: number;
   fee?: number;
   spread?: number;
   volume_base?: number; // Volume without leverage
   pnl_amount?: number;  // Profit/Loss amount
   status: TradeStatus;
+  
+  // Psychology
+  emotion_before?: string;
+  emotion_after?: string;
+  confidence_level?: number; // 1-10
+  mistake_type?: string;
+
+  // Reflection
   reflection_reason?: string;
+  trade_thesis?: string;
+  what_went_well?: string;
+  what_went_wrong?: string;
+  lesson_learned?: string;
+
   entry_date: string;
   closing_date?: string;
   created_at: string;
@@ -191,7 +214,7 @@ export interface Achievement {
   user_id: string;
   title: string;
   description: string;
-  category: 'GOAL' | 'HABIT' | 'CONSISTENCY' | 'MILESTONE';
+  category: 'GOAL' | 'HABIT' | 'CONSISTENCY' | 'MILESTONE' | 'TRADING';
   icon_name?: string;
   points_value: number;
   type: 'SYSTEM' | 'USER';

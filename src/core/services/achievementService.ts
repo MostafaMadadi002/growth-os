@@ -65,6 +65,31 @@ export const achievementService = {
       }
     }
 
+    // 8. FIRST_TRADE
+    if (!isUnlocked(AchievementKey.FIRST_TRADE)) {
+      if (activities.some(a => a.event_type === 'TRADE_REVIEWED')) {
+        newUnlocks.push(this.createAchievement(AchievementKey.FIRST_TRADE));
+      }
+    }
+
+    // 9. WINNING_STREAK
+    if (!isUnlocked(AchievementKey.WINNING_STREAK)) {
+        // This needs metadata from activity or fetching trades
+        // For now using metadata if available
+        const trades = activities.filter(a => a.event_type === 'TRADE_REVIEWED' && a.metadata?.status === 'WIN');
+        if (trades.length >= 3) {
+            newUnlocks.push(this.createAchievement(AchievementKey.WINNING_STREAK));
+        }
+    }
+
+    // 10. TRADE_MASTER
+    if (!isUnlocked(AchievementKey.TRADE_MASTER)) {
+        const tradeCount = activities.filter(a => a.event_type === 'TRADE_REVIEWED').length;
+        if (tradeCount >= 50) {
+            newUnlocks.push(this.createAchievement(AchievementKey.TRADE_MASTER));
+        }
+    }
+
     // Persist new unlocks
     newUnlocks.forEach(a => achievementRepository.unlock(a));
 
