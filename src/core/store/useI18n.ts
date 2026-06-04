@@ -160,6 +160,13 @@ const translations = {
     protocol_label: 'پروتکل',
     status_active_label: 'وضعیت فعال',
     pts_label: 'امتیاز',
+    analytics: 'تحلیل داده‌ها',
+    weekly_growth: 'رشد هفتگی سیستم',
+    habit_consistency_label: 'پایداری عادات',
+    goal_distribution: 'توزیع اهداف استراتژیک',
+    mood_analysis: 'تحلیل فرکانس عصبی (Mood)',
+    activity_points: 'نقاط فعالیت',
+    completion_rate: 'نرخ تکمیل',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -311,6 +318,13 @@ const translations = {
     protocol_label: 'PROTOCOL',
     status_active_label: 'STATUS_ACTIVE',
     pts_label: 'PTS',
+    analytics: 'DATA_ANALYTICS',
+    weekly_growth: 'WEEKLY_SYSTEM_GROWTH',
+    habit_consistency_label: 'HABIT_CONSISTENCY_MAP',
+    goal_distribution: 'STRATEGIC_GOAL_DISTRIBUTION',
+    mood_analysis: 'NEURAL_PHASE_DISTRIBUTION (MOOD)',
+    activity_points: 'ACTIVITY_POINTS',
+    completion_rate: 'COMPLETION_RATE',
   }
 };
 

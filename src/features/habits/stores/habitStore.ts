@@ -6,11 +6,13 @@ import { activityService } from '../../../core/services/activityService';
 interface HabitState {
   habits: Habit[];
   todayLogs: Record<string, HabitLog>; // habitId -> HabitLog
+  allLogs: HabitLog[];
   isLoading: boolean;
   error: string | null;
 
   // Actions
   fetchHabits: () => Promise<void>;
+  fetchHistoricalLogs: (days: number) => Promise<void>;
   addHabit: (habit: Omit<Habit, 'id' | 'user_id' | 'created_at' | 'visibility'>) => Promise<void>;
   deleteHabit: (id: string) => Promise<void>;
   logHabit: (habitId: string, status: HabitStatus, date: string, value?: number) => Promise<void>;
@@ -19,6 +21,7 @@ interface HabitState {
 export const useHabitStore = create<HabitState>((set, get) => ({
   habits: [],
   todayLogs: {},
+  allLogs: [],
   isLoading: false,
   error: null,
 
@@ -36,6 +39,15 @@ export const useHabitStore = create<HabitState>((set, get) => ({
       set({ habits, todayLogs: todayLogsMap, isLoading: false });
     } catch (err: any) {
       set({ error: err.message, isLoading: false });
+    }
+  },
+
+  fetchHistoricalLogs: async (days) => {
+    try {
+      const allLogs = await habitService.getLogsForRange(days);
+      set({ allLogs });
+    } catch (err: any) {
+      console.error('Failed to fetch historical logs', err);
     }
   },
 

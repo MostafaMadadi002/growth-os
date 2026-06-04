@@ -92,5 +92,16 @@ export const habitService = {
   async getTodayLogs(): Promise<HabitLog[]> {
     const today = new Date().toISOString().split('T')[0];
     return habitRepository.getLogs().filter(l => l.date === today);
+  },
+
+  async getLogsForRange(days: number): Promise<HabitLog[]> {
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - days);
+    
+    return habitRepository.getLogs().filter(l => {
+      const logDate = new Date(l.date);
+      return logDate >= startDate && logDate <= today;
+    });
   }
 };
