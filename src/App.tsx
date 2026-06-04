@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { LayoutDashboard, BookText, Target, Activity, User, Terminal, GraduationCap, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, BookText, Target, Activity, User, Terminal, GraduationCap, BarChart3, Trophy } from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
 import { useAuthStore } from './core/stores/authStore';
 
@@ -13,11 +13,12 @@ import TradingScreen from './features/trading/TradingScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
 import LearningScreen from './features/learning/LearningScreen';
 import AnalyticsScreen from './features/analytics/AnalyticsScreen';
+import AchievementScreen from './features/achievements/AchievementScreen';
 import DevDashboard from './features/dev/DevDashboard';
 
 const queryClient = new QueryClient();
 
-type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Trading' | 'Learning' | 'Analytics' | 'Profile' | 'Dev';
+type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Trading' | 'Learning' | 'Analytics' | 'Achievements' | 'Profile' | 'Dev';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Dashboard');
@@ -37,6 +38,7 @@ export default function App() {
       case 'Trading': return <TradingScreen />;
       case 'Learning': return <LearningScreen />;
       case 'Analytics': return <AnalyticsScreen />;
+      case 'Achievements': return <AchievementScreen />;
       case 'Profile': return <ProfileScreen onDevRequest={() => setActiveTab('Dev')} />;
       case 'Dev': return <div className="h-full relative">
         <button onClick={() => setActiveTab('Profile')} className="absolute top-6 left-6 z-50 bg-slate-900/50 p-2 rounded-full text-white">
@@ -123,6 +125,12 @@ export default function App() {
               onClick={() => setActiveTab('Analytics')}
               icon={<BarChart3 />}
               label={t('analytics')}
+            />
+            <TabButton 
+              active={activeTab === 'Achievements'} 
+              onClick={() => setActiveTab('Achievements')}
+              icon={<Trophy />}
+              label={t('achievements')}
             />
             <TabButton 
               active={activeTab === 'Learning'} 
