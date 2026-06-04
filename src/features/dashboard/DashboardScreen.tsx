@@ -69,7 +69,7 @@ export default function DashboardScreen() {
               </div>
             </div>
             <div className="text-right">
-              <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">UPTIME_NODE</span>
+              <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('uptime_label')}</span>
               <div className="text-lg md:text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
             </div>
         </div>
@@ -99,11 +99,11 @@ export default function DashboardScreen() {
 
             <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-10">
                <div className="relative">
-                  <h2 className="text-7xl md:text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
+                  <h2 className="text-6xl md:text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
                     {todayPoints}
                   </h2>
-                  <div className="absolute -right-4 top-1 md:top-4 text-brand-primary">
-                    <ArrowUpRight size={24} md:size={48} strokeWidth={3} />
+                  <div className="absolute -right-2 md:-right-4 top-1 md:top-4 text-brand-primary">
+                    <ArrowUpRight size={20} md:size={48} strokeWidth={3} />
                   </div>
                </div>
                <div className="pb-1 md:pb-6">
@@ -118,7 +118,7 @@ export default function DashboardScreen() {
           <div className="flex items-center gap-8 pt-12 border-t border-white/[0.03]">
              <div className="flex -space-x-4">
                {[1,2,3,4].map(i => (
-                 <div key={i} className="w-10 h-10 rounded-xl bg-slate-800 border-2 border-slate-900 group-hover:translate-x-1 transition-transform cursor-pointer" />
+                 <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-slate-800 border-2 border-slate-900 group-hover:translate-x-1 transition-transform cursor-pointer" />
                ))}
              </div>
              <div className="flex-1 h-[2px] bg-slate-800 rounded-full overflow-hidden">
@@ -128,7 +128,7 @@ export default function DashboardScreen() {
                   className="h-full bg-brand-primary shadow-[0_0_15px_#10b981]" 
                 />
              </div>
-             <span className="text-[10px] font-mono font-black text-white">74% PK.</span>
+             <span className="text-[10px] font-mono font-black text-white">74% {t('pts_label')}.</span>
           </div>
         </motion.div>
 
@@ -144,7 +144,7 @@ export default function DashboardScreen() {
               </div>
               <div>
                  <div className="text-4xl md:text-6xl font-display font-black text-white leading-none">{tradingWinRate}%</div>
-                 <div className="text-[8px] md:text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-1 md:mt-2">{t('trading')} OPERATIONAL_STAT</div>
+                 <div className="text-[8px] md:text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-1 md:mt-2">{t('trading')} {t('operational_stat')}</div>
               </div>
            </motion.div>
 
@@ -168,11 +168,11 @@ export default function DashboardScreen() {
         {/* Secondary Modules */}
         <motion.div className="md:col-span-2 command-card flex flex-col justify-between hover:bg-slate-900/80">
             <div className="flex justify-between items-start">
-              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('habits')} EX_MAP</span>
+              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('habits')} {t('protocol_label')}</span>
               <Activity size={16} className="text-emerald-500" />
             </div>
-            <div className="py-2">
-               <ProgressRing progress={habitConsistency} size={90} strokeWidth={8} color="#10b981" label="" />
+            <div className="py-2 flex justify-center">
+               <ProgressRing progress={habitConsistency} size={80} md:size={90} strokeWidth={8} color="#10b981" label="" />
             </div>
             <div className="text-white font-black font-display text-3xl md:text-4xl">{habitConsistency}%</div>
         </motion.div>
@@ -193,8 +193,8 @@ export default function DashboardScreen() {
 
         <motion.div className="md:col-span-2 command-card bg-slate-900/80 border-white/[0.08] flex items-center justify-center">
            <div className="text-center">
-              <div className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mb-4">Neural Readiness</div>
-              <div className="text-3xl font-display font-black text-brand-primary uppercase">{t('optimal')}</div>
+              <div className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mb-4">{t('status_active_label')}</div>
+              <div className="text-2xl md:text-3xl font-display font-black text-brand-primary uppercase">{t('optimal')}</div>
               <div className="mt-4 flex gap-1 justify-center">
                  {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-3 bg-brand-primary rounded-full shadow-[0_0_8px_#10b981]" />)}
                  {[1,2,3].map(i => <div key={i} className="w-1 h-3 bg-slate-800 rounded-full" />)}
@@ -214,8 +214,8 @@ export default function DashboardScreen() {
            
            <div className="flex gap-8 md:gap-10 border-t md:border-t-0 md:border-l border-white/[0.04] pt-6 md:pt-0 md:pl-10">
               <div className="text-right">
-                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">Peak_Output</span>
-                <span className="text-white font-mono font-bold">{Math.max(...heatmapArray.map(m => m[1] as number), 0)} PTS</span>
+                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">{t('peak_output')}</span>
+                <span className="text-white font-mono font-bold">{Math.max(...heatmapArray.map(m => m[1] as number), 0)} {t('pts_label')}</span>
               </div>
               <div className="text-right">
                 <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">{t('efficiency')}</span>
@@ -240,7 +240,7 @@ export default function DashboardScreen() {
                }`} 
              >
                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-950 border border-white/10 rounded text-[8px] font-mono font-black text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                  {date} // {points} PTS
+                  {date} // {points} {t('pts_label')}
                </div>
              </motion.div>
            ))}

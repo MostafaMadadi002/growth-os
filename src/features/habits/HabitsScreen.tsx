@@ -140,68 +140,68 @@ export default function HabitsScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-950/98 backdrop-blur-3xl z-50 flex items-center justify-center p-6"
+            className="fixed inset-0 bg-slate-950/98 backdrop-blur-3xl z-50 flex items-center justify-center p-4 md:p-6"
           >
             <motion.div 
               initial={{ scale: 0.95, y: 40 }}
               animate={{ scale: 1, y: 0 }}
-              className="bg-slate-900 border border-white/[0.05] w-full max-w-2xl rounded-[2rem] p-12 shadow-2xl relative"
+              className="bg-slate-900 border border-white/[0.05] w-full max-w-2xl rounded-2xl md:rounded-[2rem] p-6 md:p-12 shadow-2xl relative"
             >
               <button 
                 onClick={() => setShowAdd(false)} 
-                className="absolute top-10 right-10 w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl"
+                className="absolute top-4 right-4 md:top-10 md:right-10 w-10 h-10 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl z-20"
               >
-                <X size={20} />
+                <X size={18} md:size={20} />
               </button>
               
-              <div className="mb-12">
-                <span className="text-[10px] font-mono font-bold text-brand-primary uppercase tracking-[0.4em] block mb-4">Protocol Initialization</span>
-                <h3 className="text-5xl font-display font-black text-white tracking-tighter">{t('define_ritual') || 'Define Ritual'}.</h3>
+              <div className="mb-8 md:mb-12">
+                <span className="text-[8px] md:text-[10px] font-mono font-bold text-brand-primary uppercase tracking-[0.4em] block mb-2 md:mb-4">{t('protocol_init')}</span>
+                <h3 className="text-3xl md:text-5xl font-display font-black text-white tracking-tighter">{t('define_ritual')}.</h3>
               </div>
               
-              <div className="space-y-10 mb-16">
-                <div className="space-y-4">
-                  <span className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest ml-1">The Objective Narrative</span>
+              <div className="space-y-6 md:space-y-10 mb-8 md:mb-16 overflow-y-auto max-h-[50vh] md:max-h-[55vh] scrollbar-hide pr-2">
+                <div className="space-y-3 md:space-y-4">
+                  <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest ml-1">{t('objective_narrative')}</span>
                   <input 
                     value={newTitle}
                     onChange={e => setNewTitle(e.target.value)}
-                    placeholder="E.g. Neural Focus Session"
-                    className="w-full bg-slate-950/50 border border-white/[0.03] rounded-2xl p-6 text-white text-2xl font-bold outline-none focus:border-brand-primary/30 transition-all placeholder:text-slate-850"
+                    placeholder={t('habit_title_placeholder')}
+                    className="w-full bg-slate-950/50 border border-white/[0.03] rounded-xl md:rounded-2xl p-5 md:p-6 text-xl md:text-2xl font-bold outline-none focus:border-brand-primary/30 transition-all placeholder:text-slate-850"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div className="space-y-4">
-                    <span className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest ml-1">Polarity Intent</span>
-                    <div className="grid grid-cols-2 gap-3 p-1.5 bg-slate-950 rounded-2xl border border-white/[0.03]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                  <div className="space-y-3 md:space-y-4">
+                    <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest ml-1">{t('polarity_intent')}</span>
+                    <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-950 rounded-xl md:rounded-2xl border border-white/[0.03]">
                       <button 
                         onClick={() => setIsGood(true)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${isGood ? 'bg-brand-primary text-slate-950 shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-3 md:py-4 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-mono font-black uppercase tracking-widest transition-all ${isGood ? 'bg-brand-primary text-slate-950 shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
-                        Ascend
+                        {t('ascend') || 'Positive'}
                       </button>
                       <button 
                         onClick={() => setIsGood(false)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${!isGood ? 'bg-rose-500 text-slate-950 shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-3 md:py-4 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-mono font-black uppercase tracking-widest transition-all ${!isGood ? 'bg-rose-500 text-slate-950 shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
-                        Descend
+                        {t('descend') || 'Negative'}
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-4">
-                    <span className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest ml-1">Metric Logic</span>
-                    <div className="grid grid-cols-2 gap-3 p-1.5 bg-slate-950 rounded-2xl border border-white/[0.03]">
+                  <div className="space-y-3 md:space-y-4">
+                    <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest ml-1">{t('metric_logic')}</span>
+                    <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-950 rounded-xl md:rounded-2xl border border-white/[0.03]">
                       <button 
                         onClick={() => setType(HabitType.BINARY)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.BINARY ? 'bg-slate-800 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-3 md:py-4 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.BINARY ? 'bg-slate-800 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
-                        Toggle
+                        {t('toggle')}
                       </button>
                       <button 
                         onClick={() => setType(HabitType.QUANTITATIVE)}
-                        className={`py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.QUANTITATIVE ? 'bg-slate-800 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
+                        className={`py-3 md:py-4 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-mono font-black uppercase tracking-widest transition-all ${type === HabitType.QUANTITATIVE ? 'bg-slate-800 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
                       >
-                        Value
+                        {t('value')}
                       </button>
                     </div>
                   </div>
@@ -211,41 +211,41 @@ export default function HabitsScreen() {
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="grid grid-cols-2 gap-6 p-8 bg-slate-950 rounded-3xl border border-white/[0.03]"
+                    className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 p-6 md:p-8 bg-slate-950 rounded-2xl md:rounded-3xl border border-white/[0.03]"
                   >
-                    <div className="space-y-3">
-                       <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest ml-1">Target Magnitude</span>
+                    <div className="space-y-2 md:space-y-3">
+                       <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest ml-1">{t('target_magnitude')}</span>
                        <input 
                          type="number"
                          value={targetValue}
                          onChange={e => setTargetValue(Number(e.target.value))}
-                         className="w-full bg-slate-900 border border-white/[0.03] rounded-xl p-4 text-white text-center font-mono font-bold text-xl outline-none focus:border-brand-primary/20"
+                         className="w-full bg-slate-900 border border-white/[0.03] rounded-xl p-3 md:p-4 text-white text-center font-mono font-bold text-lg md:text-xl outline-none focus:border-brand-primary/20"
                        />
                     </div>
-                    <div className="space-y-3">
-                       <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest ml-1">SI Unit</span>
+                    <div className="space-y-2 md:space-y-3">
+                       <span className="text-[8px] md:text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest ml-1">{t('si_unit')}</span>
                        <input 
                          value={unit}
                          onChange={e => setUnit(e.target.value)}
                          placeholder="min, cycles, L"
-                         className="w-full bg-slate-900 border border-white/[0.03] rounded-xl p-4 text-white text-center font-mono font-bold text-xl outline-none focus:border-brand-primary/20"
+                         className="w-full bg-slate-900 border border-white/[0.03] rounded-xl p-3 md:p-4 text-white text-center font-mono font-bold text-lg md:text-xl outline-none focus:border-brand-primary/20"
                        />
                     </div>
                   </motion.div>
                 )}
               </div>
 
-              <div className="flex gap-6">
+              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                 <button 
                   onClick={handleAdd}
                   disabled={!newTitle}
-                  className="flex-[2] bg-brand-primary hover:bg-emerald-400 py-6 rounded-2xl font-mono font-black text-slate-950 uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/10 active:scale-95 transition-all disabled:opacity-30"
+                  className="w-full md:flex-[2] bg-brand-primary hover:bg-emerald-400 py-4 md:py-6 rounded-xl md:rounded-2xl font-mono font-black text-slate-950 uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/10 active:scale-95 transition-all disabled:opacity-30"
                 >
                   {t('commit_data')}
                 </button>
                 <button 
                   onClick={() => setShowAdd(false)}
-                  className="flex-1 bg-slate-800 py-6 rounded-2xl font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
+                  className="w-full md:flex-1 bg-slate-800 py-4 md:py-6 rounded-xl md:rounded-2xl font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
                 >
                   {t('abort_action')}
                 </button>

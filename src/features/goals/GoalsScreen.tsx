@@ -99,17 +99,17 @@ export default function GoalsScreen() {
                </div>
                <h1 className="text-3xl md:text-5xl font-display font-black text-white mb-3 md:mb-4 tracking-tighter">{selectedGoal.title}</h1>
                <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-4 text-slate-500 mb-8 md:mb-12 text-[8px] md:text-[10px] font-mono font-black uppercase tracking-widest">
-                  <span className="bg-slate-950 px-3 md:px-5 py-1.5 md:py-2 rounded-lg border border-white/5">{selectedGoal.level}_HORIZON</span>
+                  <span className="bg-slate-950 px-3 md:px-5 py-1.5 md:py-2 rounded-lg border border-white/5">{t(selectedGoal.level.toLowerCase() + '_term') || selectedGoal.level} // {t('horizon')}</span>
                   <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-slate-800" />
                   <span className="flex items-center gap-2">
                     <Calendar size={12} md:size={14} className="text-brand-primary" />
-                    ACTIVATED: {new Date(selectedGoal.start_date || '').toLocaleDateString()}
+                    {t('init_date') || 'ACTIVATED'}: {new Date(selectedGoal.start_date || '').toLocaleDateString()}
                   </span>
                </div>
                
                <div className="w-full space-y-4 md:space-y-5">
                   <div className="flex justify-between items-end px-1 md:px-2">
-                     <span className="text-[8px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">Objective_Saturation</span>
+                     <span className="text-[8px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('operational')} // SATURATION</span>
                      <span className="text-2xl md:text-3xl font-mono font-black text-brand-primary">{Math.round(progress)}%</span>
                   </div>
                   <div className="w-full h-2 md:h-3 bg-slate-950 rounded-full overflow-hidden border border-white/5">
@@ -124,8 +124,8 @@ export default function GoalsScreen() {
             </div>
           </div>
 
-          <h3 className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-8 mb-8">Strategic_Roadmap // Milestones</h3>
-          <div className="space-y-6">
+          <h3 className="text-[9px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4 md:ml-8 mb-6 md:mb-8">{t('milestones_label')} // ROADMAP</h3>
+          <div className="space-y-4 md:space-y-6">
              {(selectedGoal.milestones || []).map((m, idx) => (
                <motion.button 
                  key={m.id}
@@ -133,15 +133,15 @@ export default function GoalsScreen() {
                  animate={{ opacity: 1, y: 0 }}
                  transition={{ delay: idx * 0.1 }}
                  onClick={() => toggleMilestone(selectedGoal.id, m.id)}
-                 className={`w-full p-10 rounded-[2.5rem] border flex items-center justify-between transition-all group relative overflow-hidden ${m.is_completed ? 'bg-slate-900 border-white/10' : 'bg-slate-900/30 border-white/5 border-dashed hover:bg-slate-900/50'}`}
+                 className={`w-full p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] border flex items-center justify-between transition-all group relative overflow-hidden ${m.is_completed ? 'bg-slate-900 border-white/10' : 'bg-slate-900/30 border-white/5 border-dashed hover:bg-slate-900/50'}`}
                >
-                 <div className="flex items-center gap-8 relative z-10">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${m.is_completed ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/20' : 'bg-slate-950 text-slate-700 border border-white/5'}`}>
-                      {m.is_completed ? <Trophy size={24} /> : <div className="text-sm font-mono font-black">{idx + 1}</div>}
+                 <div className="flex items-center gap-4 md:gap-8 relative z-10">
+                    <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center transition-all ${m.is_completed ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/20' : 'bg-slate-950 text-slate-700 border border-white/5'}`}>
+                      {m.is_completed ? <Trophy size={18} md:size={24} /> : <div className="text-[12px] md:text-sm font-mono font-black">{idx + 1}</div>}
                     </div>
-                    <span className={`text-2xl font-display font-black tracking-tighter text-left ${m.is_completed ? 'text-white' : 'text-slate-500'}`}>{m.title}</span>
+                    <span className={`text-lg md:text-2xl font-display font-black tracking-tighter text-left ${m.is_completed ? 'text-white' : 'text-slate-500'}`}>{m.title}</span>
                  </div>
-                 {m.is_completed && <div className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] relative z-10">{t('secured')}</div>}
+                 {m.is_completed && <div className="text-[8px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] relative z-10">{t('secured')}</div>}
                </motion.button>
              ))}
           </div>
@@ -243,86 +243,88 @@ export default function GoalsScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-950/98 backdrop-blur-3xl z-50 flex items-center justify-center p-6"
+            className="fixed inset-0 bg-slate-950/98 backdrop-blur-3xl z-50 flex items-center justify-center p-4 md:p-6"
           >
             <motion.div 
               initial={{ scale: 0.95, y: 40 }}
               animate={{ scale: 1, y: 0 }}
-              className="bg-slate-900 border border-white/[0.05] w-full max-w-2xl rounded-[3rem] p-16 shadow-2xl relative"
+              className="bg-slate-900 border border-white/[0.05] w-full max-w-2xl rounded-2xl md:rounded-[3rem] p-6 md:p-16 shadow-2xl relative"
             >
               <button 
                 onClick={() => setShowAdd(false)} 
-                className="absolute top-12 right-12 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl"
+                className="absolute top-4 right-4 md:top-12 md:right-12 w-10 h-10 md:w-14 md:h-14 bg-slate-800 rounded-xl md:rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl z-20"
               >
-                <X size={24} />
+                <X size={20} md:size={24} />
               </button>
               
-              <div className="mb-12">
-                 <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-4 block">Initiative Initialization</span>
-                 <h3 className="text-5xl font-display font-black text-white tracking-tighter">{t('initiate_mission') || 'Initiate Mission'}.</h3>
+              <div className="mb-8 md:mb-12">
+                 <span className="text-[8px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.4em] mb-2 md:mb-4 block">{t('mission_init')}</span>
+                 <h3 className="text-3xl md:text-5xl font-display font-black text-white tracking-tighter">{t('initiate_mission')}.</h3>
               </div>
               
-              <div className="space-y-10 mb-16 overflow-y-auto max-h-[45vh] scrollbar-hide pr-2">
-                <div className="space-y-4">
-                  <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">The Strategic Objective</label>
+              <div className="space-y-6 md:space-y-10 mb-8 md:mb-16 overflow-y-auto max-h-[50vh] md:max-h-[45vh] scrollbar-hide pr-2">
+                <div className="space-y-3 md:space-y-4">
+                  <label className="text-[9px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('goal_title')}</label>
                   <input 
                     value={newTitle}
                     onChange={e => setNewTitle(e.target.value)}
-                    placeholder="E.g. Full-Stack Mastery"
-                    className="w-full bg-slate-950 border border-white/[0.03] rounded-3xl p-8 text-white text-2xl font-black outline-none focus:border-brand-primary/30 transition-all placeholder:text-slate-850"
+                    placeholder={t('title_placeholder')}
+                    className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl md:rounded-3xl p-5 md:p-8 text-white text-lg md:text-2xl font-black outline-none focus:border-brand-primary/30 transition-all placeholder:text-slate-850"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Domain Category</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                  <div className="space-y-3 md:space-y-4">
+                    <label className="text-[9px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('goal_category')}</label>
                     <select 
                       value={category} 
                       onChange={e => setCategory(e.target.value as any)}
-                      className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl p-6 text-white font-mono font-black text-xs outline-none appearance-none cursor-pointer hover:bg-slate-900"
+                      className="w-full bg-slate-950 border border-white/[0.03] rounded-xl md:rounded-2xl p-4 md:p-6 text-white font-mono font-black text-[10px] md:text-xs outline-none appearance-none cursor-pointer hover:bg-slate-900"
                     >
-                      <option value="EDUCATION">Education_Stream</option>
-                      <option value="FITNESS">Fitness_Stream</option>
-                      <option value="TRADING">Trading_Stream</option>
-                      <option value="PROJECT">Project_Stream</option>
-                      <option value="PERSONAL">Personal_Stream</option>
+                      <option value="EDUCATION">{t('education')}_Stream</option>
+                      <option value="FITNESS">{t('fitness')}_Stream</option>
+                      <option value="TRADING">{t('trading_cat')}_Stream</option>
+                      <option value="PROJECT">{t('project')}_Stream</option>
+                      <option value="PERSONAL">{t('personal')}_Stream</option>
                     </select>
                   </div>
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Strategic Horizon</label>
+                  <div className="space-y-3 md:space-y-4">
+                    <label className="text-[9px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('horizon')}</label>
                     <select 
                       value={level} 
                       onChange={e => setLevel(e.target.value as GoalLevel)}
-                      className="w-full bg-slate-950 border border-white/[0.03] rounded-2xl p-6 text-white font-mono font-black text-xs outline-none appearance-none cursor-pointer hover:bg-slate-900"
+                      className="w-full bg-slate-950 border border-white/[0.03] rounded-xl md:rounded-2xl p-4 md:p-6 text-white font-mono font-black text-[10px] md:text-xs outline-none appearance-none cursor-pointer hover:bg-slate-900"
                     >
-                      {Object.values(GoalLevel).map(l => <option key={l} value={l}>{l}_TERM_STRATEGY</option>)}
+                      <option value={GoalLevel.WEEKLY}>{t('weekly_term')}_STRATEGY</option>
+                      <option value={GoalLevel.MONTHLY}>{t('monthly_term')}_STRATEGY</option>
+                      <option value={GoalLevel.YEARLY}>{t('yearly_term')}_STRATEGY</option>
                     </select>
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <label className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">Tactical Milestones</label>
-                  <div className="flex gap-4">
+                <div className="space-y-4 md:space-y-6">
+                  <label className="text-[9px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest ml-4">{t('milestones_label')}</label>
+                  <div className="flex gap-3 md:gap-4">
                     <input 
                       value={milestoneInput}
                       onChange={e => setMilestoneInput(e.target.value)}
                       onKeyPress={e => e.key === 'Enter' && milestoneInput && (setTempMilestones([...tempMilestones, milestoneInput]), setMilestoneInput(''))}
-                      placeholder="Define tactical step..."
-                      className="flex-1 bg-slate-950 border border-white/[0.03] rounded-2xl p-6 text-white text-sm font-bold outline-none focus:border-brand-primary/30 placeholder:text-slate-800"
+                      placeholder={t('milestone_placeholder')}
+                      className="flex-1 bg-slate-950 border border-white/[0.03] rounded-xl md:rounded-2xl p-4 md:p-6 text-white text-[10px] md:text-sm font-bold outline-none focus:border-brand-primary/30 placeholder:text-slate-800"
                     />
                     <button 
                       onClick={() => { if(milestoneInput) { setTempMilestones([...tempMilestones, milestoneInput]); setMilestoneInput(''); } }}
-                      className="bg-brand-primary p-6 rounded-2xl text-slate-950 shadow-xl"
+                      className="bg-brand-primary p-4 md:p-6 rounded-xl md:rounded-2xl text-slate-950 shadow-xl"
                     >
-                      <Plus size={24} />
+                      <Plus size={20} md:size={24} />
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 gap-3 md:gap-4">
                     {tempMilestones.map((m, i) => (
-                      <div key={i} className="flex items-center justify-between bg-slate-950/30 p-6 rounded-2xl border border-white/[0.05] group">
-                        <span className="text-slate-300 font-mono font-bold text-xs">{m}</span>
+                      <div key={i} className="flex items-center justify-between bg-slate-950/30 p-4 md:p-6 rounded-xl md:rounded-2xl border border-white/[0.05] group">
+                        <span className="text-slate-300 font-mono font-bold text-[10px] md:text-xs">{m}</span>
                         <button onClick={() => setTempMilestones(tempMilestones.filter((_, idx) => idx !== i))} className="text-slate-700 hover:text-rose-500 transition-colors">
-                           <X size={18} />
+                           <X size={16} md:size={18} />
                         </button>
                       </div>
                     ))}
@@ -330,17 +332,17 @@ export default function GoalsScreen() {
                 </div>
               </div>
 
-              <div className="flex gap-6">
+              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                 <button 
                   onClick={handleAdd}
                   disabled={!newTitle}
-                  className="flex-[2] bg-brand-primary hover:bg-emerald-400 py-8 rounded-[2rem] font-mono font-black text-slate-950 uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all disabled:opacity-30"
+                  className="w-full md:flex-[2] bg-brand-primary hover:bg-emerald-400 py-5 md:py-8 rounded-xl md:rounded-[2rem] font-mono font-black text-slate-950 uppercase tracking-[0.2em] shadow-2xl shadow-brand-primary/20 active:scale-95 transition-all disabled:opacity-30"
                 >
                   {t('commit_data')}
                 </button>
                 <button 
                   onClick={() => setShowAdd(false)}
-                  className="flex-1 bg-slate-800 py-8 rounded-[2rem] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
+                  className="w-full md:flex-1 bg-slate-800 py-5 md:py-8 rounded-xl md:rounded-[2rem] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all"
                 >
                   {t('abort_action')}
                 </button>
