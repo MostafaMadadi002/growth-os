@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { LayoutDashboard, BookText, Target, Activity, User, Terminal, GraduationCap, BarChart3, Trophy } from 'lucide-react';
+import { 
+  LayoutDashboard, BookText, Target, Activity, User, 
+  Terminal, GraduationCap, BarChart3, Trophy, ChevronUp, Layers
+} from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
 import { useAuthStore } from './core/stores/authStore';
+import { useAppStore, UserRole } from './core/stores/appStore';
+import { motion, AnimatePresence } from 'motion/react';
 
 // MVP Features
 import DashboardScreen from './features/dashboard/DashboardScreen';
@@ -22,12 +27,23 @@ type TabType = 'Dashboard' | 'Journal' | 'Goals' | 'Habits' | 'Trading' | 'Learn
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Dashboard');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, dir, t, setLanguage } = useI18n();
   const { init: initAuth } = useAuthStore();
+  const { activeRole } = useAppStore();
 
   useEffect(() => {
     initAuth();
   }, [initAuth]);
+
+  // Scoped Tabs based on Role
+  const roleTabs: Record<UserRole, TabType[]> = {
+    [UserRole.STUDENT]: ['Dashboard', 'Goals', 'Journal', 'Habits', 'Learning', 'Analytics', 'Achievements'],
+    [UserRole.TRADER]: ['Dashboard', 'Trading', 'Analytics', 'Achievements'],
+    [UserRole.ATHLETE]: ['Dashboard', 'Habits', 'Goals', 'Analytics'],
+  };
+
+  const currentTabs = roleTabs[activeRole];
 
   const renderScreen = () => {
     switch (activeTab) {
@@ -40,134 +56,133 @@ export default function App() {
       case 'Analytics': return <AnalyticsScreen />;
       case 'Achievements': return <AchievementScreen />;
       case 'Profile': return <ProfileScreen onDevRequest={() => setActiveTab('Dev')} />;
-      case 'Dev': return <div className="h-full relative">
-        <button onClick={() => setActiveTab('Profile')} className="absolute top-6 left-6 z-50 bg-slate-900/50 p-2 rounded-full text-white">
-          <Terminal size={18} />
-        </button>
-        <DevDashboard />
-      </div>;
+      case 'Dev': return (
+        <div className="h-full relative">
+          <button onClick={() => setActiveTab('Profile')} className="absolute top-6 left-6 z-50 bg-slate-900/50 p-2 rounded-full text-white">
+            <Terminal size={18} />
+          </button>
+          <DevDashboard />
+        </div>
+      );
       default: return <DashboardScreen />;
+    }
+  };
+
+  const getIcon = (tab: TabType) => {
+    switch (tab) {
+      case 'Dashboard': return <LayoutDashboard />;
+      case 'Journal': return <BookText />;
+      case 'Goals': return <Target />;
+      case 'Habits': return <Activity />;
+      case 'Trading': return <Terminal />;
+      case 'Learning': return <GraduationCap />;
+      case 'Analytics': return <BarChart3 />;
+      case 'Achievements': return <Trophy />;
+      case 'Profile': return <User />;
+      default: return <Layers />;
     }
   };
 
   return (
     <QueryClientProvider client={queryClient}>
       <div 
-        className="flex flex-col h-screen w-full bg-slate-950 select-none"
+        className="flex flex-col h-screen w-full bg-slate-950 select-none overflow-hidden"
         dir={dir}
       >
-        {/* Top Header - Strategic Status */}
-        <header className="px-4 md:px-8 py-4 md:py-6 flex justify-between items-center bg-slate-950/80 backdrop-blur-2xl z-20 border-b border-white/[0.03]">
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-2xl shadow-brand-primary/20">
-              <div className="w-4 h-4 md:w-5 md:h-5 border-[3px] border-slate-950 rounded-sm rotate-45" />
-            </div>
-            <div>
-              <span className="text-lg md:text-xl font-display font-black tracking-tighter text-white block leading-none">GrowthOS</span>
-              <span className="text-[8px] md:text-[9px] font-mono font-bold text-brand-primary uppercase tracking-[0.3em]">{t('status_active')}</span>
-            </div>
+        {/* Minimal Header */}
+        <header className="px-6 md:px-12 py-6 flex justify-between items-center bg-slate-950/20 backdrop-blur-3xl z-40 border-b border-white/[0.02]">
+          <div className="flex items-center gap-4">
+             <div className="w-10 h-10 bg-slate-900 border border-white/5 rounded-2xl flex items-center justify-center">
+                <span className="text-brand-primary font-black text-xl">G</span>
+             </div>
+             <div>
+                <h1 className="text-xl font-display font-black text-white tracking-tighter uppercase leading-none">GrowthOS</h1>
+                <p className="text-[10px] font-mono font-black text-brand-primary mt-1 uppercase tracking-widest">{t(activeRole.toLowerCase() + '_role')}</p>
+             </div>
           </div>
-          <div className="flex items-center gap-4 md:gap-6">
-            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-slate-900/50 border border-white/[0.05] rounded-full">
-              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{t('network_secure')}</span>
-            </div>
-            <button 
-              onClick={() => setLanguage(language === 'fa' ? 'en' : 'fa')}
-              className="text-[8px] md:text-[10px] font-black bg-slate-900 border border-white/[0.05] px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-slate-400 hover:text-white transition-all active:scale-95 flex items-center gap-2"
-            >
-              <Terminal size={10} className="md:w-3 md:h-3" />
-              {language === 'fa' ? 'ENGINEERING_EN' : 'ENGINEERING_FA'}
-            </button>
+
+          <div className="flex items-center gap-6">
+             <button 
+               onClick={() => setLanguage(language === 'fa' ? 'en' : 'fa')}
+               className="text-[10px] font-mono font-black text-slate-500 hover:text-white uppercase tracking-widest transition-colors"
+             >
+               {language === 'fa' ? 'EN' : 'FA'}
+             </button>
+             <button 
+               onClick={() => setActiveTab('Profile')}
+               className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${activeTab === 'Profile' ? 'bg-brand-primary text-slate-950 shadow-2xl' : 'bg-slate-900 text-slate-500 border border-white/5'}`}
+             >
+               <User size={18} />
+             </button>
           </div>
         </header>
 
-        {/* Dynamic Content Area */}
-        <main className="flex-1 overflow-hidden relative data-grid">
-          {renderScreen()}
+        {/* content */}
+        <main className="flex-1 relative overflow-hidden data-grid">
+           <AnimatePresence mode="wait">
+             <motion.div
+               key={activeTab}
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -10 }}
+               transition={{ duration: 0.3 }}
+               className="h-full"
+             >
+               {renderScreen()}
+             </motion.div>
+           </AnimatePresence>
         </main>
 
-        {/* Bottom Navigation - Horizontal Scroll on Mobile */}
-        <nav className="industrial-nav h-24 px-4 md:px-8 flex items-center justify-between md:justify-around z-30 overflow-x-auto scrollbar-hide shrink-0">
-          <div className="flex items-center min-w-max gap-2 md:gap-0 mx-auto">
-            <TabButton 
-              active={activeTab === 'Dashboard'} 
-              onClick={() => setActiveTab('Dashboard')}
-              icon={<LayoutDashboard />}
-              label={t('dashboard')}
-            />
-            <TabButton 
-              active={activeTab === 'Journal'} 
-              onClick={() => setActiveTab('Journal')}
-              icon={<BookText />}
-              label={t('journal')}
-            />
-            <TabButton 
-              active={activeTab === 'Goals'} 
-              onClick={() => setActiveTab('Goals')}
-              icon={<Target />}
-              label={t('goals')}
-            />
-            <TabButton 
-              active={activeTab === 'Habits'} 
-              onClick={() => setActiveTab('Habits')}
-              icon={<Activity />}
-              label={t('habits')}
-            />
-            <TabButton 
-              active={activeTab === 'Trading'} 
-              onClick={() => setActiveTab('Trading')}
-              icon={<Terminal />}
-              label={t('trading')}
-            />
-            <TabButton 
-              active={activeTab === 'Analytics'} 
-              onClick={() => setActiveTab('Analytics')}
-              icon={<BarChart3 />}
-              label={t('analytics')}
-            />
-            <TabButton 
-              active={activeTab === 'Achievements'} 
-              onClick={() => setActiveTab('Achievements')}
-              icon={<Trophy />}
-              label={t('achievements')}
-            />
-            <TabButton 
-              active={activeTab === 'Learning'} 
-              onClick={() => setActiveTab('Learning')}
-              icon={<GraduationCap />}
-              label={t('learning')}
-            />
-            <TabButton 
-              active={activeTab === 'Profile'} 
-              onClick={() => setActiveTab('Profile')}
-              icon={<User />}
-              label={t('profile')}
-            />
-          </div>
-        </nav>
+        {/* Tree Navigation Root */}
+        <div className="fixed bottom-0 inset-x-0 z-50 p-6 pointer-events-none">
+           <div className="max-w-xl mx-auto flex flex-col items-center gap-4">
+              
+              {/* The "Explorer" Sub-menu (Tree branches) */}
+              <AnimatePresence>
+                {isMenuOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                    className="bg-slate-900/95 backdrop-blur-3xl border border-white/10 p-2 rounded-[2.5rem] shadow-2xl flex gap-1 pointer-events-auto overflow-x-auto scrollbar-hide max-w-full"
+                  >
+                    {currentTabs.map(tab => (
+                      <button 
+                        key={tab}
+                        onClick={() => {
+                          setActiveTab(tab);
+                          setIsMenuOpen(false);
+                        }}
+                        className={`px-6 py-4 rounded-[1.8rem] flex flex-col items-center gap-2 transition-all min-w-[80px] ${activeTab === tab ? 'bg-brand-primary text-slate-950 font-black' : 'text-slate-500 hover:text-white'}`}
+                      >
+                         {React.cloneElement(getIcon(tab) as React.ReactElement, { size: 18 })}
+                         <span className="text-[9px] font-mono uppercase tracking-widest">{t(tab.toLowerCase())}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Main Explorer Button (Tree Root) */}
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="bg-slate-900 border border-white/10 w-20 h-20 rounded-[2rem] flex flex-col items-center justify-center text-white pointer-events-auto shadow-2xl hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 group relative overflow-hidden"
+              >
+                 <div className={`transition-transform duration-500 ${isMenuOpen ? 'rotate-180 scale-125' : 'rotate-0'}`}>
+                    <ChevronUp size={24} className={isMenuOpen ? 'text-brand-primary' : 'text-slate-500'} />
+                 </div>
+                 <span className="text-[8px] font-mono font-black mt-1 uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">Explorer</span>
+                 
+                 {isMenuOpen && (
+                    <motion.div 
+                      layoutId="nav-bg"
+                      className="absolute inset-0 bg-brand-primary/5 blur-xl pointer-events-none"
+                    />
+                 )}
+              </button>
+           </div>
+        </div>
       </div>
     </QueryClientProvider>
-  );
-}
-
-function TabButton({ active, onClick, icon, label }: { active: boolean, onClick: () => void, icon: React.ReactNode, label: string }) {
-  return (
-    <button 
-      onClick={onClick}
-      className={`relative flex flex-col items-center justify-center w-16 md:w-20 h-full transition-all duration-500 ${active ? 'text-brand-primary' : 'text-slate-600 hover:text-slate-400'}`}
-    >
-      {active && (
-        <div className="absolute -top-[1px] inset-x-0 flex justify-center">
-           <div className="w-10 md:w-12 h-[2px] bg-brand-primary shadow-[0_0_15px_rgba(16,185,129,0.8)]" />
-        </div>
-      )}
-      <div className={`transition-all duration-500 ${active ? 'scale-110 translate-y-[-1px] md:translate-y-[-2px]' : 'scale-100'}`}>
-        {React.cloneElement(icon as React.ReactElement, { className: "w-5 h-5 md:w-6 md:h-6" })}
-      </div>
-      <span className={`text-[7px] md:text-[9px] mt-1.5 md:mt-2 font-black uppercase tracking-[0.1em] md:tracking-[0.2em] transition-all duration-500 ${active ? 'opacity-100' : 'opacity-40'}`}>
-        {label}
-      </span>
-    </button>
   );
 }
