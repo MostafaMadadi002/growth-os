@@ -63,6 +63,24 @@ export default function HabitsScreen() {
       </header>
 
       <main className="flex-1 overflow-y-auto space-y-16 pb-32 scrollbar-hide">
+        {/* Weekly Micro-Report */}
+        <section className="bg-slate-900/40 border border-white/5 rounded-3xl p-8 mb-12">
+           <div className="flex justify-between items-center mb-6">
+              <h3 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('weekly_summary')}</h3>
+              <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-widest">Efficiency: 88%</span>
+           </div>
+           <div className="flex justify-between gap-2">
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                <div key={i} className="flex flex-col items-center gap-3 flex-1">
+                   <div className="w-full h-12 bg-slate-950 rounded-xl flex items-center justify-center border border-white/5 relative overflow-hidden">
+                      <div className="absolute inset-x-0 bottom-0 bg-brand-primary" style={{ height: `${[60, 80, 40, 90, 70, 95, 85][i]}%` }} />
+                   </div>
+                   <span className="text-[8px] font-mono font-bold text-slate-700">{day}</span>
+                </div>
+              ))}
+           </div>
+        </section>
+
         {/* Positive Growth Section */}
         <section>
           <div className="flex items-center justify-between mb-10 px-2">

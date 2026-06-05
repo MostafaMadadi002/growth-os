@@ -19,7 +19,7 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
   const { user, signOut, isLoading } = useAuthStore();
   const { activeRole, setActiveRole } = useAppStore();
   const { activities, fetchActivities } = useActivityStore();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [showAuth, setShowAuth] = useState(false);
 
   useEffect(() => {
@@ -83,21 +83,71 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">System_Authority // ID: {user?.id?.slice(0, 8)}</span>
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">GrowthOS // System_Level: {Math.floor(activities.length / 10) + 1}</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter uppercase">{t('identity')}</h1>
+          <h1 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter uppercase leading-none">{t('profile')}</h1>
         </div>
-        <button 
-          onClick={() => signOut()}
-          className="p-4 bg-rose-500/5 text-rose-500 rounded-2xl border border-rose-500/10 hover:bg-rose-500 hover:text-white transition-all shadow-xl"
-        >
-          <LogOut size={20} />
-        </button>
+        <div className="flex gap-4">
+           <div className="bg-slate-900 border border-white/5 px-6 py-4 rounded-2xl flex flex-col items-end">
+              <span className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('total_xp')}</span>
+              <span className="text-xl font-mono font-black text-brand-primary">{activities.length * 10}</span>
+           </div>
+           <button 
+             onClick={() => signOut()}
+             className="p-4 bg-rose-500/5 text-rose-500 rounded-2xl border border-rose-500/10 hover:bg-rose-500 hover:text-white transition-all shadow-xl"
+           >
+             <LogOut size={20} />
+           </button>
+        </div>
       </header>
 
       <div className="space-y-12">
         
-        {/* Role Domain Switcher - The 3 Boxes */}
+        {/* Growth Heatmap (System Contribution Graph) */}
+        <section className="bg-slate-950 border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] pointer-events-none" />
+           <div className="flex justify-between items-center mb-10">
+            <div>
+              <h3 className="text-2xl font-display font-black text-white tracking-tight uppercase mb-1">{t('growth_heatmap')}</h3>
+              <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('system_contributions')}</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-1.5 md:gap-2">
+            {heatmapData.map((day, i) => (
+              <motion.div 
+                key={i} 
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: i * 0.001 }}
+                title={`${day.date}: ${day.intensity} activities`}
+                className={`w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-sm transition-colors duration-500 ${
+                  day.intensity === 0 ? 'bg-slate-900' :
+                  day.intensity === 1 ? 'bg-brand-primary/20' :
+                  day.intensity === 2 ? 'bg-brand-primary/40' :
+                  day.intensity === 3 ? 'bg-brand-primary/70' :
+                  'bg-brand-primary'
+                }`}
+              />
+            ))}
+          </div>
+          
+          <div className="flex justify-between mt-8 text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest px-1">
+             <span>{t('weekly_summary')} // 365_Day_Window</span>
+             <div className="flex items-center gap-2">
+                <span>{language === 'fa' ? 'کمتر' : 'Less'}</span>
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-slate-900 rounded-xs" />
+                  <div className="w-2 h-2 bg-brand-primary/20 rounded-xs" />
+                  <div className="w-2 h-2 bg-brand-primary/40 rounded-xs" />
+                  <div className="w-2 h-2 bg-brand-primary rounded-xs" />
+                </div>
+                <span>{language === 'fa' ? 'بیشتر' : 'More'}</span>
+             </div>
+          </div>
+        </section>
+
+        {/* System Roots selection */}
         <section className="space-y-6">
           <div className="flex items-center gap-4 px-2">
             <h3 className="text-xs font-mono font-black text-slate-600 uppercase tracking-widest">{t('select_role')}</h3>
@@ -111,7 +161,7 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
                 className={`relative overflow-hidden p-8 rounded-[2rem] border transition-all duration-500 text-left group ${
                   activeRole === role.id 
                     ? `bg-slate-900 border-white/10 ring-2 ring-${role.color.replace('bg-', '')}/30` 
-                    : 'bg-slate-900/40 border-white/[0.03] opacity-60 hover:opacity-100'
+                    : 'bg-slate-900/40 border-white/[0.03] opacity-40 hover:opacity-100'
                 }`}
               >
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
@@ -133,58 +183,24 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
           </div>
         </section>
 
-        {/* Growth Heatmap (GitHub Style) */}
-        <section className="bg-slate-900 border border-white/[0.05] rounded-[2.5rem] p-8 md:p-12">
-          <div className="flex justify-between items-center mb-10">
-            <div>
-              <h3 className="text-2xl font-display font-black text-white tracking-tight uppercase mb-1">{t('growth_heatmap')}</h3>
-              <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('system_contributions')}</p>
-            </div>
-            <div className="text-right">
-              <span className="text-2xl font-mono font-black text-brand-primary">{activities.length}</span>
-              <span className="text-[10px] font-mono font-black text-slate-700 uppercase tracking-widest block">Total_Events</span>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-1.5 md:gap-2">
-            {heatmapData.map((day, i) => (
-              <div 
-                key={i} 
-                title={`${day.date}: ${day.intensity} activities`}
-                className={`w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-sm transition-colors duration-500 ${
-                  day.intensity === 0 ? 'bg-slate-950' :
-                  day.intensity === 1 ? 'bg-brand-primary/20' :
-                  day.intensity === 2 ? 'bg-brand-primary/40' :
-                  day.intensity === 3 ? 'bg-brand-primary/70' :
-                  'bg-brand-primary'
-                }`}
-              />
-            ))}
-          </div>
-          
-          <div className="flex justify-between mt-6 text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest px-1">
-             <span>Sequential_System_Logs: 365_Day_Window</span>
-             <div className="flex items-center gap-2">
-                <span>Less</span>
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-slate-950 rounded-xs" />
-                  <div className="w-2 h-2 bg-brand-primary/20 rounded-xs" />
-                  <div className="w-2 h-2 bg-brand-primary/40 rounded-xs" />
-                  <div className="w-2 h-2 bg-brand-primary rounded-xs" />
-                </div>
-                <span>More</span>
-             </div>
-          </div>
+        {/* System Metrics (Summary for the active root) */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+           <MetricCard label={t('branch_goals')} value="12" sub="85% Done" />
+           <MetricCard label={t('branch_habits')} value="24" sub="92% Strength" />
+           <MetricCard label={t('branch_notes')} value="156" sub="Knowledge Nodes" />
+           <MetricCard label={t('system_level')} value={String(Math.floor(activities.length / 10) + 1)} sub="Core Stability" />
         </section>
-
-        {/* Global Configuration */}
-        <section className="command-card !p-0 overflow-hidden divide-y divide-white/[0.04]">
-           <MenuButton icon={<Settings />} label="Kernel Architecture" sub="Customize operational parameters & core logic" />
-           <MenuButton icon={<Bell />} label="Telemetry Tunnels" sub="Config persistent signal notifications" />
-           <MenuButton icon={<Info />} label="System Diagnostics" sub="View internal kernel logs & resource efficiency" onClick={onDevRequest} />
-        </section>
-
       </div>
+    </div>
+  );
+}
+
+function MetricCard({ label, value, sub }: { label: string, value: string, sub: string }) {
+  return (
+    <div className="bg-slate-900/50 border border-white/[0.03] p-8 rounded-3xl group hover:border-white/10 transition-all">
+       <span className="text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest block mb-4">{label}</span>
+       <div className="text-4xl font-display font-black text-white mb-2 group-hover:text-brand-primary transition-colors">{value}</div>
+       <div className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest">{sub}</div>
     </div>
   );
 }

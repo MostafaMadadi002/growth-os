@@ -109,7 +109,7 @@ export default function GoalsScreen() {
                
                <div className="w-full space-y-4 md:space-y-5">
                   <div className="flex justify-between items-end px-1 md:px-2">
-                     <span className="text-[8px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('operational')} // SATURATION</span>
+                     <span className="text-[8px] md:text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('progress_rate')}</span>
                      <span className="text-2xl md:text-3xl font-mono font-black text-brand-primary">{Math.round(progress)}%</span>
                   </div>
                   <div className="w-full h-2 md:h-3 bg-slate-950 rounded-full overflow-hidden border border-white/5">

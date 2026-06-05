@@ -37,13 +37,48 @@ export default function App() {
   }, [initAuth]);
 
   // Scoped Tabs based on Role
-  const roleTabs: Record<UserRole, TabType[]> = {
-    [UserRole.STUDENT]: ['Dashboard', 'Goals', 'Journal', 'Habits', 'Learning', 'Analytics', 'Achievements'],
-    [UserRole.TRADER]: ['Dashboard', 'Trading', 'Analytics', 'Achievements'],
-    [UserRole.ATHLETE]: ['Dashboard', 'Habits', 'Goals', 'Analytics'],
+  const roleTrees: Record<UserRole, { label: string, branches: { id: TabType, label: string, icon: React.ReactNode }[] }[]> = {
+    [UserRole.STUDENT]: [
+      { 
+        label: 'root_student', 
+        branches: [
+          { id: 'Dashboard', label: 'dashboard', icon: <LayoutDashboard size={18} /> },
+          { id: 'Goals', label: 'branch_goals', icon: <Target size={18} /> },
+          { id: 'Habits', label: 'branch_habits', icon: <Activity size={18} /> },
+          { id: 'Journal', label: 'branch_notes', icon: <BookText size={18} /> },
+        ]
+      },
+      {
+        label: 'system_core',
+        branches: [
+          { id: 'Analytics', label: 'analytics', icon: <BarChart3 size={18} /> },
+          { id: 'Achievements', label: 'achievements', icon: <Trophy size={18} /> },
+        ]
+      }
+    ],
+    [UserRole.TRADER]: [
+      { 
+        label: 'root_trader', 
+        branches: [
+          { id: 'Dashboard', label: 'dashboard', icon: <LayoutDashboard size={18} /> },
+          { id: 'Trading', label: 'branch_journal', icon: <Terminal size={18} /> },
+          { id: 'Analytics', label: 'branch_charts', icon: <BarChart3 size={18} /> },
+        ]
+      }
+    ],
+    [UserRole.ATHLETE]: [
+      { 
+        label: 'root_athlete', 
+        branches: [
+          { id: 'Dashboard', label: 'dashboard', icon: <LayoutDashboard size={18} /> },
+          { id: 'Habits', label: 'habits', icon: <Activity size={18} /> },
+          { id: 'Goals', label: 'goals', icon: <Target size={18} /> },
+        ]
+      }
+    ]
   };
 
-  const currentTabs = roleTabs[activeRole];
+  const currentTree = roleTrees[activeRole];
 
   const renderScreen = () => {
     switch (activeTab) {
@@ -137,27 +172,41 @@ export default function App() {
         <div className="fixed bottom-0 inset-x-0 z-50 p-6 pointer-events-none">
            <div className="max-w-xl mx-auto flex flex-col items-center gap-4">
               
-              {/* The "Explorer" Sub-menu (Tree branches) */}
+              {/* The "Explorer" Tree Structure */}
               <AnimatePresence>
                 {isMenuOpen && (
                   <motion.div 
                     initial={{ opacity: 0, y: 20, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                    className="bg-slate-900/95 backdrop-blur-3xl border border-white/10 p-2 rounded-[2.5rem] shadow-2xl flex gap-1 pointer-events-auto overflow-x-auto scrollbar-hide max-w-full"
+                    className="bg-slate-900/98 backdrop-blur-3xl border border-white/10 p-6 rounded-[3rem] shadow-2xl flex flex-col gap-8 pointer-events-auto min-w-[300px] max-h-[70vh] overflow-y-auto scrollbar-hide"
                   >
-                    {currentTabs.map(tab => (
-                      <button 
-                        key={tab}
-                        onClick={() => {
-                          setActiveTab(tab);
-                          setIsMenuOpen(false);
-                        }}
-                        className={`px-6 py-4 rounded-[1.8rem] flex flex-col items-center gap-2 transition-all min-w-[80px] ${activeTab === tab ? 'bg-brand-primary text-slate-950 font-black' : 'text-slate-500 hover:text-white'}`}
-                      >
-                         {React.cloneElement(getIcon(tab) as React.ReactElement, { size: 18 })}
-                         <span className="text-[9px] font-mono uppercase tracking-widest">{t(tab.toLowerCase())}</span>
-                      </button>
+                    {currentTree.map((group, gIdx) => (
+                      <div key={gIdx} className="space-y-4">
+                        <div className="flex items-center gap-3 px-2">
+                           <div className="w-1 h-3 rounded-full bg-brand-primary" />
+                           <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em]">{t(group.label)}</span>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2">
+                          {group.branches.map(branch => (
+                            <button 
+                              key={branch.id}
+                              onClick={() => {
+                                setActiveTab(branch.id);
+                                setIsMenuOpen(false);
+                              }}
+                              className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${
+                                activeTab === branch.id 
+                                  ? 'bg-brand-primary text-slate-950 font-black shadow-lg shadow-brand-primary/20 scale-[1.02]' 
+                                  : 'text-slate-400 hover:bg-white/5'
+                              }`}
+                            >
+                               {branch.icon}
+                               <span className="text-xs font-mono uppercase tracking-widest">{t(branch.label)}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </motion.div>
                 )}

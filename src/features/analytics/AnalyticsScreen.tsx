@@ -9,20 +9,24 @@ import {
   ChevronRight, Calendar, Zap, AlertCircle
 } from 'lucide-react';
 import { useI18n } from '../../core/store/useI18n';
+import { useAppStore, UserRole } from '../../core/stores/appStore';
 import { useActivityStore } from '../../core/stores/activityStore';
 import { useHabitStore } from '../habits/stores/habitStore';
 import { useGoalStore } from '../goals/stores/goalStore';
 import { useJournalStore } from '../journal/stores/journalStore';
+import { useTradingStore } from '../trading/stores/tradingStore';
 import { format, subDays, eachDayOfInterval, isSameDay, parseISO } from 'date-fns';
 
 const COLORS = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'];
 
 export default function AnalyticsScreen() {
   const { t, language } = useI18n();
+  const { activeRole } = useAppStore();
   const { heatmapData, fetchHeatmapData } = useActivityStore();
   const { habits, allLogs: habitLogs, fetchHabits, fetchHistoricalLogs } = useHabitStore();
   const { goals, fetchGoals } = useGoalStore();
   const { entries: journalEntries, fetchEntries: fetchJournals } = useJournalStore();
+  const { trades, fetchTrades } = useTradingStore();
 
   useEffect(() => {
     fetchHeatmapData(30);
@@ -30,7 +34,25 @@ export default function AnalyticsScreen() {
     fetchHistoricalLogs(30);
     fetchGoals();
     fetchJournals();
+    fetchTrades();
   }, []);
+
+  // Trading Specific Metrics
+  const pnlData = useMemo(() => {
+    return trades.slice(-10).map((t, i) => ({
+      name: `T${i+1}`,
+      pnl: t.pnl_amount || 0,
+      equity: trades.slice(0, i+1).reduce((acc, curr) => acc + (curr.pnl_amount || 0), 0)
+    }));
+  }, [trades]);
+
+  const marketDistData = useMemo(() => {
+    const dist: Record<string, number> = {};
+    trades.forEach(t => {
+      dist[t.market_type] = (dist[t.market_type] || 0) + 1;
+    });
+    return Object.entries(dist).map(([name, value]) => ({ name, value }));
+  }, [trades]);
 
   // 1. Weekly Growth Data (Last 7 Days)
   const weeklyGrowthData = useMemo(() => {
@@ -119,102 +141,164 @@ export default function AnalyticsScreen() {
            </div>
         </section>
 
-        {/* Top Grid: Weekly Growth & Habit Consistency */}
+        {/* Top Grid: Dynamic depending on Role */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
            
-           {/* Weekly Growth Bar Chart */}
-           <motion.div 
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             className="command-card min-h-[400px] flex flex-col"
-           >
-              <div className="flex justify-between items-center mb-8">
-                 <div className="flex items-center gap-3">
-                    <Zap className="text-brand-primary" size={20} />
-                    <h3 className="text-xs font-mono font-black text-white uppercase tracking-widest">{t('weekly_growth')}</h3>
-                 </div>
-                 <span className="text-[10px] font-mono text-slate-600">UNIT: PTS</span>
-              </div>
-              <div className="flex-1 w-full">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={weeklyGrowthData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff08" />
-                    <XAxis 
-                      dataKey="name" 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }} 
-                      dy={10}
-                    />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }}
-                    />
-                    <Tooltip 
-                      cursor={{ fill: '#ffffff05' }}
-                      contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px', fontSize: '10px', fontFamily: 'monospace' }}
-                      itemStyle={{ color: '#10b981', fontWeight: 900 }}
-                    />
-                    <Bar 
-                      dataKey="points" 
-                      fill="#10b981" 
-                      radius={[6, 6, 0, 0]} 
-                      barSize={30}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-           </motion.div>
+           {activeRole === UserRole.TRADER ? (
+              <>
+                {/* Equity Curve (Trader Unique) */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="command-card min-h-[400px] flex flex-col"
+                >
+                   <div className="flex justify-between items-center mb-8">
+                      <div className="flex items-center gap-3">
+                         <TrendingUp className="text-emerald-500" size={20} />
+                         <h3 className="text-xs font-mono font-black text-white uppercase tracking-widest">Equity_Curve</h3>
+                      </div>
+                      <span className="text-[10px] font-mono text-slate-600">UNIT: CURRENCY</span>
+                   </div>
+                   <div className="flex-1 w-full">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={pnlData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff08" />
+                        <XAxis dataKey="name" hide />
+                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#475569', fontSize: 10 }} />
+                        <Tooltip contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10' }} />
+                        <Line type="stepAfter" dataKey="equity" stroke="#10b981" strokeWidth={4} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                   </div>
+                </motion.div>
 
-           {/* Habit Consistency Line Chart */}
-           <motion.div 
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.1 }}
-             className="command-card min-h-[400px] flex flex-col"
-           >
-              <div className="flex justify-between items-center mb-8">
-                 <div className="flex items-center gap-3">
-                    <TrendingUp className="text-blue-500" size={20} />
-                    <h3 className="text-xs font-mono font-black text-white uppercase tracking-widest">{t('habit_consistency_label')}</h3>
-                 </div>
-                 <span className="text-[10px] font-mono text-slate-600">UNIT: %</span>
-              </div>
-              <div className="flex-1 w-full">
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={habitConsistencyData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff08" />
-                    <XAxis 
-                      dataKey="name" 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }} 
-                      dy={10}
-                    />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }}
-                      domain={[0, 100]}
-                    />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px', fontSize: '10px', fontFamily: 'monospace' }}
-                      itemStyle={{ color: '#3b82f6', fontWeight: 900 }}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="rate" 
-                      stroke="#3b82f6" 
-                      strokeWidth={4} 
-                      dot={{ r: 4, fill: '#3b82f6', strokeWidth: 0 }}
-                      activeDot={{ r: 6, strokeWidth: 0, shadow: '0 0 10px #3b82f6' }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-           </motion.div>
+                {/* Market Distribution (Trader Unique) */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="command-card min-h-[400px] flex flex-col"
+                >
+                   <div className="flex justify-between items-center mb-8">
+                      <div className="flex items-center gap-3">
+                         <Activity className="text-blue-500" size={20} />
+                         <h3 className="text-xs font-mono font-black text-white uppercase tracking-widest">Market_Exposure</h3>
+                      </div>
+                   </div>
+                   <div className="flex-1">
+                      <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                          <Pie
+                            data={marketDistData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={80}
+                            paddingAngle={5}
+                            dataKey="value"
+                          >
+                            {marketDistData.map((e, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                   </div>
+                </motion.div>
+              </>
+           ) : (
+             <>
+                {/* Weekly Growth Bar Chart */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="command-card min-h-[400px] flex flex-col"
+                >
+                   <div className="flex justify-between items-center mb-8">
+                      <div className="flex items-center gap-3">
+                         <Zap className="text-brand-primary" size={20} />
+                         <h3 className="text-xs font-mono font-black text-white uppercase tracking-widest">{t('weekly_growth')}</h3>
+                      </div>
+                      <span className="text-[10px] font-mono text-slate-600">UNIT: PTS</span>
+                   </div>
+                   <div className="flex-1 w-full">
+                     <ResponsiveContainer width="100%" height={300}>
+                       <BarChart data={weeklyGrowthData}>
+                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff08" />
+                         <XAxis 
+                           dataKey="name" 
+                           axisLine={false} 
+                           tickLine={false} 
+                           tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }} 
+                           dy={10}
+                         />
+                         <YAxis 
+                           axisLine={false} 
+                           tickLine={false} 
+                           tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }}
+                         />
+                         <Tooltip 
+                           cursor={{ fill: '#ffffff05' }}
+                           contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px', fontSize: '10px', fontFamily: 'monospace' }}
+                           itemStyle={{ color: '#10b981', fontWeight: 900 }}
+                         />
+                         <Bar 
+                           dataKey="points" 
+                           fill="#10b981" 
+                           radius={[6, 6, 0, 0]} 
+                           barSize={30}
+                         />
+                       </BarChart>
+                     </ResponsiveContainer>
+                   </div>
+                </motion.div>
 
+                {/* Habit Consistency Line Chart */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="command-card min-h-[400px] flex flex-col"
+                >
+                   <div className="flex justify-between items-center mb-8">
+                      <div className="flex items-center gap-3">
+                         <TrendingUp className="text-blue-500" size={20} />
+                         <h3 className="text-xs font-mono font-black text-white uppercase tracking-widest">{t('habit_consistency_label')}</h3>
+                      </div>
+                      <span className="text-[10px] font-mono text-slate-600">UNIT: %</span>
+                   </div>
+                   <div className="flex-1 w-full">
+                     <ResponsiveContainer width="100%" height={300}>
+                       <LineChart data={habitConsistencyData}>
+                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ffffff08" />
+                         <XAxis 
+                           dataKey="name" 
+                           axisLine={false} 
+                           tickLine={false} 
+                           tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }} 
+                           dy={10}
+                         />
+                         <YAxis 
+                           axisLine={false} 
+                           tickLine={false} 
+                           tick={{ fill: '#475569', fontSize: 10, fontWeight: 900 }}
+                           domain={[0, 100]}
+                         />
+                         <Tooltip 
+                           contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px', fontSize: '10px', fontFamily: 'monospace' }}
+                           itemStyle={{ color: '#3b82f6', fontWeight: 900 }}
+                         />
+                         <Line 
+                           type="monotone" 
+                           dataKey="rate" 
+                           stroke="#3b82f6" 
+                           strokeWidth={4} 
+                           dot={{ r: 4, fill: '#3b82f6', strokeWidth: 0 }}
+                           activeDot={{ r: 6, strokeWidth: 0, shadow: '0 0 10px #3b82f6' }}
+                         />
+                       </LineChart>
+                     </ResponsiveContainer>
+                   </div>
+                </motion.div>
+             </>
+           )}
         </div>
 
         {/* Bottom Grid: Goal Distribution & Mood Map */}
