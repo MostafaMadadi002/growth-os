@@ -73,25 +73,25 @@ export default function App() {
          </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-0 inset-x-0 bg-slate-950/80 backdrop-blur-2xl border-t border-white/[0.03] z-50 px-6 pb-8 pt-2">
+      <nav className="fixed bottom-0 inset-x-0 bg-slate-950/40 backdrop-blur-3xl border-t border-white/10 z-50 px-6 pb-8 pt-2">
         <div className="max-w-md mx-auto flex justify-between items-center h-16">
           {tabs.map((tab) => (
             <button 
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex flex-col items-center justify-center gap-1 px-4 transition-all duration-300 ${activeTab === tab.id ? 'text-brand-primary' : 'text-slate-600 hover:text-slate-400'}`}
+              className={`relative flex flex-col items-center justify-center gap-1 px-4 transition-all duration-500 ${activeTab === tab.id ? 'text-brand-primary' : 'text-slate-500 hover:text-slate-300'}`}
             >
-              <div className={`transition-transform duration-300 ${activeTab === tab.id ? 'scale-110 -translate-y-1' : 'scale-100'}`}>
+              <div className={`transition-all duration-500 ${activeTab === tab.id ? 'scale-110 -translate-y-2 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'scale-100 opacity-60'}`}>
                 {tab.icon}
               </div>
-              <span className={`text-[8px] font-mono font-black uppercase tracking-widest transition-opacity duration-300 ${activeTab === tab.id ? 'opacity-100' : 'opacity-0'}`}>
+              <span className={`text-[10px] font-display font-black uppercase tracking-tighter transition-all duration-500 ${activeTab === tab.id ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
                 {t(tab.label).split(' ')[0]}
               </span>
               
               {activeTab === tab.id && (
                 <motion.div 
-                  layoutId="nav-glow"
-                  className="absolute -top-2 w-8 h-8 bg-brand-primary/10 blur-xl rounded-full"
+                  layoutId="nav-active-bg"
+                  className="absolute -top-3 w-10 h-10 bg-brand-primary/5 blur-xl rounded-full"
                 />
               )}
             </button>
