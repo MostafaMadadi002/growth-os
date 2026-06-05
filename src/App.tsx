@@ -36,7 +36,7 @@ export default function App() {
     initAuth();
   }, [initAuth]);
 
-  // Scoped Tabs based on Role
+  // Scoped Tabs based on Role (Tree Structure)
   const roleTrees: Record<UserRole, { label: string, branches: { id: TabType, label: string, icon: React.ReactNode }[] }[]> = {
     [UserRole.STUDENT]: [
       { 
@@ -47,13 +47,6 @@ export default function App() {
           { id: 'Habits', label: 'branch_habits', icon: <Activity size={18} /> },
           { id: 'Journal', label: 'branch_notes', icon: <BookText size={18} /> },
         ]
-      },
-      {
-        label: 'system_core',
-        branches: [
-          { id: 'Analytics', label: 'analytics', icon: <BarChart3 size={18} /> },
-          { id: 'Achievements', label: 'achievements', icon: <Trophy size={18} /> },
-        ]
       }
     ],
     [UserRole.TRADER]: [
@@ -63,22 +56,13 @@ export default function App() {
           { id: 'Dashboard', label: 'dashboard', icon: <LayoutDashboard size={18} /> },
           { id: 'Trading', label: 'branch_journal', icon: <Terminal size={18} /> },
           { id: 'Analytics', label: 'branch_charts', icon: <BarChart3 size={18} /> },
+          { id: 'Journal', label: 'trading_notes', icon: <BookText size={18} /> },
         ]
       }
     ],
-    [UserRole.ATHLETE]: [
-      { 
-        label: 'root_athlete', 
-        branches: [
-          { id: 'Dashboard', label: 'dashboard', icon: <LayoutDashboard size={18} /> },
-          { id: 'Habits', label: 'habits', icon: <Activity size={18} /> },
-          { id: 'Goals', label: 'goals', icon: <Target size={18} /> },
-        ]
-      }
-    ]
   };
 
-  const currentTree = roleTrees[activeRole];
+  const currentTree = roleTrees[activeRole || UserRole.STUDENT];
 
   const renderScreen = () => {
     switch (activeTab) {
@@ -179,8 +163,30 @@ export default function App() {
                     initial={{ opacity: 0, y: 20, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                    className="bg-slate-900/98 backdrop-blur-3xl border border-white/10 p-6 rounded-[3rem] shadow-2xl flex flex-col gap-8 pointer-events-auto min-w-[300px] max-h-[70vh] overflow-y-auto scrollbar-hide"
+                    className="bg-slate-900/98 backdrop-blur-3xl border border-white/10 p-8 rounded-[3rem] shadow-2xl flex flex-col gap-10 pointer-events-auto min-w-[340px] max-h-[85vh] overflow-y-auto scrollbar-hide"
                   >
+                    {/* Level 1: Root Selector */}
+                    <div className="space-y-4">
+                       <div className="flex items-center gap-3 px-2">
+                          <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                          <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.3em]">{t('select_role')}</span>
+                       </div>
+                       <div className="flex gap-2 p-1 bg-slate-950 rounded-2xl border border-white/5">
+                          {[UserRole.STUDENT, UserRole.TRADER].map((role) => (
+                            <button
+                              key={role}
+                              onClick={() => useAppStore.getState().setActiveRole(role)}
+                              className={`flex-1 py-3 rounded-xl transition-all flex flex-col items-center gap-1 ${activeRole === role ? 'bg-slate-800 text-brand-primary shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
+                            >
+                               {role === UserRole.STUDENT && <GraduationCap size={16} />}
+                               {role === UserRole.TRADER && <Terminal size={16} />}
+                               <span className="text-[8px] font-mono font-black uppercase">{t(role.toLowerCase() + '_role').split(' ')[0]}</span>
+                            </button>
+                          ))}
+                       </div>
+                    </div>
+
+                    {/* Level 2: Branch Navigation */}
                     {currentTree.map((group, gIdx) => (
                       <div key={gIdx} className="space-y-4">
                         <div className="flex items-center gap-3 px-2">
@@ -195,14 +201,19 @@ export default function App() {
                                 setActiveTab(branch.id);
                                 setIsMenuOpen(false);
                               }}
-                              className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all ${
+                              className={`flex items-center gap-4 px-6 py-5 rounded-2xl transition-all border ${
                                 activeTab === branch.id 
-                                  ? 'bg-brand-primary text-slate-950 font-black shadow-lg shadow-brand-primary/20 scale-[1.02]' 
-                                  : 'text-slate-400 hover:bg-white/5'
+                                  ? 'bg-brand-primary border-brand-primary text-slate-950 font-black shadow-xl shadow-brand-primary/20 scale-[1.02]' 
+                                  : 'bg-slate-950/50 border-white/[0.03] text-slate-400 hover:bg-slate-800 hover:border-white/10'
                               }`}
                             >
-                               {branch.icon}
-                               <span className="text-xs font-mono uppercase tracking-widest">{t(branch.label)}</span>
+                               <div className={`${activeTab === branch.id ? 'text-slate-950' : 'text-brand-primary/60'}`}>
+                                 {branch.icon}
+                               </div>
+                               <div className="flex flex-col items-start translate-y-[-1px]">
+                                 <span className="text-xs font-mono uppercase tracking-[0.15em]">{t(branch.label)}</span>
+                                 <span className="text-[8px] opacity-60 font-mono">NODE_LOG // ACTIVE</span>
+                               </div>
                             </button>
                           ))}
                         </div>

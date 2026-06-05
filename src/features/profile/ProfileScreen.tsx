@@ -51,29 +51,28 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
           animate={{ opacity: 1, scale: 1 }}
           className="w-32 h-32 bg-slate-900 rounded-[3rem] flex items-center justify-center mb-10 border border-white/5 relative"
         >
-          <div className="absolute inset-0 bg-rose-500/10 rounded-[3rem] blur-2xl animate-pulse" />
-          <CloudOff size={48} className="text-slate-600 relative z-10" />
+          <div className="absolute inset-0 bg-brand-primary/20 rounded-[3rem] blur-2xl animate-pulse" />
+          <User size={48} className="text-brand-primary relative z-10" />
         </motion.div>
         
-        <h2 className="text-4xl font-display font-black text-white mb-4 tracking-tighter">{t('localized_instance')}</h2>
+        <h2 className="text-4xl font-display font-black text-white mb-4 tracking-tighter uppercase">{t('identity_control')}</h2>
         <p className="text-slate-500 text-base max-w-sm mb-12 leading-relaxed">
-          {t('local_evolution_desc')}
+          {t('auth_required_desc')}
         </p>
         
         <button 
           onClick={() => setShowAuth(true)}
-          className="w-full max-w-xs bg-emerald-500 text-slate-950 font-black px-10 py-6 rounded-[2.5rem] hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/10"
+          className="w-full max-w-xs bg-brand-primary text-slate-950 font-black px-10 py-6 rounded-2xl hover:bg-emerald-400 transition-all shadow-xl shadow-brand-primary/10 uppercase text-xs tracking-widest"
         >
-          {t('initialize_sync')}
+          {t('initialize_session')}
         </button>
       </div>
     );
   }
 
   const Roles = [
-    { id: UserRole.STUDENT, icon: <GraduationCap />, label: t('student_role'), color: 'bg-indigo-500', sub: t('educational_objectives') },
-    { id: UserRole.TRADER, icon: <Terminal />, label: t('trader_role'), color: 'bg-emerald-500', sub: t('technical_journal') },
-    { id: UserRole.ATHLETE, icon: <Flame />, label: t('athlete_role'), color: 'bg-rose-500', sub: t('physical_metrics') },
+    { id: UserRole.STUDENT, icon: <GraduationCap />, label: t('student_role'), color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+    { id: UserRole.TRADER, icon: <Terminal />, label: t('trader_role'), color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
   ];
 
   return (
@@ -83,7 +82,7 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
-            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">GrowthOS // System_Level: {Math.floor(activities.length / 10) + 1}</span>
+            <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">GrowthOS // LVL: {Math.floor(activities.length / 10) + 1}</span>
           </div>
           <h1 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter uppercase leading-none">{t('profile')}</h1>
         </div>
@@ -101,87 +100,56 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
         </div>
       </header>
 
-      <div className="space-y-12">
-        
-        {/* Growth Heatmap (System Contribution Graph) */}
-        <section className="bg-slate-950 border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] pointer-events-none" />
-           <div className="flex justify-between items-center mb-10">
-            <div>
-              <h3 className="text-2xl font-display font-black text-white tracking-tight uppercase mb-1">{t('growth_heatmap')}</h3>
-              <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('system_contributions')}</p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-1.5 md:gap-2">
-            {heatmapData.map((day, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: i * 0.001 }}
-                title={`${day.date}: ${day.intensity} activities`}
-                className={`w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-sm transition-colors duration-500 ${
-                  day.intensity === 0 ? 'bg-slate-900' :
-                  day.intensity === 1 ? 'bg-brand-primary/20' :
-                  day.intensity === 2 ? 'bg-brand-primary/40' :
-                  day.intensity === 3 ? 'bg-brand-primary/70' :
-                  'bg-brand-primary'
-                }`}
-              />
-            ))}
-          </div>
-          
-          <div className="flex justify-between mt-8 text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest px-1">
-             <span>{t('weekly_summary')} // 365_Day_Window</span>
-             <div className="flex items-center gap-2">
-                <span>{language === 'fa' ? 'کمتر' : 'Less'}</span>
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-slate-900 rounded-xs" />
-                  <div className="w-2 h-2 bg-brand-primary/20 rounded-xs" />
-                  <div className="w-2 h-2 bg-brand-primary/40 rounded-xs" />
-                  <div className="w-2 h-2 bg-brand-primary rounded-xs" />
-                </div>
-                <span>{language === 'fa' ? 'بیشتر' : 'More'}</span>
-             </div>
-          </div>
-        </section>
-
-        {/* System Roots selection */}
-        <section className="space-y-6">
-          <div className="flex items-center gap-4 px-2">
-            <h3 className="text-xs font-mono font-black text-slate-600 uppercase tracking-widest">{t('select_role')}</h3>
-            <div className="h-[1px] flex-1 bg-white/[0.03]" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {Roles.map((role) => (
-              <button 
-                key={role.id}
-                onClick={() => setActiveRole(role.id)}
-                className={`relative overflow-hidden p-8 rounded-[2rem] border transition-all duration-500 text-left group ${
-                  activeRole === role.id 
-                    ? `bg-slate-900 border-white/10 ring-2 ring-${role.color.replace('bg-', '')}/30` 
-                    : 'bg-slate-900/40 border-white/[0.03] opacity-40 hover:opacity-100'
-                }`}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
-                   activeRole === role.id ? `${role.color} text-slate-950 scale-110 shadow-2xl` : 'bg-slate-950 text-slate-600 group-hover:bg-slate-800'
-                }`}>
-                   {React.cloneElement(role.icon as React.ReactElement, { size: 24, strokeWidth: 2.5 })}
-                </div>
-                <h4 className={`text-xl font-display font-black tracking-tight mb-2 ${activeRole === role.id ? 'text-white' : 'text-slate-500'}`}>{role.label}</h4>
-                <p className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{role.sub}</p>
+      <div className="space-y-16">
+        {/* Branch Growth Comparison - 2 Heatmaps */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+           {Roles.map(role => (
+              <section key={role.id} className="bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-8 md:p-10 relative overflow-hidden">
+                <div className={`absolute top-0 right-0 w-32 h-32 ${role.bg.replace('/10', '/5')} blur-3xl pointer-events-none`} />
                 
-                {activeRole === role.id && (
-                  <motion.div 
-                    layoutId="active-indicator"
-                    className={`absolute top-6 right-6 w-3 h-3 rounded-full ${role.color} shadow-[0_0_15px_currentColor]`}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
+                <div className="flex justify-between items-center mb-8">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-xl ${role.bg} ${role.color} flex items-center justify-center`}>
+                       {React.cloneElement(role.icon as React.ReactElement, { size: 18 })}
+                    </div>
+                    <h3 className="text-xl font-display font-black text-white tracking-tight uppercase">{role.label}</h3>
+                  </div>
+                  <button 
+                    onClick={() => setActiveRole(role.id as UserRole)}
+                    className={`text-[9px] font-mono font-black px-4 py-2 rounded-lg border transition-all ${activeRole === role.id ? 'bg-brand-primary text-slate-950 border-brand-primary' : 'bg-slate-950 text-slate-500 border-white/5'}`}
+                  >
+                     {activeRole === role.id ? 'ACTIVE_ROOT' : 'SWITCH_ROOT'}
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-1">
+                  {heatmapData.slice(-140).map((day, i) => (
+                    <div 
+                      key={i} 
+                      className={`w-2 h-2 rounded-sm ${
+                        activeRole === role.id ? (
+                          day.intensity === 0 ? 'bg-slate-950' :
+                          day.intensity === 1 ? 'bg-brand-primary/20' :
+                          day.intensity === 2 ? 'bg-brand-primary/40' :
+                          'bg-brand-primary'
+                        ) : 'bg-slate-800/20'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="mt-6 text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest px-1">
+                   Domain_Contribution_Logs // 20_Week_Window
+                </p>
+              </section>
+           ))}
+        </div>
+
+        {/* Global Configuration */}
+        <section className="command-card !p-0 overflow-hidden divide-y divide-white/[0.04]">
+           <MenuButton icon={<GraduationCap />} label={t('student_mode')} sub="Manage educational roots and knowledge goals" onClick={() => setActiveRole(UserRole.STUDENT)} />
+           <MenuButton icon={<Terminal />} label={t('trader_mode')} sub="Access neural trading journals and market charts" onClick={() => setActiveRole(UserRole.TRADER)} />
         </section>
+      </div>
 
         {/* System Metrics (Summary for the active root) */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -190,7 +158,6 @@ export default function ProfileScreen({ onDevRequest }: ProfileProps) {
            <MetricCard label={t('branch_notes')} value="156" sub="Knowledge Nodes" />
            <MetricCard label={t('system_level')} value={String(Math.floor(activities.length / 10) + 1)} sub="Core Stability" />
         </section>
-      </div>
     </div>
   );
 }
