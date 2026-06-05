@@ -15,7 +15,7 @@ import ProfileScreen from './features/profile/ProfileScreen';
 
 const queryClient = new QueryClient();
 
-type TabType = 'Home' | 'Journal' | 'Stats' | 'Profile';
+type TabType = 'Home' | 'Stats' | 'Profile';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Home');
@@ -31,7 +31,6 @@ export default function App() {
   const renderScreen = () => {
     switch (activeTab) {
       case 'Home': return <DashboardScreen />;
-      case 'Journal': return <JournalScreen />;
       case 'Stats': return <AnalyticsScreen />;
       case 'Profile': return <ProfileScreen />;
       default: return <DashboardScreen />;
@@ -40,7 +39,6 @@ export default function App() {
 
   const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: 'Home', label: 'dashboard', icon: <LayoutDashboard size={20} /> },
-    { id: 'Journal', label: 'journal', icon: <BookText size={20} /> },
     { id: 'Stats', label: 'analytics', icon: <BarChart3 size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
   ];
