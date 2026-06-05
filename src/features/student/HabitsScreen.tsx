@@ -18,6 +18,7 @@ export default function HabitsScreen() {
     const habit: Habit = {
       id: Math.random().toString(36).substr(2, 9),
       title: formData.get('title') as string,
+      description: formData.get('description') as string,
       type: formData.get('type') as any,
       streak: 0,
     };
@@ -81,6 +82,15 @@ export default function HabitsScreen() {
                    />
                 </div>
 
+                <div className="space-y-3">
+                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('description')}</label>
+                   <textarea 
+                     name="description" 
+                     placeholder="..." 
+                     className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 text-white font-sans text-lg placeholder:text-slate-800 outline-none focus:border-blue-500/30 focus:bg-white/[0.08] transition-all min-h-[100px] resize-none" 
+                   />
+                </div>
+
                 <div className="space-y-4">
                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('polarity_selection')}</label>
                    <div className="grid grid-cols-2 gap-6">
@@ -127,6 +137,11 @@ export default function HabitsScreen() {
                       <h4 className={`text-xl font-display font-black uppercase tracking-tight leading-none mb-2 transition-colors duration-500 ${isDone ? 'text-brand-primary' : 'text-white'}`}>
                         {habit.title}
                       </h4>
+                      {habit.description && (
+                        <p className="text-[11px] text-slate-500 mb-3 line-clamp-2 max-w-[200px]">
+                          {habit.description}
+                        </p>
+                      )}
                       <div className="flex items-center gap-3">
                          <span className={`text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 ${habit.type === 'POSITIVE' ? 'text-emerald-500' : 'text-rose-500'}`}>
                            {habit.type}_PATH

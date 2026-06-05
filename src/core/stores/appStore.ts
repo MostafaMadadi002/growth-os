@@ -18,6 +18,7 @@ export interface Goal {
 export interface Habit {
   id: string;
   title: string;
+  description?: string;
   type: 'POSITIVE' | 'NEGATIVE';
   streak: number;
   lastCheck?: string;
