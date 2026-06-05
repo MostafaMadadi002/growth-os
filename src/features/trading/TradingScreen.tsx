@@ -293,7 +293,7 @@ export default function TradingScreen() {
             >
               <button 
                 onClick={() => setSelectedTrade(null)} 
-                className="absolute top-8 right-8 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl"
+                className="absolute top-8 right-8 rtl:right-auto rtl:left-8 w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl"
               >
                 <X size={24} />
               </button>
@@ -449,7 +449,7 @@ export default function TradingScreen() {
             >
               <button 
                 onClick={() => setShowAdd(false)} 
-                className="absolute top-4 right-4 md:top-12 md:right-12 w-10 h-10 md:w-14 md:h-14 bg-slate-800 rounded-xl md:rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl z-20"
+                className="absolute top-4 right-4 rtl:right-auto rtl:left-4 md:top-12 md:right-12 md:rtl:right-auto md:rtl:left-12 w-10 h-10 md:w-14 md:h-14 bg-slate-800 rounded-xl md:rounded-2xl flex items-center justify-center text-slate-500 hover:text-white transition-all shadow-xl z-20"
               >
                 <X size={20} md:size={24} />
               </button>

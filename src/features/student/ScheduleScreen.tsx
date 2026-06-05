@@ -62,7 +62,7 @@ export default function ScheduleScreen() {
              <button 
                type="button" 
                onClick={() => setIsAdding(false)} 
-               className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors z-20 bg-white/5 p-2 rounded-full"
+               className="absolute top-8 right-8 rtl:right-auto rtl:left-8 text-slate-500 hover:text-white transition-colors z-20 bg-white/5 p-2 rounded-full"
              >
                 <X size={20} />
              </button>
