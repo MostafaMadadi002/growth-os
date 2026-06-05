@@ -1,251 +1,193 @@
-import React, { useEffect } from 'react';
-import { useHabitStore } from '../habits/stores/habitStore';
-import { useGoalStore } from '../goals/stores/goalStore';
-import { useJournalStore } from '../journal/stores/journalStore';
-import { useTradingStore } from '../trading/stores/tradingStore';
-import { useActivityStore } from '../../core/stores/activityStore';
+import React from 'react';
+import { useAppStore, UserRole } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
-import { Flame, Target, BookText, Zap, ChevronRight, Trophy, ArrowUpRight, Activity } from 'lucide-react';
+import { 
+  Flame, Target, Zap, ChevronRight, TrendingUp, 
+  Terminal, GraduationCap, ArrowUpRight, Activity,
+  Layers, Wallet
+} from 'lucide-react';
 import { motion } from 'motion/react';
-import { ProgressRing } from '../../components/ProgressRing';
 
 export default function DashboardScreen() {
-  const { habits, todayLogs } = useHabitStore();
-  const { goals } = useGoalStore();
-  const { entries } = useJournalStore();
-  const { trades } = useTradingStore();
-  const { todayPoints, heatmapData, fetchTodayPoints, fetchHeatmapData } = useActivityStore();
-  const { t, dir, language } = useI18n();
+  const { currentRoot, studentData, traderData } = useAppStore();
+  const { t } = useI18n();
 
-  useEffect(() => {
-    fetchTodayPoints();
-    fetchHeatmapData(30);
-  }, [fetchTodayPoints, fetchHeatmapData]);
+  const isTrader = currentRoot === UserRole.TRADER;
 
-  const activeGoals = goals.filter(g => g.status === 'ACTIVE').length;
-  const heatmapArray = Object.entries(heatmapData).sort((a, b) => b[0].localeCompare(a[0])).reverse();
+  if (isTrader) {
+    // Trader Dashboard View
+    const totalTrades = traderData.trades.length;
+    const winTrades = traderData.trades.filter(t => t.pnl_amount > 0).length;
+    const winRate = totalTrades > 0 ? Math.round((winTrades / totalTrades) * 100) : 0;
+    const totalPnl = traderData.trades.reduce((acc, curr) => acc + curr.pnl_amount, 0);
 
-  // Dynamic calculations
-  const habitConsistency = habits.length > 0 
-    ? Math.round((Object.values(todayLogs).filter(l => l.status === 'DONE').length / habits.length) * 100) 
-    : 0;
+    return (
+      <div className="p-6 md:p-12 space-y-10 max-w-6xl mx-auto pb-40">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
+              <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">Node_Stream // Trader_Mode</span>
+            </div>
+            <h1 className="text-4xl md:text-7xl font-display font-black text-white tracking-tighter uppercase leading-none">Terminal.</h1>
+          </div>
+          <div className="flex gap-8 bg-slate-900/40 border border-white/5 p-6 rounded-[2rem]">
+             <div className="text-right">
+                <span className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest block mb-1">Session_PnL</span>
+                <span className={`text-2xl font-mono font-black ${totalPnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                  {totalPnl >= 0 ? '+' : ''}${totalPnl}
+                </span>
+             </div>
+          </div>
+        </header>
 
-  const tradingWinRate = trades.length > 0 
-    ? Math.round((trades.filter(t => t.pnl_amount && t.pnl_amount > 0).length / trades.length) * 100) 
-    : 0;
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+           <MetricCard label="Win Rate" value={`${winRate}%`} sub="Tactical Accuracy" icon={<Activity size={18} />} color="text-emerald-500" bg="bg-emerald-500/10" />
+           <MetricCard label="Total Ops" value={String(totalTrades)} sub="Trade Frequency" icon={<Layers size={18} />} color="text-blue-500" bg="bg-blue-500/10" />
+           <MetricCard label="Active Margin" value="$12,450" sub="Capital Exposure" icon={<Wallet size={18} />} color="text-brand-primary" bg="bg-emerald-500/10" />
+        </div>
 
-  const totalPossiblePoints = habits.length * 10;
-  const reliabilityAvg = totalPossiblePoints > 0 
-    ? Math.min(100, Math.round((todayPoints / totalPossiblePoints) * 100)) 
-    : 0;
+        <section className="bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-8 md:p-10 space-y-8">
+           <div className="flex justify-between items-center px-2">
+              <h3 className="text-xl font-display font-black text-white uppercase tracking-tight">Recent Activity Feed</h3>
+              <button className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-widest flex items-center gap-2">View History <ChevronRight size={12} /></button>
+           </div>
+           <div className="space-y-4">
+              {traderData.trades.slice(-4).reverse().map(trade => (
+                <TradeCard key={trade.id} trade={trade} />
+              ))}
+              {traderData.trades.length === 0 && (
+                <div className="py-12 text-center border-2 border-dashed border-white/5 rounded-[2rem]">
+                  <p className="text-slate-600 font-mono text-sm uppercase tracking-widest">No market activity detected in node</p>
+                </div>
+              )}
+           </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Student Dashboard View
+  const activeGoalsCount = studentData.goals.length;
+  const completedHabitsToday = studentData.habits.filter(h => h.weekLog[new Date().getDay()] === 1).length;
+  const habitRate = studentData.habits.length > 0 ? Math.round((completedHabitsToday / studentData.habits.length) * 100) : 0;
 
   return (
-    <div className="flex flex-col h-full bg-surface-base p-4 md:p-12 overflow-y-auto pb-40 data-grid scrollbar-hide">
-      {/* Dynamic Header - Industrial Style */}
-      <header className="mb-12 md:mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8">
+    <div className="p-6 md:p-12 space-y-10 max-w-6xl mx-auto pb-40">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-3 mb-2 md:mb-4"
-          >
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse shadow-[0_0_10px_#10b981]" />
-            <span className="text-[9px] md:text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">Node-01 // {t('welcome')}</span>
-          </motion.div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-7xl font-display font-black text-white tracking-tighter leading-none"
-          >
-            {t('dashboard')}.
-          </motion.h1>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]" />
+            <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">Core_Link // Student_Mode</span>
+          </div>
+          <h1 className="text-4xl md:text-7xl font-display font-black text-white tracking-tighter uppercase leading-none">Studio.</h1>
         </div>
-        
-        <div className="flex gap-6 md:gap-12 border-t md:border-t-0 md:border-l border-white/[0.05] pt-6 md:pt-0 md:pl-12 w-full md:w-auto items-center justify-between md:justify-start">
-            <div className="text-left md:text-right">
-              <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('local_time') || 'LOCAL_TIME'}</span>
-              <div className="text-lg md:text-2xl font-mono font-medium text-white tracking-tight">
-                {new Date().toLocaleTimeString('en-US', { hour12: false })}
-              </div>
-            </div>
-            <div className="text-right">
-              <span className="text-[8px] md:text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest block mb-1">{t('uptime_label')}</span>
-              <div className="text-lg md:text-2xl font-mono font-medium text-brand-primary tracking-tight">12.04d</div>
-            </div>
+        <div className="flex gap-8 bg-slate-900/40 border border-white/5 p-6 rounded-[2rem]">
+           <div className="text-right">
+              <span className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest block mb-1">Growth_Score</span>
+              <span className="text-2xl font-mono font-black text-brand-primary">1,250 PTS</span>
+           </div>
         </div>
       </header>
 
-      {/* Bento Grid Command Center */}
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-12">
-        
-        {/* Prime Objective Progress (High Impact) */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="md:col-span-4 md:row-span-2 command-card relative overflow-hidden group min-h-[340px] md:min-h-[400px] flex flex-col justify-between !p-6 md:!p-12"
-        >
-          <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-1000">
-            <Zap size={300} strokeWidth={1} />
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-8 md:mb-12">
-               <div className="flex items-center gap-3">
-                  <div className="w-2 h-6 bg-brand-primary rounded-full" />
-                  <h3 className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.3em]">{t('growth_score')}</h3>
-               </div>
-               <div className="text-[8px] md:text-[10px] font-mono text-slate-600">STABILITY_LOCK_v4</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+         <motion.div 
+           initial={{ opacity: 0, x: -20 }}
+           animate={{ opacity: 1, x: 0 }}
+           className="bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-10 flex flex-col justify-between min-h-[300px] relative overflow-hidden"
+         >
+            <div className="absolute top-0 right-0 p-10 opacity-10"><Target size={120} /></div>
+            <div className="relative z-10">
+               <h3 className="text-3xl font-display font-black text-white tracking-tight leading-none uppercase">{t('branch_goals')}</h3>
+               <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest mt-2">Active Strategic Objectives</p>
             </div>
+            <div className="relative z-10 flex items-end justify-between border-t border-white/5 pt-8">
+               <div className="text-6xl font-display font-black text-white leading-none">{activeGoalsCount}</div>
+               <div className="text-brand-primary flex items-center gap-2 font-mono font-black text-[10px] uppercase">Trajectory Optimal <ArrowUpRight size={16} /></div>
+            </div>
+         </motion.div>
 
-            <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-10">
-               <div className="relative">
-                  <h2 className="text-6xl md:text-[12rem] font-display font-black text-white leading-none tracking-tighter mix-blend-difference">
-                    {todayPoints}
-                  </h2>
-                  <div className="absolute -right-2 md:-right-4 top-1 md:top-4 text-brand-primary">
-                    <ArrowUpRight size={20} md:size={48} strokeWidth={3} />
-                  </div>
-               </div>
-               <div className="pb-1 md:pb-6">
-                  <div className="text-[8px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] mb-1 md:mb-2">+12.4% {t('productivity')}</div>
-                  <p className="text-slate-500 text-[10px] md:text-sm font-medium leading-relaxed max-w-[240px]">
-                    {t('trajectory_message')}
-                  </p>
+         <motion.div 
+           initial={{ opacity: 0, x: 20 }}
+           animate={{ opacity: 1, x: 0 }}
+           className="bg-slate-900 border border-white/5 rounded-[2.5rem] p-10 flex flex-col justify-between min-h-[300px] relative overflow-hidden"
+         >
+            <div className="absolute top-0 right-0 p-10 opacity-10"><Activity size={120} /></div>
+            <div className="relative z-10">
+               <h3 className="text-3xl font-display font-black text-white tracking-tight leading-none uppercase">{t('branch_habits')}</h3>
+               <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest mt-2">{t('habit_consistency_label')}</p>
+            </div>
+            <div className="relative z-10 flex items-end justify-between border-t border-white/5 pt-8">
+               <div className="text-6xl font-display font-black text-white leading-none">{habitRate}%</div>
+               <div className="flex gap-1.5 mb-2">
+                  {[1,2,3,4,5].map(i => <div key={i} className={`w-2 h-6 rounded-full ${i <= 3 ? 'bg-brand-primary shadow-[0_0_10px_rgba(16,185,129,0.3)]' : 'bg-slate-800'}`} />)}
                </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-8 pt-12 border-t border-white/[0.03]">
-             <div className="flex -space-x-4">
-               {[1,2,3,4].map(i => (
-                 <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-slate-800 border-2 border-slate-900 group-hover:translate-x-1 transition-transform cursor-pointer" />
-               ))}
-             </div>
-             <div className="flex-1 h-[2px] bg-slate-800 rounded-full overflow-hidden">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: '74%' }}
-                  className="h-full bg-brand-primary shadow-[0_0_15px_#10b981]" 
-                />
-             </div>
-             <span className="text-[10px] font-mono font-black text-white">74% {t('pts_label')}.</span>
-          </div>
-        </motion.div>
-
-        {/* Tactical Metrics (Dense) */}
-        <div className="md:col-span-2 grid grid-cols-1 gap-6">
-           <motion.div 
-             whileHover={{ y: -4 }}
-             className="command-card bg-emerald-600/10 border-emerald-500/20 flex flex-col justify-between"
-           >
-              <div className="flex justify-between items-start">
-                 <div className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('win_rate')}</div>
-                 <Activity size={16} className="text-emerald-500" />
-              </div>
-              <div>
-                 <div className="text-4xl md:text-6xl font-display font-black text-white leading-none">{tradingWinRate}%</div>
-                 <div className="text-[8px] md:text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest mt-1 md:mt-2">{t('trading')} {t('operational_stat')}</div>
-              </div>
-           </motion.div>
-
-           <motion.div 
-             whileHover={{ y: -4 }}
-             className="command-card !p-0 overflow-hidden flex"
-           >
-              <div className="flex-1 p-4 md:p-6 flex flex-col justify-between">
-                <div className="text-[9px] font-mono font-black text-brand-secondary uppercase tracking-widest">{t('active_goals')}</div>
-                <div>
-                  <div className="text-4xl md:text-5xl font-display font-black text-white">{activeGoals}</div>
-                  <div className="w-full bg-slate-800 h-1 mt-2 md:mt-3 rounded-full overflow-hidden">
-                    <div className="w-1/3 h-full bg-brand-secondary" />
-                  </div>
-                </div>
-              </div>
-              <div className="w-1 bg-brand-secondary shadow-[0_0_20px_#3b82f6]" />
-           </motion.div>
-        </div>
-
-        {/* Secondary Modules */}
-        <motion.div className="md:col-span-2 command-card flex flex-col justify-between hover:bg-slate-900/80">
-            <div className="flex justify-between items-start">
-              <span className="text-[9px] font-mono font-black text-emerald-500 uppercase tracking-widest">{t('habits')} {t('protocol_label')}</span>
-              <Activity size={16} className="text-emerald-500" />
-            </div>
-            <div className="py-2 flex justify-center">
-               <ProgressRing progress={habitConsistency} size={80} md:size={90} strokeWidth={8} color="#10b981" label="" />
-            </div>
-            <div className="text-white font-black font-display text-3xl md:text-4xl">{habitConsistency}%</div>
-        </motion.div>
-
-        <motion.div 
-          onClick={() => {}} 
-          className="md:col-span-2 command-card flex flex-col justify-between cursor-pointer group"
-        >
-            <div className="flex justify-between items-start">
-              <span className="text-[9px] font-mono font-black text-purple-500 uppercase tracking-widest">{t('journal')}</span>
-              <BookText size={16} className="text-purple-500" />
-            </div>
-            <div className="text-5xl md:text-6xl font-display font-black text-white">{entries.length}</div>
-            <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest group-hover:text-white transition-colors">
-               {t('access_archives')} <ChevronRight size={12} />
-            </div>
-        </motion.div>
-
-        <motion.div className="md:col-span-2 command-card bg-slate-900/80 border-white/[0.08] flex items-center justify-center">
-           <div className="text-center">
-              <div className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mb-4">{t('status_active_label')}</div>
-              <div className="text-2xl md:text-3xl font-display font-black text-brand-primary uppercase">{t('optimal')}</div>
-              <div className="mt-4 flex gap-1 justify-center">
-                 {[1,2,3,4,5].map(i => <div key={i} className="w-1 h-3 bg-brand-primary rounded-full shadow-[0_0_8px_#10b981]" />)}
-                 {[1,2,3].map(i => <div key={i} className="w-1 h-3 bg-slate-800 rounded-full" />)}
-              </div>
-           </div>
-        </motion.div>
-
+         </motion.div>
       </div>
 
-        {/* Strategic Grid (Reliability Matrix) */}
-      <section className="command-card !p-6 md:!p-12 border-white/[0.04]">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8 mb-8 md:mb-12">
-           <div>
-             <h2 className="text-3xl md:text-4xl font-display font-black text-white tracking-tighter">{t('consistency_matrix')}.</h2>
-             <span className="text-[10px] font-mono font-bold text-slate-650 uppercase tracking-[0.4em]">{t('continuous_monitoring')}</span>
-           </div>
-           
-           <div className="flex gap-8 md:gap-10 border-t md:border-t-0 md:border-l border-white/[0.04] pt-6 md:pt-0 md:pl-10">
-              <div className="text-right">
-                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">{t('peak_output')}</span>
-                <span className="text-white font-mono font-bold">{Math.max(...heatmapArray.map(m => m[1] as number), 0)} {t('pts_label')}</span>
+      <section className="bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-8 md:p-10 space-y-8">
+         <div className="flex justify-between items-center px-2">
+            <h3 className="text-xl font-display font-black text-white uppercase tracking-tight">Active Goals Feed</h3>
+            <button className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-widest flex items-center gap-2">Expand Node <ChevronRight size={12} /></button>
+         </div>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {studentData.goals.slice(0, 4).map(goal => (
+              <div key={goal.id} className="p-6 bg-slate-950/40 border border-white/5 rounded-3xl group hover:border-brand-primary transition-all">
+                 <div className="flex justify-between items-start mb-6">
+                    <h4 className="text-base font-black text-white uppercase group-hover:text-brand-primary transition-colors">{goal.title}</h4>
+                    <span className="text-[10px] font-mono font-black text-brand-primary bg-brand-primary/10 px-2 py-1 rounded-lg border border-brand-primary/20">{goal.progress}%</span>
+                 </div>
+                 <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden">
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${goal.progress}%` }} className="h-full bg-brand-primary" />
+                 </div>
               </div>
-              <div className="text-right">
-                <span className="text-[8px] font-mono text-slate-650 uppercase tracking-widest block mb-1">{t('efficiency')}</span>
-                <span className="text-brand-primary font-mono font-bold">{reliabilityAvg}%</span>
-              </div>
-           </div>
-        </div>
-
-        
-        <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-15 xl:grid-cols-20 gap-2.5" dir="ltr">
-           {heatmapArray.slice(-60).map(([date, points], i) => (
-             <motion.div 
-               key={date} 
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               transition={{ delay: i * 0.005 + 0.5 }}
-               className={`aspect-square rounded-[2px] transition-all duration-300 hover:scale-150 cursor-crosshair border border-white/5 relative group ${
-                 points >= 100 ? 'bg-brand-primary shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 
-                 points >= 50 ? 'bg-brand-primary/60' : 
-                 points >= 25 ? 'bg-brand-primary/30' : 
-                 points > 0 ? 'bg-brand-primary/10 border-brand-primary/5' : 'bg-slate-950 opacity-20'
-               }`} 
-             >
-               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-950 border border-white/10 rounded text-[8px] font-mono font-black text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                  {date} // {points} {t('pts_label')}
-               </div>
-             </motion.div>
-           ))}
-        </div>
+            ))}
+            {studentData.goals.length === 0 && (
+                <div className="col-span-full py-12 text-center border-2 border-dashed border-white/5 rounded-[2rem]">
+                  <p className="text-slate-600 font-mono text-sm uppercase tracking-widest">No strategic objectives found</p>
+                </div>
+            )}
+         </div>
       </section>
+    </div>
+  );
+}
+
+function MetricCard({ label, value, sub, icon, color, bg }: { label: string, value: string, sub: string, icon: React.ReactNode, color: string, bg: string }) {
+  return (
+    <div className="bg-slate-900/40 border border-white/5 p-8 rounded-[2.5rem] group hover:border-white/10 transition-all relative overflow-hidden">
+       <div className={`absolute top-0 right-0 w-24 h-24 ${bg} blur-3xl opacity-0 group-hover:opacity-100 transition-opacity`} />
+       <div className="flex justify-between items-start mb-6 relative z-10">
+          <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{label}</span>
+          <div className={`${color} opacity-40 group-hover:opacity-100 transition-opacity`}>
+             {icon}
+          </div>
+       </div>
+       <div className="text-5xl font-display font-black text-white tracking-tighter mb-2 relative z-10 group-hover:scale-105 transition-transform origin-left">{value}</div>
+       <div className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest relative z-10">{sub}</div>
+    </div>
+  );
+}
+
+function TradeCard({ trade }: { trade: any }) {
+  return (
+    <div className="p-6 bg-slate-950/40 border border-white/5 rounded-3xl flex items-center justify-between group hover:bg-slate-900 transition-all">
+       <div className="flex items-center gap-6">
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${trade.pnl_amount >= 0 ? 'bg-emerald-500 text-slate-950 shadow-[0_0_15px_#10b981]' : 'bg-rose-500 text-white shadow-[0_0_15px_#f43f5e]'}`}>
+             {trade.pnl_amount >= 0 ? <TrendingUp size={20} /> : <Zap size={20} className="rotate-180" />}
+          </div>
+          <div className="text-left">
+             <p className="text-sm font-black text-white uppercase">{trade.market}</p>
+             <p className="text-[9px] font-mono text-slate-600 uppercase tracking-wider mt-1">{trade.date.split('T')[0]} // SN_ID: {trade.id.slice(0, 8)}</p>
+          </div>
+       </div>
+       <div className="text-right">
+          <p className={`text-xl font-display font-black ${trade.pnl_amount >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>
+            {trade.pnl_amount >= 0 ? '+' : ''}${Math.abs(trade.pnl_amount)}
+          </p>
+          <p className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest mt-1">Settled_Result</p>
+       </div>
     </div>
   );
 }

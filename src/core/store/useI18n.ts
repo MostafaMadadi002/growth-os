@@ -247,6 +247,15 @@ const translations = {
     system_core: 'هسته مرکزی',
     student_mode: 'قلمرو دانشجو',
     trader_mode: 'قلمرو معامله‌گر',
+    language: 'زبان سیستم',
+    diagnostics: 'عیب‌یابی سیستم',
+    educational_objectives: 'اهداف آموزشی و آکادمیک',
+    technical_journal: 'ژورنال‌های استراتژیک و فنی',
+    streak: 'تداوم عملکرد',
+    trades: 'معاملات',
+    growth_heatmap: 'نقشه حرارتی رشد',
+    identity_control: 'کنترل هویت سیستم',
+    security: 'امنیت و دسترسی',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -485,6 +494,10 @@ const translations = {
     system_core: 'SYSTEM_CORE',
     student_mode: 'STUDENT_DOMAIN',
     trader_mode: 'TRADER_DOMAIN',
+    language: 'LANGUAGE',
+    diagnostics: 'DIAGNOSTICS',
+    educational_objectives: 'Educational & Academic Roots',
+    technical_journal: 'Strategic & Technical Journals',
   }
 };
 
