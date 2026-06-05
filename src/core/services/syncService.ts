@@ -1,7 +1,7 @@
 import { supabase } from '../services/supabase';
 import { goalRepository } from '../../features/goals/repositories/goalRepository';
 import { habitRepository } from '../../features/habits/repositories/habitRepository';
-import { journalRepository } from '../../features/journal/repositories/journalRepository';
+// import { journalRepository } from '../../features/journal/repositories/journalRepository';
 import { activityRepository } from '../repositories/activityRepository';
 
 /**
@@ -40,12 +40,14 @@ export const syncService = {
       if (lError) console.error('Error syncing logs:', lError);
     }
 
-    // 4. Sync Journal
+    // 4. Sync Journal (DISABLED - REPO MISSING)
+    /*
     const localJournal = journalRepository.getEntries();
     if (localJournal.length > 0) {
       const { error: jError } = await supabase.from('journal_entries').upsert(localJournal.map(e => ({ ...e, user_id: userId })));
       if (jError) console.error('Error syncing journal:', jError);
     }
+    */
 
     // 5. Sync Activities
     const localActivities = activityRepository.getActivities();
@@ -78,8 +80,10 @@ export const syncService = {
     }
 
     // Fetch Journal
+    /*
     const { data: cloudJournal } = await supabase.from('journal_entries').select('*').eq('user_id', userId);
     if (cloudJournal) journalRepository.saveEntries(cloudJournal);
+    */
 
     // Fetch Activities
     const { data: cloudActivities } = await supabase.from('activity_records').select('*').eq('user_id', userId);

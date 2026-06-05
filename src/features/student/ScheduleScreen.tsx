@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { 
   CalendarDays, Clock, CheckCircle2, 
-  Plus, Timer, LayoutGrid, Hash
+  Plus, Timer, Hash, X
 } from 'lucide-react';
 import { useAppStore } from '../../core/stores/appStore';
-import { motion } from 'motion/react';
+import { useI18n } from '../../core/store/useI18n';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function ScheduleScreen() {
+  const { t, dir, language } = useI18n();
   const { logActivity } = useAppStore();
   const [tasks, setTasks] = useState<{ id: string; time: string; label: string; done: boolean }[]>([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -35,88 +37,115 @@ export default function ScheduleScreen() {
   };
 
   return (
-    <div className="p-6 md:p-12 space-y-12 max-w-4xl mx-auto w-full">
+    <div className="p-6 md:p-12 space-y-12 max-w-4xl mx-auto w-full rtl:font-farsi">
       <header className="flex justify-between items-end">
         <div>
            <div className="flex items-center gap-3 mb-4">
-              <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316]" />
-              <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">Chronos_Sequencing</span>
+              <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_#f97316]" />
+              <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">{t('chronos_sequencing')}</span>
            </div>
-           <h1 className="text-5xl font-display font-black text-white tracking-tighter uppercase leading-none">Schedule.</h1>
+           <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter uppercase leading-none">
+             {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
+           </h1>
         </div>
         <button 
           onClick={() => setIsAdding(true)}
-          className="w-14 h-14 bg-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-600/20 hover:scale-105 active:scale-95 transition-all"
+          className="w-16 h-16 bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-2xl flex items-center justify-center text-orange-400 shadow-2xl shadow-orange-500/10 hover:bg-orange-600 hover:text-white transition-all duration-500 active:scale-95"
         >
-          <Plus size={24} strokeWidth={3} />
+          <Plus size={28} strokeWidth={3} />
         </button>
       </header>
 
-      {isAdding && (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-slate-900 border border-white/10 p-8 rounded-[2.5rem] shadow-2xl"
-        >
-           <form onSubmit={handleAddTask} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2">
-                 <input name="label" required placeholder="Session / Task Label" className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono text-sm outline-none focus:border-orange-500/30" />
-              </div>
-              <div className="flex gap-4">
-                 <input name="time" type="time" required className="flex-1 bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono text-sm outline-none" />
-                 <button type="submit" className="px-6 bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest">Add</button>
-              </div>
-           </form>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {isAdding && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white/5 backdrop-blur-2xl border border-white/10 p-8 md:p-10 rounded-[3rem] shadow-2xl space-y-8 relative overflow-hidden"
+          >
+             <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-500/10 blur-[100px] rounded-full" />
+             <button type="button" onClick={() => setIsAdding(false)} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors">
+                <X size={20} />
+             </button>
+             
+             <form onSubmit={handleAddTask} className="flex flex-col md:flex-row gap-6 relative z-10">
+                <div className="flex-1 space-y-3">
+                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('session_task_label')}</label>
+                   <input name="label" required placeholder="..." className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-xl outline-none focus:border-orange-500/30 focus:bg-white/[0.08]" />
+                </div>
+                <div className="md:w-48 space-y-3">
+                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('local_time')}</label>
+                   <input name="time" type="time" required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-orange-500/30" />
+                </div>
+                <div className="md:pt-9">
+                   <button type="submit" className="w-full md:w-auto h-16 px-10 bg-orange-600 text-white rounded-2xl font-display font-black text-sm uppercase tracking-widest shadow-xl shadow-orange-600/20 hover:scale-105 active:scale-95 transition-all">
+                     {language === 'fa' ? 'افزودن' : 'ADD'}
+                   </button>
+                </div>
+             </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <section className="space-y-6 relative before:absolute before:left-8 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-900 before:z-0">
+      <section className="space-y-6 relative before:absolute before:left-10 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-10 before:w-[2px] before:bg-white/5 before:z-0">
          {tasks.map((task) => (
-           <div key={task.id} className="relative z-10 flex gap-8 items-center bg-slate-950/20 p-2 pr-6 rounded-[2rem]">
-              <div className={`w-16 h-16 rounded-2xl flex flex-col items-center justify-center border shadow-xl transition-all ${task.done ? 'bg-orange-500/10 border-orange-500/20 text-orange-500' : 'bg-slate-900 border-white/5 text-slate-500'}`}>
-                 <span className="text-[10px] font-mono font-black">{task.time.split(':')[0]}</span>
-                 <span className="text-[10px] font-mono font-black opacity-40">{task.time.split(':')[1]}</span>
+           <motion.div 
+             layout
+             key={task.id} 
+             className="relative z-10 flex gap-8 items-center bg-white/[0.02] backdrop-blur-md p-3 pr-8 rtl:pr-3 rtl:pl-8 rounded-[2.5rem] border border-white/5 hover:bg-white/[0.05] transition-all"
+           >
+              <div className={`w-20 h-20 rounded-3xl flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 ${task.done ? 'bg-orange-500 text-slate-950 border-orange-400 scale-90' : 'bg-slate-900 border-white/10 text-slate-400'}`}>
+                 <span className="text-xl font-mono font-black leading-none">{task.time.split(':')[0]}</span>
+                 <span className="text-[10px] font-mono font-black opacity-60">{task.time.split(':')[1]}</span>
               </div>
               <div className="flex-1">
-                 <h4 className={`text-base font-display font-black uppercase tracking-tight transition-all ${task.done ? 'text-slate-600 line-through' : 'text-white'}`}>
+                 <h4 className={`text-2xl font-display font-black uppercase tracking-tight transition-all duration-500 ${task.done ? 'text-slate-600 line-through' : 'text-white'}`}>
                    {task.label}
                  </h4>
-                 <div className="flex items-center gap-2 mt-1">
-                    <Clock size={10} className="text-slate-700" />
-                    <span className="text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest">Scheduled_Transmission</span>
+                 <div className="flex items-center gap-2 mt-2">
+                    <Clock size={12} className="text-slate-700" />
+                    <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest">{t('status_active')}</span>
                  </div>
               </div>
               <button 
                 onClick={() => toggleTask(task.id)}
-                className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${task.done ? 'bg-emerald-500/20 text-emerald-500' : 'bg-slate-900 text-slate-700 hover:text-orange-500 hover:border-orange-500/30 border border-transparent'}`}
+                className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${task.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/20' : 'bg-white/5 text-slate-700 border border-white/5 hover:border-orange-500/30 hover:text-orange-500'}`}
               >
-                 {task.done ? <CheckCircle2 size={24} /> : <div className="w-6 h-6 border-2 border-current rounded-lg opacity-20" />}
+                 {task.done ? <CheckCircle2 size={28} strokeWidth={3} /> : <div className="w-8 h-8 border-4 border-current rounded-xl opacity-20" />}
               </button>
-           </div>
+           </motion.div>
          ))}
 
          {tasks.length === 0 && (
-           <div className="py-24 text-center border-2 border-dashed border-white/5 rounded-[3rem] bg-slate-900/10">
-              <CalendarDays size={48} strokeWidth={1} className="mx-auto mb-6 text-slate-800" />
-              <p className="text-[10px] font-mono font-black text-slate-700 uppercase tracking-widest leading-loose text-center">
-                 Chronology Bank Empty // <br />Partition Node Time For Execution
+           <motion.div 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             className="py-32 text-center border-4 border-dashed border-white/5 rounded-[4rem] bg-white/[0.01]"
+           >
+              <CalendarDays size={64} strokeWidth={1} className="mx-auto mb-8 text-slate-800" />
+              <p className="text-[12px] font-mono font-black text-slate-600 uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
+                 {t('partition_time')} <br /> Partition Node Time For Execution
               </p>
-           </div>
+           </motion.div>
          )}
       </section>
 
-      <footer className="grid grid-cols-2 gap-4">
-         <div className="p-8 bg-slate-900/40 border border-white/5 rounded-[2.5rem]">
-            <Hash className="text-orange-500 mb-4" size={24} />
-            <h5 className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Active_Segments</h5>
-            <p className="text-2xl font-display font-black text-white leading-none uppercase">{tasks.length} Nodes</p>
+      <footer className="grid grid-cols-2 gap-6">
+         <div className="p-10 bg-white/[0.02] backdrop-blur-md border border-white/5 rounded-[3rem] relative overflow-hidden group">
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-orange-500/10 blur-[50px] rounded-full group-hover:bg-orange-500/20 transition-all" />
+            <Hash className="text-orange-500 mb-6" size={32} />
+            <h5 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
+            <p className="text-4xl font-display font-black text-white leading-none uppercase">{tasks.length} <span className="text-sm font-mono text-slate-700">NODES</span></p>
          </div>
-         <div className="p-8 bg-slate-900/40 border border-white/5 rounded-[2.5rem]">
-            <Timer className="text-emerald-500 mb-4" size={24} />
-            <h5 className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Completion_Load</h5>
-            <p className="text-2xl font-display font-black text-white leading-none uppercase">{tasks.filter(t => t.done).length} Pulses</p>
+         <div className="p-10 bg-white/[0.02] backdrop-blur-md border border-white/5 rounded-[3rem] relative overflow-hidden group">
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 blur-[50px] rounded-full group-hover:bg-emerald-500/20 transition-all" />
+            <Timer className="text-emerald-500 mb-6" size={32} />
+            <h5 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.3em] mb-2">{t('completion_load')}</h5>
+            <p className="text-4xl font-display font-black text-white leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-sm font-mono text-slate-700">PULSES</span></p>
          </div>
       </footer>
     </div>
   );
 }
+

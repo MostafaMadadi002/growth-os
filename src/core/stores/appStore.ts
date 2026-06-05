@@ -28,6 +28,21 @@ export interface ActivityLog {
   count: number;
 }
 
+export interface Trade {
+  id: string;
+  symbol: string;
+  entry: number;
+  exit?: number;
+  status: 'OPEN' | 'CLOSED';
+}
+
+export interface TraderNote {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+}
+
 interface AppState {
   currentRoot: UserRole;
   language: 'FA' | 'EN';
@@ -53,6 +68,7 @@ interface AppState {
   addHabit: (habit: Habit) => void;
   toggleHabit: (habitId: string) => void;
   deleteHabit: (habitId: string) => void;
+  logActivity: (date: string) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -76,16 +92,16 @@ export const useAppStore = create<AppState>()(
       setLanguage: (lang) => set({ language: lang }),
       
       addGoal: (goal) => set((state) => ({
-        studentData: { ...state.studentData, goals: [...state.studentData.goals, goal] }
+        studentData: { ...state.studentData, goals: [...(state.studentData.goals || []), goal] }
       })),
 
       completeSession: (goalId) => set((state) => {
-        const goals = state.studentData.goals.map(g => 
+        const goals = (state.studentData.goals || []).map(g => 
           g.id === goalId ? { ...g, completedSessions: Math.min(g.completedSessions + 1, g.totalSessions) } : g
         );
         
         const today = new Date().toISOString().split('T')[0];
-        const logs = [...state.studentData.activityLogs];
+        const logs = [...(state.studentData.activityLogs || [])];
         const existingLogIndex = logs.findIndex(l => l.date === today);
         
         if (existingLogIndex > -1) {
@@ -102,16 +118,16 @@ export const useAppStore = create<AppState>()(
       deleteGoal: (id) => set((state) => ({
         studentData: { 
           ...state.studentData, 
-          goals: state.studentData.goals.filter(g => g.id !== id) 
+          goals: (state.studentData.goals || []).filter(g => g.id !== id) 
         }
       })),
       
       addHabit: (habit) => set((state) => ({
-        studentData: { ...state.studentData, habits: [...state.studentData.habits, habit] }
+        studentData: { ...state.studentData, habits: [...(state.studentData.habits || []), habit] }
       })),
 
       toggleHabit: (habitId) => set((state) => {
-        const habits = state.studentData.habits.map(h => {
+        const habits = (state.studentData.habits || []).map(h => {
           if (h.id === habitId) {
             const today = new Date().toISOString().split('T')[0];
             const isCompletedToday = h.lastCheck === today;
@@ -129,26 +145,37 @@ export const useAppStore = create<AppState>()(
       deleteHabit: (id) => set((state) => ({
         studentData: { 
           ...state.studentData, 
-          habits: state.studentData.habits.filter(h => h.id !== id) 
+          habits: (state.studentData.habits || []).filter(h => h.id !== id) 
         }
       })),
+
+      logActivity: (date) => set((state) => {
+        const logs = [...(state.studentData.activityLogs || [])];
+        const existingLogIndex = logs.findIndex(l => l.date === date);
+        if (existingLogIndex > -1) {
+          logs[existingLogIndex].count += 1;
+        } else {
+          logs.push({ date, count: 1 });
+        }
+        return { studentData: { ...state.studentData, activityLogs: logs } };
+      }),
 
       addTraderTrade: (trade) => set((state) => ({
         traderData: {
           ...state.traderData,
-          trades: [...state.traderData.trades, trade],
+          trades: [...(state.traderData.trades || []), trade],
         }
       })),
 
       deleteTraderTrade: (id) => set((state) => ({
         traderData: {
           ...state.traderData,
-          trades: state.traderData.trades.filter(t => t.id !== id),
+          trades: (state.traderData.trades || []).filter(t => t.id !== id),
         }
       })),
       
       addTraderNote: (note) => set((state) => ({
-        traderData: { ...state.traderData, notes: [...state.traderData.notes, note] }
+        traderData: { ...state.traderData, notes: [...(state.traderData.notes || []), note] }
       })),
     }),
     {

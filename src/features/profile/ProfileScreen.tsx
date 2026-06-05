@@ -21,7 +21,7 @@ export default function ProfileScreen() {
     const date = new Date();
     date.setDate(date.getDate() - (111 - i));
     const dateStr = date.toISOString().split('T')[0];
-    const log = studentData.activityLogs.find(l => l.date === dateStr);
+    const log = (studentData.activityLogs || []).find(l => l.date === dateStr);
     return {
       date: dateStr,
       intensity: log ? Math.min(log.count, 4) : 0

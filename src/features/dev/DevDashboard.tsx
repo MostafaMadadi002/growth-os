@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Database, Users, ShieldAlert, BarChart3, Activity, Terminal, RefreshCcw } from 'lucide-react';
 import { useHabitStore } from '../habits/stores/habitStore';
 import { useGoalStore } from '../goals/stores/goalStore';
-import { useJournalStore } from '../journal/stores/journalStore';
+// import { useJournalStore } from '../journal/stores/journalStore';
 import { useActivityStore } from '../../core/stores/activityStore';
 import { supabase } from '../../core/services/supabase';
 
 export default function DevDashboard() {
   const { habits } = useHabitStore();
   const { goals } = useGoalStore();
-  const { entries } = useJournalStore();
+  // const { entries } = useJournalStore();
+  const entries: any[] = [];
   const { activities } = useActivityStore();
   
   const [dbStatus, setDbStatus] = useState<'checking' | 'online' | 'offline'>('checking');

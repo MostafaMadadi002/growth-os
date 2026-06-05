@@ -85,7 +85,7 @@ export default function App() {
                 {tab.icon}
               </div>
               <span className={`text-[10px] font-display font-black uppercase tracking-tighter transition-all duration-500 ${activeTab === tab.id ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                {t(tab.label).split(' ')[0]}
+                {t(tab.label)}
               </span>
               
               {activeTab === tab.id && (

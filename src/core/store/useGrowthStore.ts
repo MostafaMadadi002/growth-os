@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { useHabitStore } from '../../features/habits/stores/habitStore';
 import { useGoalStore } from '../../features/goals/stores/goalStore';
-import { useJournalStore } from '../../features/journal/stores/journalStore';
+// import { useJournalStore } from '../../features/journal/stores/journalStore';
 import { HabitStatus } from '../types';
 
 interface GrowthState {
@@ -21,7 +21,8 @@ export const useGrowthStore = create<GrowthState>((set) => ({
   calculateScores: () => {
     const { todayLogs } = useHabitStore.getState();
     const { goals } = useGoalStore.getState();
-    const { entries } = useJournalStore.getState();
+    // const { entries } = useJournalStore.getState();
+    const entries: any[] = [];
 
     const todayStr = new Date().toISOString().split('T')[0];
     
