@@ -63,7 +63,11 @@ export default function HabitsScreen() {
                 onSubmit={handleAddHabit} 
                 className="bg-slate-900/40 backdrop-blur-3xl border border-white/10 p-8 md:p-12 rounded-[3.5rem] w-full max-w-xl space-y-10 shadow-2xl relative overflow-hidden"
              >
-                <button type="button" onClick={() => setIsAdding(false)} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
+                <button 
+                  type="button" 
+                  onClick={() => setIsAdding(false)} 
+                  className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
+                >
                    <X size={20} />
                 </button>
                 

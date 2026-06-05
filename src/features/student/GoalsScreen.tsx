@@ -65,7 +65,11 @@ export default function GoalsScreen() {
              >
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/5 blur-[100px] rounded-full" />
                 
-                <button type="button" onClick={() => setIsAdding(false)} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
+                <button 
+                  type="button" 
+                  onClick={() => setIsAdding(false)} 
+                  className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
+                >
                    <X size={20} />
                 </button>
                 

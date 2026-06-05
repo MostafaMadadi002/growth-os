@@ -59,7 +59,11 @@ export default function ScheduleScreen() {
             className="bg-slate-900 border border-white/10 p-8 md:p-12 rounded-[3.5rem] shadow-2xl space-y-10 relative overflow-hidden"
           >
              <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-500/10 blur-[100px] rounded-full" />
-             <button type="button" onClick={() => setIsAdding(false)} className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors">
+             <button 
+               type="button" 
+               onClick={() => setIsAdding(false)} 
+               className="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors z-20 bg-white/5 p-2 rounded-full"
+             >
                 <X size={20} />
              </button>
              
@@ -130,9 +134,11 @@ export default function ScheduleScreen() {
                         </div>
                       )}
                       {task.dueDate && (
-                        <div className="flex items-center gap-2 bg-white/5 px-2 py-0.5 rounded-lg border border-white/10">
-                          <CalendarDays size={10} className="text-slate-500" />
-                          <span className="text-[9px] font-mono font-black text-slate-500">{task.dueDate}</span>
+                        <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-xl border border-white/10 shadow-lg">
+                          <CalendarDays size={14} className="text-orange-500" />
+                          <span className="text-[11px] font-mono font-black text-white uppercase tracking-tighter">
+                            {language === 'fa' ? 'مهلت:' : 'DUE:'} {task.dueDate}
+                          </span>
                         </div>
                       )}
                   </div>
