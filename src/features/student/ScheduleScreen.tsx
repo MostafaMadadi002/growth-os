@@ -264,7 +264,13 @@ export default function ScheduleScreen() {
                   </div>
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('local_time')}</label>
-                    <input name="time" type="time" required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-orange-500/30" />
+                    <input 
+                      name="time" 
+                      type="time" 
+                      required 
+                      defaultValue={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                      className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-orange-500/30" 
+                    />
                   </div>
                 </div>
 
