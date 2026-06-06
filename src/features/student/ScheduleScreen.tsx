@@ -72,29 +72,29 @@ export default function ScheduleScreen() {
   };
 
   return (
-    <div className="p-6 md:p-12 space-y-12 max-w-4xl mx-auto w-full rtl:font-farsi">
-      <header className="flex justify-between items-end">
+    <div className="p-4 md:p-12 space-y-8 md:space-y-12 max-w-4xl mx-auto w-full rtl:font-farsi">
+      <header className="flex justify-between items-center md:items-end">
         <div>
-           <div className="flex items-center gap-3 mb-4">
+           <div className="flex items-center gap-3 mb-2 md:mb-4">
               <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_#f97316]" />
-              <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">{t('chronos_sequencing')}</span>
+              <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('chronos_sequencing')}</span>
            </div>
-           <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter uppercase leading-none">
+           <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter uppercase leading-none">
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
            </h1>
         </div>
-         <div className="flex gap-4">
+         <div className="flex gap-2 md:gap-4">
            <button 
              onClick={() => setIsRecording(true)}
-             className="w-16 h-16 bg-brand-primary/10 backdrop-blur-xl border border-brand-primary/30 rounded-2xl flex items-center justify-center text-brand-primary shadow-2xl shadow-brand-primary/10 hover:bg-brand-primary hover:text-slate-950 transition-all duration-500 active:scale-95"
+             className="w-12 h-12 md:w-16 md:h-16 bg-brand-primary/10 backdrop-blur-xl border border-brand-primary/30 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-primary shadow-2xl shadow-brand-primary/10 hover:bg-brand-primary hover:text-slate-950 transition-all duration-500 active:scale-95"
            >
-             <Timer size={28} strokeWidth={3} />
+             <Timer size={24} md:size={28} strokeWidth={3} />
            </button>
            <button 
              onClick={() => setIsAdding(true)}
-             className="w-16 h-16 bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-2xl flex items-center justify-center text-orange-400 shadow-2xl shadow-orange-500/10 hover:bg-orange-600 hover:text-white transition-all duration-500 active:scale-95"
+             className="w-12 h-12 md:w-16 md:h-16 bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-xl md:rounded-2xl flex items-center justify-center text-orange-400 shadow-2xl shadow-orange-500/10 hover:bg-orange-600 hover:text-white transition-all duration-500 active:scale-95"
            >
-             <Plus size={28} strokeWidth={3} />
+             <Plus size={24} md:size={28} strokeWidth={3} />
            </button>
          </div>
       </header>
@@ -105,23 +105,23 @@ export default function ScheduleScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-slate-950/60 backdrop-blur-xl"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-slate-950/80 backdrop-blur-xl"
             dir={dir}
           >
              <motion.div 
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                className="bg-slate-900/40 backdrop-blur-3xl border border-white/10 p-8 md:p-12 rounded-[3.5rem] w-full max-w-xl space-y-10 shadow-2xl relative overflow-hidden"
+                className="bg-slate-900 border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
              >
-                <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/5 blur-[100px] rounded-full" />
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/5 blur-[100px] rounded-full pointer-events-none" />
                 
                 <button 
                   type="button" 
                   onClick={() => setIsRecording(false)} 
-                  className="absolute top-8 right-8 rtl:right-auto rtl:left-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
+                  className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
                 >
-                   <X size={20} />
+                   <X size={18} md:size={20} />
                 </button>
 
                 <h2 className="text-3xl font-display font-black text-white mb-8">{t('record_activity')}</h2>
@@ -189,19 +189,26 @@ export default function ScheduleScreen() {
 
         {isAdding && (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-slate-900 border border-white/10 p-8 md:p-12 rounded-[3.5rem] shadow-2xl space-y-10 relative overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-slate-950/80 backdrop-blur-xl"
+            dir={dir}
           >
-             <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-500/10 blur-[100px] rounded-full" />
-             <button 
-               type="button" 
-               onClick={() => setIsAdding(false)} 
-               className="absolute top-8 right-8 rtl:right-auto rtl:left-8 text-slate-500 hover:text-white transition-colors z-20 bg-white/5 p-2 rounded-full"
-             >
-                <X size={20} />
-             </button>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-slate-900 border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide shadow-2xl space-y-8 md:space-y-10 relative"
+            >
+               <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none" />
+               <button 
+                 type="button" 
+                 onClick={() => setIsAdding(false)} 
+                 className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-slate-500 hover:text-white transition-colors z-20 bg-white/5 p-2 rounded-full"
+               >
+                  <X size={18} md:size={20} />
+               </button>
              
              <form onSubmit={handleAddTask} className="space-y-8 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -237,6 +244,7 @@ export default function ScheduleScreen() {
                    </button>
                 </div>
              </form>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

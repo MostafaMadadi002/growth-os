@@ -73,7 +73,7 @@ export default function App() {
          </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-0 inset-x-0 bg-slate-950/40 backdrop-blur-3xl border-t border-white/10 z-50 px-6 pb-8 pt-2">
+      <nav className="fixed bottom-0 inset-x-0 bg-slate-950/40 backdrop-blur-3xl border-t border-white/10 z-50 px-6 pb-3 sm:pb-8 pt-2">
         <div className="max-w-md mx-auto flex justify-between items-center h-16">
           {tabs.map((tab) => (
             <button 
