@@ -163,11 +163,11 @@ export const useAppStore = create<AppState>()(
             if (existingLogIndex > -1) {
               newLogs[existingLogIndex].score += scoreChange;
               if (h.type === 'POSITIVE') {
-                newLogs[existingLogIndex].posCount = Math.max(0, newLogs[existingLogIndex].posCount + (isCompletedToday ? -1 : 1));
+                newLogs[existingLogIndex].posCount = Math.max(0, (newLogs[existingLogIndex].posCount || 0) + (isCompletedToday ? -1 : 1));
               } else {
-                newLogs[existingLogIndex].negCount = Math.max(0, newLogs[existingLogIndex].negCount + (isCompletedToday ? -1 : 1));
+                newLogs[existingLogIndex].negCount = Math.max(0, (newLogs[existingLogIndex].negCount || 0) + (isCompletedToday ? -1 : 1));
               }
-              newLogs[existingLogIndex].count = newLogs[existingLogIndex].posCount + newLogs[existingLogIndex].negCount;
+              newLogs[existingLogIndex].count = (newLogs[existingLogIndex].posCount || 0) + (newLogs[existingLogIndex].negCount || 0);
             } else {
               const pos = h.type === 'POSITIVE' ? 1 : 0;
               const neg = h.type === 'NEGATIVE' ? 1 : 0;
@@ -200,8 +200,8 @@ export const useAppStore = create<AppState>()(
         if (existingLogIndex > -1) {
           logs[existingLogIndex].count += count;
           logs[existingLogIndex].score += scoreChange;
-          if (type === 'POSITIVE') logs[existingLogIndex].posCount += count;
-          else logs[existingLogIndex].negCount += count;
+          if (type === 'POSITIVE') logs[existingLogIndex].posCount = (logs[existingLogIndex].posCount || 0) + count;
+          else logs[existingLogIndex].negCount = (logs[existingLogIndex].negCount || 0) + count;
         } else {
           logs.push({ 
             date, 
@@ -223,8 +223,8 @@ export const useAppStore = create<AppState>()(
         if (existingLogIndex > -1) {
           logs[existingLogIndex].count += activity.sessions;
           logs[existingLogIndex].score += scoreChange;
-          if (activity.type === 'POSITIVE') logs[existingLogIndex].posCount += activity.sessions;
-          else logs[existingLogIndex].negCount += activity.sessions;
+          if (activity.type === 'POSITIVE') logs[existingLogIndex].posCount = (logs[existingLogIndex].posCount || 0) + activity.sessions;
+          else logs[existingLogIndex].negCount = (logs[existingLogIndex].negCount || 0) + activity.sessions;
         } else {
           logs.push({ 
             date: activity.date, 
@@ -314,7 +314,7 @@ export const useAppStore = create<AppState>()(
               if (logIndex > -1) {
                 logs[logIndex].count += 1;
                 logs[logIndex].score += 1;
-                logs[logIndex].posCount += 1;
+                logs[logIndex].posCount = (logs[logIndex].posCount || 0) + 1;
               } else {
                 logs.push({ date: today, count: 1, posCount: 1, negCount: 0, score: 1 });
               }

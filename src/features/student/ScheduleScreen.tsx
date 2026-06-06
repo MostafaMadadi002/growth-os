@@ -58,7 +58,16 @@ export default function ScheduleScreen() {
 
     // Identify if it's a goal or negative session
     const goalId = isHabit ? undefined : (selection || undefined);
-    const title = isHabit ? selection.replace('habit:', '') : (formData.get('title') as string);
+    let title = isHabit ? selection.replace('habit:', '') : (formData.get('title') as string);
+    
+    // Fallback for title if empty
+    if (!title && goalId) {
+      title = goals.find(g => g.id === goalId)?.title || '';
+    }
+    if (!title) {
+      title = t('unplanned_activity');
+    }
+
     const type = goalId ? 'POSITIVE' : 'NEGATIVE';
 
     const activity = {
@@ -179,8 +188,7 @@ export default function ScheduleScreen() {
                         <input 
                           name="title" 
                           list="negative-habits"
-                          required 
-                          placeholder="..." 
+                          placeholder={t('unplanned_activity')} 
                           className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-xl outline-none focus:border-brand-primary/30" 
                         />
                         <datalist id="negative-habits">
