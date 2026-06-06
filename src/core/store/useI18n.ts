@@ -288,6 +288,10 @@ const translations = {
     target_achieved: 'هدف محقق شد',
     edit_goal: 'ویرایش هدف',
     save_changes: 'ذخیره تغییرات',
+    session_history: 'تاریخچه جلسات',
+    total_duration: 'کل مدت زمان مطالعه',
+    no_sessions: 'جلسه‌ای برای این هدف ثبت نشده',
+    sessions: 'جلسه',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -550,6 +554,10 @@ const translations = {
     target_achieved: 'NODE SATURATED',
     edit_goal: 'EDIT GOAL',
     save_changes: 'SAVE CHANGES',
+    session_history: 'SESSION HISTORY',
+    total_duration: 'TOTAL DURATION',
+    no_sessions: 'NO SESSIONS RECORDED',
+    sessions: 'SESSIONS',
   }
 };
 

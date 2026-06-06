@@ -41,6 +41,8 @@ export interface StudentActivity {
 export interface ActivityLog {
   date: string; // YYYY-MM-DD
   count: number;
+  posCount: number;
+  negCount: number;
   score: number; // cumulative score for heat map coloring
 }
 
@@ -160,8 +162,16 @@ export const useAppStore = create<AppState>()(
             const newLogs = [...logs];
             if (existingLogIndex > -1) {
               newLogs[existingLogIndex].score += scoreChange;
+              if (h.type === 'POSITIVE') {
+                newLogs[existingLogIndex].posCount = Math.max(0, newLogs[existingLogIndex].posCount + (isCompletedToday ? -1 : 1));
+              } else {
+                newLogs[existingLogIndex].negCount = Math.max(0, newLogs[existingLogIndex].negCount + (isCompletedToday ? -1 : 1));
+              }
+              newLogs[existingLogIndex].count = newLogs[existingLogIndex].posCount + newLogs[existingLogIndex].negCount;
             } else {
-              newLogs.push({ date: today, count: 1, score: scoreChange });
+              const pos = h.type === 'POSITIVE' ? 1 : 0;
+              const neg = h.type === 'NEGATIVE' ? 1 : 0;
+              newLogs.push({ date: today, count: 1, posCount: pos, negCount: neg, score: scoreChange });
             }
 
             return {
@@ -190,8 +200,16 @@ export const useAppStore = create<AppState>()(
         if (existingLogIndex > -1) {
           logs[existingLogIndex].count += count;
           logs[existingLogIndex].score += scoreChange;
+          if (type === 'POSITIVE') logs[existingLogIndex].posCount += count;
+          else logs[existingLogIndex].negCount += count;
         } else {
-          logs.push({ date, count, score: scoreChange });
+          logs.push({ 
+            date, 
+            count, 
+            posCount: type === 'POSITIVE' ? count : 0, 
+            negCount: type === 'NEGATIVE' ? count : 0, 
+            score: scoreChange 
+          });
         }
         return { studentData: { ...state.studentData, activityLogs: logs } };
       }),
@@ -205,8 +223,16 @@ export const useAppStore = create<AppState>()(
         if (existingLogIndex > -1) {
           logs[existingLogIndex].count += activity.sessions;
           logs[existingLogIndex].score += scoreChange;
+          if (activity.type === 'POSITIVE') logs[existingLogIndex].posCount += activity.sessions;
+          else logs[existingLogIndex].negCount += activity.sessions;
         } else {
-          logs.push({ date: activity.date, count: activity.sessions, score: scoreChange });
+          logs.push({ 
+            date: activity.date, 
+            count: activity.sessions, 
+            posCount: activity.type === 'POSITIVE' ? activity.sessions : 0, 
+            negCount: activity.type === 'NEGATIVE' ? activity.sessions : 0, 
+            score: scoreChange 
+          });
         }
 
         // Auto-sync with Habits
@@ -288,8 +314,9 @@ export const useAppStore = create<AppState>()(
               if (logIndex > -1) {
                 logs[logIndex].count += 1;
                 logs[logIndex].score += 1;
+                logs[logIndex].posCount += 1;
               } else {
-                logs.push({ date: today, count: 1, score: 1 });
+                logs.push({ date: today, count: 1, posCount: 1, negCount: 0, score: 1 });
               }
 
               // Update Goal

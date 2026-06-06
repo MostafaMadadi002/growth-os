@@ -24,24 +24,47 @@ export default function ProfileScreen() {
     const log = (studentData.activityLogs || []).find(l => l.date === dateStr);
     return {
       date: dateStr,
-      intensity: log ? Math.min(Math.abs(log.score), 4) : 0,
-      score: log ? log.score : 0
+      intensity: log ? Math.min(Math.abs(log.score || 0), 4) : 0,
+      score: log ? log.score : 0,
+      pos: log ? (log.posCount || (log.score > 0 ? log.score : 0)) : 0,
+      neg: log ? (log.negCount || (log.score < 0 ? Math.abs(log.score) : 0)) : 0
     };
   });
 
-  const getDayColor = (day: { intensity: number, score: number }) => {
+  const getDayColor = (day: { intensity: number, score: number, pos: number, neg: number }) => {
     if (day.intensity === 0) return 'bg-slate-950';
-    if (day.score > 0) {
+    
+    const total = day.pos + day.neg;
+    const balance = total > 0 ? day.pos / total : 0.5;
+    
+    if (balance >= 0.9) {
         if (day.intensity === 1) return 'bg-emerald-500/20';
         if (day.intensity === 2) return 'bg-emerald-500/40';
         if (day.intensity === 3) return 'bg-emerald-500/70';
         return 'bg-emerald-500';
-    } else {
-        if (day.intensity === 1) return 'bg-rose-500/20';
-        if (day.intensity === 2) return 'bg-rose-500/40';
-        if (day.intensity === 3) return 'bg-rose-500/70';
-        return 'bg-rose-500';
     }
+    if (balance >= 0.6) {
+        if (day.intensity === 1) return 'bg-teal-500/20';
+        if (day.intensity === 2) return 'bg-teal-500/40';
+        if (day.intensity === 3) return 'bg-teal-500/70';
+        return 'bg-teal-500';
+    }
+    if (balance >= 0.4) {
+        if (day.intensity === 1) return 'bg-slate-700/30';
+        if (day.intensity === 2) return 'bg-slate-700/50';
+        if (day.intensity === 3) return 'bg-slate-700/80';
+        return 'bg-slate-700';
+    }
+    if (balance >= 0.2) {
+        if (day.intensity === 1) return 'bg-orange-500/20';
+        if (day.intensity === 2) return 'bg-orange-500/40';
+        if (day.intensity === 3) return 'bg-orange-500/70';
+        return 'bg-orange-500';
+    }
+    if (day.intensity === 1) return 'bg-rose-500/20';
+    if (day.intensity === 2) return 'bg-rose-500/40';
+    if (day.intensity === 3) return 'bg-rose-500/70';
+    return 'bg-rose-500';
   };
 
   return (
@@ -120,7 +143,7 @@ export default function ProfileScreen() {
               {heatmapData.map((day, i) => (
                 <div 
                   key={i} 
-                  title={`${day.date}: ${day.score}`}
+                  title={`${day.date} | Pos: ${day.pos} Neg: ${day.neg} | Balance: ${day.pos + day.neg > 0 ? Math.round((day.pos/(day.pos+day.neg))*100) : 0}%`}
                   className={`w-2.5 h-2.5 md:w-4 md:h-4 rounded-sm transition-all duration-500 hover:scale-150 relative z-10 ${getDayColor(day)}`}
                 />
               ))}
@@ -129,7 +152,9 @@ export default function ProfileScreen() {
                <span className="text-rose-500">{t('bad_habits')}</span>
                <div className="flex gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-slate-950 rounded-xl border border-white/5">
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-500 rounded-xs" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-white/5 rounded-xs" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-orange-500 rounded-xs" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-slate-700 rounded-xs" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 rounded-xs" />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-500 rounded-xs" />
                </div>
                <span className="text-emerald-500">{t('good_habits')}</span>
@@ -168,6 +193,42 @@ export default function ProfileScreen() {
                     </div>
                 </div>
             </section>
+        )}
+
+        {/* Strategic Goal Summary */}
+        {currentRoot === UserRole.STUDENT && studentData.goals?.length > 0 && (
+          <section className="p-6 md:p-8 bg-slate-900/40 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] space-y-6">
+            <div className="flex items-center justify-between px-1">
+              <h4 className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('goal_distribution') || 'STRATEGIC_DISTRIBUTION'}</h4>
+              <Zap size={14} className="text-brand-primary" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {studentData.goals.map(goal => {
+                const activities = (studentData.activities || []).filter(a => a.goalId === goal.id);
+                const totalDuration = activities.reduce((sum, a) => sum + a.duration, 0);
+                return (
+                  <div key={goal.id} className="p-5 bg-white/5 rounded-2xl border border-white/5 space-y-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-[12px] font-display font-black text-white uppercase tracking-tight">{goal.title}</p>
+                        <p className="text-[9px] font-mono text-slate-500 uppercase">{activities.length} {t('sessions')}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-mono font-black text-brand-primary leading-none">{Math.floor(totalDuration / 60)}h {totalDuration % 60}m</p>
+                        <p className="text-[8px] font-mono text-slate-700 uppercase mt-1">{t('total_duration') || 'TOTAL_TIME'}</p>
+                      </div>
+                    </div>
+                    <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden p-[1px]">
+                      <div 
+                        className="h-full bg-brand-primary rounded-full transition-all duration-1000" 
+                        style={{ width: `${Math.min(100, (goal.completedSessions / goal.totalSessions) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
         )}
 
         {/* Configuration Section */}
