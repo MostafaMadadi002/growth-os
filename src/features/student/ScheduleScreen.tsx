@@ -286,7 +286,12 @@ export default function ScheduleScreen() {
                   </div>
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('target_date')}</label>
-                    <input name="dueDate" type="date" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-lg outline-none focus:border-orange-500/30" />
+                    <input 
+                      name="dueDate" 
+                      type="date" 
+                      defaultValue={new Date().toISOString().split('T')[0]}
+                      className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-lg outline-none focus:border-orange-500/30" 
+                    />
                   </div>
                 </div>
 
