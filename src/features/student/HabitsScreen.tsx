@@ -9,8 +9,13 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function HabitsScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addHabit, toggleHabit, deleteHabit } = useAppStore();
+  const { studentData, addHabit, toggleHabit, deleteHabit, logActivity } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
+
+  const handleToggleHabit = (id: string, type: 'POSITIVE' | 'NEGATIVE') => {
+    toggleHabit(id);
+    logActivity(today, type, 1);
+  };
 
   const handleAddHabit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -127,10 +132,10 @@ export default function HabitsScreen() {
                className={`p-8 bg-white/[0.02] backdrop-blur-md border rounded-[3rem] transition-all flex items-center justify-between group hover:bg-white/[0.04] ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-white/5'}`}
              >
                 <div className="flex items-center gap-6">
-                   <button 
-                     onClick={() => toggleHabit(habit.id)}
-                     className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-500 ${isDone ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/30 scale-110' : 'bg-slate-950 border border-white/5 text-slate-700 hover:text-white hover:border-blue-500/30'}`}
-                   >
+                    <button 
+                      onClick={() => handleToggleHabit(habit.id, habit.type)}
+                      className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-500 ${isDone ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/30 scale-110' : 'bg-slate-950 border border-white/5 text-slate-700 hover:text-white hover:border-blue-500/30'}`}
+                    >
                      <Zap size={28} className={isDone ? 'fill-current' : ''} />
                    </button>
                    <div>

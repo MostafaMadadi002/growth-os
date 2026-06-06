@@ -24,9 +24,25 @@ export default function ProfileScreen() {
     const log = (studentData.activityLogs || []).find(l => l.date === dateStr);
     return {
       date: dateStr,
-      intensity: log ? Math.min(log.count, 4) : 0
+      intensity: log ? Math.min(Math.abs(log.score), 4) : 0,
+      score: log ? log.score : 0
     };
   });
+
+  const getDayColor = (day: { intensity: number, score: number }) => {
+    if (day.intensity === 0) return 'bg-slate-950';
+    if (day.score > 0) {
+        if (day.intensity === 1) return 'bg-emerald-500/20';
+        if (day.intensity === 2) return 'bg-emerald-500/40';
+        if (day.intensity === 3) return 'bg-emerald-500/70';
+        return 'bg-emerald-500';
+    } else {
+        if (day.intensity === 1) return 'bg-rose-500/20';
+        if (day.intensity === 2) return 'bg-rose-500/40';
+        if (day.intensity === 3) return 'bg-rose-500/70';
+        return 'bg-rose-500';
+    }
+  };
 
   return (
     <div className="flex flex-col h-full bg-slate-950 overflow-y-auto pb-44 scrollbar-hide">
@@ -104,28 +120,54 @@ export default function ProfileScreen() {
               {heatmapData.map((day, i) => (
                 <div 
                   key={i} 
-                  title={day.date}
-                  className={`w-3 h-3 md:w-3.5 md:h-3.5 rounded-sm transition-colors ${
-                    day.intensity === 0 ? 'bg-slate-950' :
-                    day.intensity === 1 ? 'bg-brand-primary/20' :
-                    day.intensity === 2 ? 'bg-brand-primary/40' :
-                    day.intensity === 3 ? 'bg-brand-primary/70' :
-                    'bg-brand-primary'
-                  }`}
+                  title={`${day.date}: ${day.score}`}
+                  className={`w-3 h-3 md:w-4 md:h-4 rounded-sm transition-all duration-500 hover:scale-150 relative z-10 ${getDayColor(day)}`}
                 />
               ))}
             </div>
             <div className="flex justify-between items-center text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest px-1">
-               <span>Less Growth</span>
-               <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 bg-slate-950 rounded-xs" />
-                  <div className="w-2.5 h-2.5 bg-brand-primary/20 rounded-xs" />
-                  <div className="w-2.5 h-2.5 bg-brand-primary/40 rounded-xs" />
-                  <div className="w-2.5 h-2.5 bg-brand-primary rounded-xs" />
+               <span className="text-rose-500">{t('bad_habits')}</span>
+               <div className="flex gap-1.5 px-4 py-2 bg-slate-950 rounded-xl border border-white/5">
+                  <div className="w-2.5 h-2.5 bg-rose-500 rounded-xs" />
+                  <div className="w-2.5 h-2.5 bg-white/5 rounded-xs" />
+                  <div className="w-2.5 h-2.5 bg-emerald-500 rounded-xs" />
                </div>
-               <span>More Growth</span>
+               <span className="text-emerald-500">{t('good_habits')}</span>
             </div>
           </motion.section>
+        )}
+
+        {/* Activity Summary Section */}
+        {currentRoot === UserRole.STUDENT && (
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-8 bg-slate-900/40 border border-white/5 rounded-[2.5rem] space-y-6">
+                    <h4 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('weekly_summary')}</h4>
+                    <div className="space-y-4">
+                        {(studentData.activities || []).slice(-5).reverse().map((act, i) => (
+                            <div key={i} className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-2 h-2 rounded-full ${act.type === 'POSITIVE' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'}`} />
+                                    <span className="text-sm font-black text-white">{act.title}</span>
+                                </div>
+                                <span className="text-[10px] font-mono text-slate-500">{act.duration}m</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="p-8 bg-slate-900/40 border border-white/5 rounded-[2.5rem] space-y-6">
+                    <h4 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('active_nodes')}</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-white/5 p-4 rounded-2xl">
+                            <p className="text-[9px] font-mono font-black text-slate-600 uppercase mb-1">{t('positive')}</p>
+                            <p className="text-2xl font-display font-black text-emerald-500">{(studentData.activities || []).filter(a => a.type === 'POSITIVE').length}</p>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-2xl">
+                            <p className="text-[9px] font-mono font-black text-slate-600 uppercase mb-1">{t('negative')}</p>
+                            <p className="text-2xl font-display font-black text-rose-500">{(studentData.activities || []).filter(a => a.type === 'NEGATIVE').length}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         )}
 
         {/* Configuration Section */}

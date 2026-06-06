@@ -13,6 +13,9 @@ export interface Goal {
   completedSessions: number;
   frequencyPerWeek: number;
   category: 'STUDY' | 'WORK' | 'PROJECT';
+  durationMonths: number;
+  startDate: string;
+  selectedDays?: number[]; // 0-6 (Sun-Sat)
 }
 
 export interface Habit {
@@ -24,9 +27,20 @@ export interface Habit {
   lastCheck?: string;
 }
 
+export interface StudentActivity {
+  id: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  duration: number; // minutes
+  sessions: number;
+  type: 'POSITIVE' | 'NEGATIVE';
+  goalId?: string;
+}
+
 export interface ActivityLog {
   date: string; // YYYY-MM-DD
   count: number;
+  score: number; // cumulative score for heat map coloring
 }
 
 export interface ScheduleTask {
@@ -61,6 +75,7 @@ interface AppState {
     goals: Goal[];
     habits: Habit[];
     tasks: ScheduleTask[];
+    activities: StudentActivity[];
     activityLogs: ActivityLog[];
   };
   
@@ -79,7 +94,8 @@ interface AppState {
   addHabit: (habit: Habit) => void;
   toggleHabit: (habitId: string) => void;
   deleteHabit: (habitId: string) => void;
-  logActivity: (date: string) => void;
+  logActivity: (date: string, type: 'POSITIVE' | 'NEGATIVE', count?: number) => void;
+  recordActivity: (activity: StudentActivity) => void;
   addTask: (task: ScheduleTask) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
@@ -95,6 +111,7 @@ export const useAppStore = create<AppState>()(
         goals: [],
         habits: [],
         tasks: [],
+        activities: [],
         activityLogs: [],
       },
       
@@ -119,10 +136,12 @@ export const useAppStore = create<AppState>()(
         const logs = [...(state.studentData.activityLogs || [])];
         const existingLogIndex = logs.findIndex(l => l.date === today);
         
+        const scoreChange = 1;
         if (existingLogIndex > -1) {
           logs[existingLogIndex].count += 1;
+          logs[existingLogIndex].score += scoreChange;
         } else {
-          logs.push({ date: today, count: 1 });
+          logs.push({ date: today, count: 1, score: scoreChange });
         }
 
         return {
@@ -146,6 +165,19 @@ export const useAppStore = create<AppState>()(
           if (h.id === habitId) {
             const today = new Date().toISOString().split('T')[0];
             const isCompletedToday = h.lastCheck === today;
+            
+            // Log as minor activity
+            const logs = [...(state.studentData.activityLogs || [])];
+            const existingLogIndex = logs.findIndex(l => l.date === today);
+            const scoreChange = h.type === 'POSITIVE' ? (isCompletedToday ? -1 : 1) : (isCompletedToday ? 1 : -1);
+            
+            const newLogs = [...logs];
+            if (existingLogIndex > -1) {
+              newLogs[existingLogIndex].score += scoreChange;
+            } else {
+              newLogs.push({ date: today, count: 1, score: scoreChange });
+            }
+
             return {
               ...h,
               streak: isCompletedToday ? Math.max(0, h.streak - 1) : h.streak + 1,
@@ -164,15 +196,46 @@ export const useAppStore = create<AppState>()(
         }
       })),
 
-      logActivity: (date) => set((state) => {
+      logActivity: (date, type, count = 1) => set((state) => {
         const logs = [...(state.studentData.activityLogs || [])];
         const existingLogIndex = logs.findIndex(l => l.date === date);
+        const scoreChange = type === 'POSITIVE' ? count : -count;
+        
         if (existingLogIndex > -1) {
-          logs[existingLogIndex].count += 1;
+          logs[existingLogIndex].count += count;
+          logs[existingLogIndex].score += scoreChange;
         } else {
-          logs.push({ date, count: 1 });
+          logs.push({ date, count, score: scoreChange });
         }
         return { studentData: { ...state.studentData, activityLogs: logs } };
+      }),
+
+      recordActivity: (activity) => set((state) => {
+        const logs = [...(state.studentData.activityLogs || [])];
+        const existingLogIndex = logs.findIndex(l => l.date === activity.date);
+        const scoreChange = activity.type === 'POSITIVE' ? activity.sessions : -activity.sessions;
+
+        if (existingLogIndex > -1) {
+          logs[existingLogIndex].count += activity.sessions;
+          logs[existingLogIndex].score += scoreChange;
+        } else {
+          logs.push({ date: activity.date, count: activity.sessions, score: scoreChange });
+        }
+
+        // If it's a goal activity, update goal sessions
+        let goals = [...state.studentData.goals];
+        if (activity.goalId) {
+          goals = goals.map(g => g.id === activity.goalId ? { ...g, completedSessions: g.completedSessions + activity.sessions } : g);
+        }
+
+        return {
+          studentData: {
+            ...state.studentData,
+            activities: [...(state.studentData.activities || []), activity],
+            activityLogs: logs,
+            goals
+          }
+        };
       }),
 
       addTask: (task) => set((state) => ({

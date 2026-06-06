@@ -15,13 +15,18 @@ export default function GoalsScreen() {
   const handleAddGoal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const selectedDays = Array.from(formData.getAll('days')).map(Number);
+    
     const goal: Goal = {
       id: Math.random().toString(36).substr(2, 9),
       title: formData.get('title') as string,
       totalSessions: Number(formData.get('totalSessions')),
       completedSessions: 0,
-      frequencyPerWeek: Number(formData.get('frequencyPerWeek')),
+      frequencyPerWeek: Number(formData.get('frequencyPerWeek')) || selectedDays.length,
       category: formData.get('category') as any,
+      durationMonths: Number(formData.get('durationMonths')),
+      startDate: (formData.get('startDate') as string) || new Date().toISOString().split('T')[0],
+      selectedDays
     };
     addGoal(goal);
     setIsAdding(false);
@@ -83,27 +88,59 @@ export default function GoalsScreen() {
                    />
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-3">
-                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('total_sessions')}</label>
+                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('total_required_sessions')}</label>
                       <input 
                         name="totalSessions" 
                         type="number" 
                         required 
-                        defaultValue={10}
+                        defaultValue={30}
                         className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                    </div>
                    <div className="space-y-3">
-                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('weekly_frequency')}</label>
+                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('duration_months')}</label>
                       <input 
-                        name="frequencyPerWeek" 
+                        name="durationMonths" 
                         type="number" 
                         required 
-                        defaultValue={3}
+                        defaultValue={1}
                         className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                    </div>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('scheduled_days')}</label>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { id: 6, label: t('day_sat') },
+                      { id: 0, label: t('day_sun') },
+                      { id: 1, label: t('day_mon') },
+                      { id: 2, label: t('day_tue') },
+                      { id: 3, label: t('day_wed') },
+                      { id: 4, label: t('day_thu') },
+                      { id: 5, label: t('day_fri') },
+                    ].map(day => (
+                      <label key={day.id} className="cursor-pointer">
+                        <input type="checkbox" name="days" value={day.id} className="hidden peer" defaultChecked={day.id !== 5} />
+                        <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black text-slate-600 peer-checked:bg-white/10 peer-checked:text-brand-primary peer-checked:border-brand-primary/30 transition-all">
+                          {day.label}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('start_date')}</label>
+                   <input 
+                     name="startDate" 
+                     type="date" 
+                     defaultValue={new Date().toISOString().split('T')[0]}
+                     className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
+                   />
                 </div>
 
                 <div className="space-y-4">
@@ -141,14 +178,19 @@ export default function GoalsScreen() {
              className="bg-white/[0.02] backdrop-blur-sm border border-white/5 p-8 md:p-10 rounded-[3rem] group hover:bg-white/[0.04] hover:border-brand-primary/20 transition-all flex flex-col md:flex-row md:items-center justify-between gap-10"
            >
               <div className="flex-1 space-y-8">
-                 <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-5">
                     <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-brand-primary border border-white/5 shadow-inner">
                        {goal.category === 'STUDY' ? <BookOpen size={24} /> : goal.category === 'WORK' ? <Briefcase size={24} /> : <Rocket size={24} />}
                     </div>
                     <div>
                        <h3 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-2 group-hover:text-brand-primary transition-colors">{goal.title}</h3>
-                       <div className="flex items-center gap-3">
-                          <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg">{goal.frequencyPerWeek} {t('ses_week')}</span>
+                       <div className="flex items-center gap-3 flex-wrap">
+                          <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg">
+                            {goal.selectedDays?.length || goal.frequencyPerWeek} {t('ses_week')}
+                          </span>
+                          <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg">
+                            {goal.durationMonths} {t('monthly_term')}
+                          </span>
                           <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{t(goal.category.toLowerCase())}</span>
                        </div>
                     </div>

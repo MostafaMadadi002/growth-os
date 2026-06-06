@@ -9,11 +9,16 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function ScheduleScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addTask, toggleTask, deleteTask } = useAppStore();
+  const { studentData, addTask, toggleTask, deleteTask, recordActivity, addHabit } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   const tasks = studentData.tasks || [];
   const goals = studentData.goals || [];
+  const activities = studentData.activities || [];
+
+  const unfinishedTasks = tasks.filter(t => !t.done);
+  const showPrompt = !isAdding && !isRecording && unfinishedTasks.length > 0;
 
   const handleAddTask = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +35,42 @@ export default function ScheduleScreen() {
     setIsAdding(false);
   };
 
+  const handleRecordActivity = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const goalId = formData.get('goalId') as string;
+    const isUnplanned = !goalId;
+    const today = new Date().toISOString().split('T')[0];
+
+    const activity = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: formData.get('title') as string,
+      duration: Number(formData.get('duration')),
+      sessions: Number(formData.get('sessions')),
+      date: today,
+      type: (isUnplanned ? 'NEGATIVE' : 'POSITIVE') as 'POSITIVE' | 'NEGATIVE',
+      goalId: goalId || undefined
+    };
+
+    recordActivity(activity);
+
+    // If unplanned, add as a negative habit or increment existing one
+    if (isUnplanned) {
+      const existingHabit = (studentData.habits || []).find(h => h.title === activity.title && h.type === 'NEGATIVE');
+      if (!existingHabit) {
+        addHabit({
+          id: Math.random().toString(36).substr(2, 9),
+          title: activity.title,
+          type: 'NEGATIVE',
+          streak: 1,
+          lastCheck: today
+        });
+      }
+    }
+
+    setIsRecording(false);
+  };
+
   return (
     <div className="p-6 md:p-12 space-y-12 max-w-4xl mx-auto w-full rtl:font-farsi">
       <header className="flex justify-between items-end">
@@ -42,15 +83,110 @@ export default function ScheduleScreen() {
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
            </h1>
         </div>
-        <button 
-          onClick={() => setIsAdding(true)}
-          className="w-16 h-16 bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-2xl flex items-center justify-center text-orange-400 shadow-2xl shadow-orange-500/10 hover:bg-orange-600 hover:text-white transition-all duration-500 active:scale-95"
-        >
-          <Plus size={28} strokeWidth={3} />
-        </button>
+         <div className="flex gap-4">
+           <button 
+             onClick={() => setIsRecording(true)}
+             className="w-16 h-16 bg-brand-primary/10 backdrop-blur-xl border border-brand-primary/30 rounded-2xl flex items-center justify-center text-brand-primary shadow-2xl shadow-brand-primary/10 hover:bg-brand-primary hover:text-slate-950 transition-all duration-500 active:scale-95"
+           >
+             <Timer size={28} strokeWidth={3} />
+           </button>
+           <button 
+             onClick={() => setIsAdding(true)}
+             className="w-16 h-16 bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-2xl flex items-center justify-center text-orange-400 shadow-2xl shadow-orange-500/10 hover:bg-orange-600 hover:text-white transition-all duration-500 active:scale-95"
+           >
+             <Plus size={28} strokeWidth={3} />
+           </button>
+         </div>
       </header>
 
       <AnimatePresence>
+        {isRecording && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-slate-950/60 backdrop-blur-xl"
+            dir={dir}
+          >
+             <motion.div 
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                className="bg-slate-900/40 backdrop-blur-3xl border border-white/10 p-8 md:p-12 rounded-[3.5rem] w-full max-w-xl space-y-10 shadow-2xl relative overflow-hidden"
+             >
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/5 blur-[100px] rounded-full" />
+                
+                <button 
+                  type="button" 
+                  onClick={() => setIsRecording(false)} 
+                  className="absolute top-8 right-8 rtl:right-auto rtl:left-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
+                >
+                   <X size={20} />
+                </button>
+
+                <h2 className="text-3xl font-display font-black text-white mb-8">{t('record_activity')}</h2>
+                
+                <form onSubmit={handleRecordActivity} className="space-y-8 relative z-10 text-left rtl:text-right">
+                    <div className="space-y-3">
+                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('activity_title')}</label>
+                      <input name="title" required placeholder="..." className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-xl outline-none focus:border-brand-primary/30" />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                        <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('linked_objective')}</label>
+                        <select name="goalId" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-sans font-black text-lg outline-none focus:border-brand-primary/30 appearance-none">
+                            <option value="">{t('unplanned_activity')}</option>
+                            {goals.map(goal => (
+                            <option key={goal.id} value={goal.id} className="text-slate-900">{goal.title}</option>
+                            ))}
+                        </select>
+                        </div>
+                        <div className="space-y-3">
+                        <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('session_duration')}</label>
+                        <input name="duration" type="number" defaultValue={60} required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('sessions_done')}</label>
+                      <input name="sessions" type="number" defaultValue={1} required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                    </div>
+
+                    <button type="submit" className="w-full h-20 bg-brand-primary text-slate-950 rounded-3xl font-display font-black text-lg uppercase tracking-widest shadow-2xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        {t('commit_snapshot')}
+                    </button>
+                </form>
+             </motion.div>
+          </motion.div>
+        )}
+
+        {showPrompt && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-rose-500/10 border border-rose-500/20 p-8 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-8 group mb-12"
+          >
+            <div className="flex items-center gap-6">
+              <div className="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center text-rose-500 animate-pulse">
+                <Clock size={32} />
+              </div>
+              <div className="text-left rtl:text-right">
+                <h3 className="text-2xl font-display font-black text-white">{t('unknown_activity_prompt')}</h3>
+                <p className="text-[11px] font-mono font-black text-rose-500/60 uppercase tracking-widest mt-1">
+                  {unfinishedTasks.length} {t('active_segments')} {t('remaining')}
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsRecording(true)}
+              className="px-8 py-4 bg-rose-500 text-white rounded-2xl font-black text-[12px] uppercase tracking-widest shadow-xl shadow-rose-500/20 hover:scale-105 transition-all w-full md:w-auto"
+            >
+              {t('record_activity')}
+            </button>
+          </motion.div>
+        )}
+
         {isAdding && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
