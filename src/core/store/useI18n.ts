@@ -284,6 +284,10 @@ const translations = {
     identity_control: 'کنترل شاخه و ریشه',
     auth_required_desc: 'برای پایش روند تکامل و ثبت مشارکت‌ها در شاخه‌ها، احراز هویت کنید.',
     initialize_session: 'شروع نشست (Login)',
+    remaining_sessions: 'جلسات باقیمانده',
+    target_achieved: 'هدف محقق شد',
+    edit_goal: 'ویرایش هدف',
+    save_changes: 'ذخیره تغییرات',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -542,6 +546,10 @@ const translations = {
     identity_control: 'IDENTITY_CONTROL',
     auth_required_desc: 'Authenticate to monitor your evolution and sync system contributions across branches.',
     initialize_session: 'INITIALIZE_SESSION',
+    remaining_sessions: 'REMAINING SESSIONS',
+    target_achieved: 'NODE SATURATED',
+    edit_goal: 'EDIT GOAL',
+    save_changes: 'SAVE CHANGES',
   }
 };
 

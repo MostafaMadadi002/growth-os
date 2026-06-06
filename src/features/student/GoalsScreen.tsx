@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Plus, Target, X, CheckCircle2, 
-  BookOpen, Briefcase, Rocket
+  BookOpen, Briefcase, Rocket, Edit3
 } from 'lucide-react';
 import { useAppStore, Goal } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
@@ -9,8 +9,9 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function GoalsScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addGoal, completeSession, deleteGoal } = useAppStore();
+  const { studentData, addGoal, deleteGoal, updateGoal } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const handleAddGoal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +31,28 @@ export default function GoalsScreen() {
     };
     addGoal(goal);
     setIsAdding(false);
+  };
+
+  const handleUpdateGoal = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!editingGoal) return;
+    
+    const formData = new FormData(e.currentTarget);
+    const selectedDays = Array.from(formData.getAll('days')).map(Number);
+    
+    const updatedGoal: Goal = {
+      ...editingGoal,
+      title: formData.get('title') as string,
+      totalSessions: Number(formData.get('totalSessions')),
+      frequencyPerWeek: Number(formData.get('frequencyPerWeek')) || selectedDays.length,
+      category: formData.get('category') as any,
+      durationMonths: Number(formData.get('durationMonths')),
+      startDate: formData.get('startDate') as string,
+      selectedDays
+    };
+    
+    updateGoal(updatedGoal);
+    setEditingGoal(null);
   };
 
   return (
@@ -53,7 +76,7 @@ export default function GoalsScreen() {
       </header>
 
       <AnimatePresence>
-        {isAdding && (
+        {(isAdding || editingGoal) && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -65,24 +88,27 @@ export default function GoalsScreen() {
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                onSubmit={handleAddGoal} 
+                onSubmit={isAdding ? handleAddGoal : handleUpdateGoal} 
                 className="bg-slate-900 border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
              >
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/5 blur-[100px] rounded-full pointer-events-none" />
                 
                 <button 
                   type="button" 
-                  onClick={() => setIsAdding(false)} 
+                  onClick={() => { setIsAdding(false); setEditingGoal(null); }} 
                   className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
                 >
                    <X size={18} md:size={20} />
                 </button>
                 
+                <h2 className="text-3xl font-display font-black text-white">{isAdding ? t('establish_objective') : t('edit_goal') || 'EDIT_GOAL'}</h2>
+
                 <div className="space-y-3">
                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('objective_header')}</label>
                    <input 
                      name="title" 
                      required 
+                     defaultValue={editingGoal?.title || ''}
                      placeholder={language === 'fa' ? 'مثلاً: تسلط بر هوش مصنوعی' : 'e.g. Master AI Fundamentals'} 
                      className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 text-white font-display font-black text-2xl placeholder:text-slate-800 outline-none focus:border-brand-primary/30 focus:bg-white/[0.08] transition-all" 
                    />
@@ -95,7 +121,7 @@ export default function GoalsScreen() {
                         name="totalSessions" 
                         type="number" 
                         required 
-                        defaultValue={30}
+                        defaultValue={editingGoal?.totalSessions || 30}
                         className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                    </div>
@@ -105,7 +131,7 @@ export default function GoalsScreen() {
                         name="durationMonths" 
                         type="number" 
                         required 
-                        defaultValue={1}
+                        defaultValue={editingGoal?.durationMonths || 1}
                         className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                    </div>
@@ -124,7 +150,13 @@ export default function GoalsScreen() {
                       { id: 5, label: t('day_fri') },
                     ].map(day => (
                       <label key={day.id} className="cursor-pointer">
-                        <input type="checkbox" name="days" value={day.id} className="hidden peer" defaultChecked={day.id !== 5} />
+                        <input 
+                          type="checkbox" 
+                          name="days" 
+                          value={day.id} 
+                          className="hidden peer" 
+                          defaultChecked={editingGoal ? editingGoal.selectedDays?.includes(day.id) : day.id !== 5} 
+                        />
                         <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black text-slate-600 peer-checked:bg-white/10 peer-checked:text-brand-primary peer-checked:border-brand-primary/30 transition-all">
                           {day.label}
                         </div>
@@ -138,7 +170,7 @@ export default function GoalsScreen() {
                    <input 
                      name="startDate" 
                      type="date" 
-                     defaultValue={new Date().toISOString().split('T')[0]}
+                     defaultValue={editingGoal?.startDate || new Date().toISOString().split('T')[0]}
                      className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
                    />
                 </div>
@@ -152,7 +184,7 @@ export default function GoalsScreen() {
                         { id: 'PROJECT', icon: <Rocket size={22} />, label: t('project') }
                       ].map(cat => (
                         <label key={cat.id} className="flex flex-col items-center gap-4 p-5 rounded-3xl border border-white/5 bg-white/5 cursor-pointer has-[:checked]:border-brand-primary has-[:checked]:bg-brand-primary/10 group transition-all duration-300">
-                           <input type="radio" name="category" value={cat.id} className="hidden" defaultChecked={cat.id === 'STUDY'} />
+                           <input type="radio" name="category" value={cat.id} className="hidden" defaultChecked={editingGoal ? editingGoal.category === cat.id : cat.id === 'STUDY'} />
                            <div className="text-slate-500 group-has-[:checked]:text-brand-primary group-has-[:checked]:scale-110 transition-all">
                               {cat.icon}
                            </div>
@@ -163,7 +195,7 @@ export default function GoalsScreen() {
                 </div>
 
                 <button type="submit" className="w-full py-7 bg-brand-primary text-slate-950 rounded-3xl font-display font-black text-xl uppercase shadow-2xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
-                   {t('establish_objective')}
+                   {isAdding ? t('establish_objective') : t('save_changes') || 'SAVE CHANGES'}
                 </button>
              </motion.form>
           </motion.div>
@@ -214,12 +246,11 @@ export default function GoalsScreen() {
 
               <div className="flex md:flex-col gap-4">
                  <button 
-                   onClick={() => completeSession(goal.id)}
-                   disabled={goal.completedSessions >= goal.totalSessions}
-                   className={`flex-1 md:flex-none h-16 md:w-48 rounded-[1.5rem] flex items-center justify-center gap-4 font-black text-[12px] uppercase tracking-widest transition-all duration-500 ${goal.completedSessions >= goal.totalSessions ? 'bg-slate-950 text-slate-800' : 'bg-brand-primary text-slate-950 hover:scale-105 hover:shadow-2xl hover:shadow-brand-primary/20 shadow-lg shadow-brand-primary/5'}`}
+                   onClick={() => setEditingGoal(goal)}
+                   className="flex-1 md:flex-none h-16 md:w-48 rounded-[1.5rem] bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center gap-4 font-black text-[12px] uppercase tracking-widest text-brand-primary hover:bg-brand-primary hover:text-slate-950 transition-all duration-500"
                  >
-                    {goal.completedSessions >= goal.totalSessions ? <CheckCircle2 size={20} /> : <Plus size={20} strokeWidth={3} />}
-                    {goal.completedSessions >= goal.totalSessions ? t('objective_met') : t('commit_session')}
+                    <Edit3 size={20} strokeWidth={3} />
+                    {t('edit_goal') || 'EDIT'}
                  </button>
                  <button 
                   onClick={() => deleteGoal(goal.id)}

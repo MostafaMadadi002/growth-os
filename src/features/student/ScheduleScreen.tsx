@@ -53,22 +53,20 @@ export default function ScheduleScreen() {
     };
 
     recordActivity(activity);
-
-    // If unplanned, add as a negative habit or increment existing one
-    if (isUnplanned) {
-      const existingHabit = (studentData.habits || []).find(h => h.title === activity.title && h.type === 'NEGATIVE');
-      if (!existingHabit) {
-        addHabit({
-          id: Math.random().toString(36).substr(2, 9),
-          title: activity.title,
-          type: 'NEGATIVE',
-          streak: 1,
-          lastCheck: today
-        });
-      }
-    }
-
     setIsRecording(false);
+  };
+
+  const calculateWeeklyTarget = (goal: any) => {
+    const totalWeeks = goal.durationMonths * 4;
+    return Math.ceil(goal.totalSessions / totalWeeks);
+  };
+
+  const getWeeklyProgress = (goalId: string) => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    return activities
+      .filter(a => a.goalId === goalId && new Date(a.date) >= oneWeekAgo)
+      .reduce((sum, a) => sum + a.sessions, 0);
   };
 
   return (
@@ -98,6 +96,40 @@ export default function ScheduleScreen() {
            </button>
          </div>
       </header>
+      
+      {goals.length > 0 && (
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {goals.slice(0, 3).map(goal => {
+            const weeklyTarget = calculateWeeklyTarget(goal);
+            const weeklyDone = getWeeklyProgress(goal.id);
+            const progress = Math.min(100, (weeklyDone / weeklyTarget) * 100);
+            
+            return (
+              <motion.div 
+                key={goal.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-5 bg-white/[0.03] border border-white/5 rounded-[2rem] space-y-4"
+              >
+                <div className="flex justify-between items-start">
+                  <h4 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest truncate max-w-[100px]">{goal.title}</h4>
+                  <span className="text-[10px] font-mono text-brand-primary">{weeklyDone}/{weeklyTarget}</span>
+                </div>
+                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    className="h-full bg-brand-primary shadow-[0_0_8px_#10b981]"
+                  />
+                </div>
+                <p className="text-[9px] font-mono text-slate-400 uppercase tracking-tighter">
+                  {progress >= 100 ? t('target_achieved') || 'NODE SATURATED' : `${t('remaining_sessions') || 'SESSIONS REMAINING'}: ${Math.max(0, weeklyTarget - weeklyDone)}`}
+                </p>
+              </motion.div>
+            );
+          })}
+        </section>
+      )}
 
       <AnimatePresence>
         {isRecording && (
@@ -129,7 +161,21 @@ export default function ScheduleScreen() {
                 <form onSubmit={handleRecordActivity} className="space-y-8 relative z-10 text-left rtl:text-right">
                     <div className="space-y-3">
                       <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('activity_title')}</label>
-                      <input name="title" required placeholder="..." className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-xl outline-none focus:border-brand-primary/30" />
+                      <div className="relative group">
+                        <input 
+                          name="title" 
+                          list="negative-habits"
+                          required 
+                          placeholder="..." 
+                          className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-xl outline-none focus:border-brand-primary/30" 
+                        />
+                        <datalist id="negative-habits">
+                          {(studentData.habits || [])
+                            .filter(h => h.type === 'NEGATIVE')
+                            .map(h => <option key={h.id} value={h.title} />)
+                          }
+                        </datalist>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

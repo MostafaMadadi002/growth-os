@@ -89,7 +89,7 @@ interface AppState {
   
   // Student Actions
   addGoal: (goal: Goal) => void;
-  completeSession: (goalId: string) => void;
+  updateGoal: (goal: Goal) => void;
   deleteGoal: (goalId: string) => void;
   addHabit: (habit: Habit) => void;
   toggleHabit: (habitId: string) => void;
@@ -127,27 +127,12 @@ export const useAppStore = create<AppState>()(
         studentData: { ...state.studentData, goals: [...(state.studentData.goals || []), goal] }
       })),
 
-      completeSession: (goalId) => set((state) => {
-        const goals = (state.studentData.goals || []).map(g => 
-          g.id === goalId ? { ...g, completedSessions: Math.min(g.completedSessions + 1, g.totalSessions) } : g
-        );
-        
-        const today = new Date().toISOString().split('T')[0];
-        const logs = [...(state.studentData.activityLogs || [])];
-        const existingLogIndex = logs.findIndex(l => l.date === today);
-        
-        const scoreChange = 1;
-        if (existingLogIndex > -1) {
-          logs[existingLogIndex].count += 1;
-          logs[existingLogIndex].score += scoreChange;
-        } else {
-          logs.push({ date: today, count: 1, score: scoreChange });
+      updateGoal: (goal) => set((state) => ({
+        studentData: { 
+          ...state.studentData, 
+          goals: (state.studentData.goals || []).map(g => g.id === goal.id ? goal : g) 
         }
-
-        return {
-          studentData: { ...state.studentData, goals, activityLogs: logs }
-        };
-      }),
+      })),
 
       deleteGoal: (id) => set((state) => ({
         studentData: { 
@@ -211,7 +196,8 @@ export const useAppStore = create<AppState>()(
       }),
 
       recordActivity: (activity) => set((state) => {
-        const logs = [...(state.studentData.activityLogs || [])];
+        const studentData = state.studentData;
+        const logs = [...(studentData.activityLogs || [])];
         const existingLogIndex = logs.findIndex(l => l.date === activity.date);
         const scoreChange = activity.type === 'POSITIVE' ? activity.sessions : -activity.sessions;
 
@@ -222,17 +208,42 @@ export const useAppStore = create<AppState>()(
           logs.push({ date: activity.date, count: activity.sessions, score: scoreChange });
         }
 
+        // Auto-sync with Habits
+        let updatedHabits = [...(studentData.habits || [])];
+        const habitTitle = activity.goalId 
+          ? (studentData.goals.find(g => g.id === activity.goalId)?.title || activity.title)
+          : activity.title;
+        
+        const existingHabit = updatedHabits.find(h => h.title === habitTitle && h.type === activity.type);
+        
+        if (existingHabit) {
+          updatedHabits = updatedHabits.map(h => 
+            h.id === existingHabit.id 
+              ? { ...h, streak: h.streak + activity.sessions, lastCheck: activity.date } 
+              : h
+          );
+        } else {
+          updatedHabits.push({
+            id: Math.random().toString(36).substr(2, 9),
+            title: habitTitle,
+            type: activity.type,
+            streak: activity.sessions,
+            lastCheck: activity.date
+          });
+        }
+
         // If it's a goal activity, update goal sessions
-        let goals = [...state.studentData.goals];
+        let goals = [...studentData.goals];
         if (activity.goalId) {
           goals = goals.map(g => g.id === activity.goalId ? { ...g, completedSessions: g.completedSessions + activity.sessions } : g);
         }
 
         return {
           studentData: {
-            ...state.studentData,
-            activities: [...(state.studentData.activities || []), activity],
+            ...studentData,
+            activities: [...(studentData.activities || []), activity],
             activityLogs: logs,
+            habits: updatedHabits,
             goals
           }
         };
@@ -246,18 +257,57 @@ export const useAppStore = create<AppState>()(
       })),
 
       toggleTask: (taskId) => set((state) => {
-        let updatedGoals = [...(state.studentData.goals || [])];
-        const tasks = (state.studentData.tasks || []).map(t => {
+        const studentData = state.studentData;
+        let updatedGoals = [...(studentData.goals || [])];
+        let updatedHabits = [...(studentData.habits || [])];
+        let updatedActivities = [...(studentData.activities || [])];
+        const today = new Date().toISOString().split('T')[0];
+        const logs = [...(studentData.activityLogs || [])];
+
+        const tasks = (studentData.tasks || []).map(t => {
           if (t.id === taskId) {
             const nowDone = !t.done;
             
-            // If task is linked to a goal and marked as done, update goal progress
-            if (nowDone && t.goalId) {
-              updatedGoals = updatedGoals.map(g => 
-                g.id === t.goalId ? { ...g, completedSessions: Math.min(g.completedSessions + 1, g.totalSessions) } : g
-              );
-            } else if (!nowDone && t.goalId) {
-                // Optionally decrement if undone? Usually conservative to keep it
+            if (nowDone) {
+              // Record as Activity if marked as done
+              const activityId = Math.random().toString(36).substr(2, 9);
+              const newActivity: StudentActivity = {
+                id: activityId,
+                date: today,
+                title: t.label,
+                duration: 60, // Default 1 hour
+                sessions: 1,
+                type: 'POSITIVE',
+                goalId: t.goalId
+              };
+              updatedActivities.push(newActivity);
+
+              // Update Logs
+              const logIndex = logs.findIndex(l => l.date === today);
+              if (logIndex > -1) {
+                logs[logIndex].count += 1;
+                logs[logIndex].score += 1;
+              } else {
+                logs.push({ date: today, count: 1, score: 1 });
+              }
+
+              // Update Goal
+              if (t.goalId) {
+                updatedGoals = updatedGoals.map(g => 
+                  g.id === t.goalId ? { ...g, completedSessions: Math.min(g.completedSessions + 1, g.totalSessions) } : g
+                );
+              }
+
+              // Update Habit
+              const habitTitle = t.goalId 
+                ? (updatedGoals.find(g => g.id === t.goalId)?.title || t.label)
+                : t.label;
+              const existingHabit = updatedHabits.find(h => h.title === habitTitle && h.type === 'POSITIVE');
+              if (existingHabit) {
+                updatedHabits = updatedHabits.map(h => h.id === existingHabit.id ? { ...h, streak: h.streak + 1, lastCheck: today } : h);
+              } else {
+                updatedHabits.push({ id: Math.random().toString(36).substr(2, 9), title: habitTitle, type: 'POSITIVE', streak: 1, lastCheck: today });
+              }
             }
 
             return { ...t, done: nowDone };
@@ -265,21 +315,13 @@ export const useAppStore = create<AppState>()(
           return t;
         });
 
-        // Also log activity if marked as done today
-        const today = new Date().toISOString().split('T')[0];
-        const logs = [...(state.studentData.activityLogs || [])];
-        const existingLogIndex = logs.findIndex(l => l.date === today);
-        if (existingLogIndex > -1) {
-          logs[existingLogIndex].count += 1;
-        } else {
-          logs.push({ date: today, count: 1 });
-        }
-
         return { 
           studentData: { 
-            ...state.studentData, 
+            ...studentData, 
             tasks, 
             goals: updatedGoals,
+            habits: updatedHabits,
+            activities: updatedActivities,
             activityLogs: logs 
           } 
         };
