@@ -30,6 +30,7 @@ export interface Habit {
 export interface StudentActivity {
   id: string;
   date: string; // YYYY-MM-DD
+  time?: string; // HH:mm
   title: string;
   duration: number; // minutes
   sessions: number;

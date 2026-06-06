@@ -15,10 +15,24 @@ export default function ScheduleScreen() {
 
   const tasks = studentData.tasks || [];
   const goals = studentData.goals || [];
-  const activities = studentData.activities || [];
+  const activities = (studentData.activities || []).filter(a => a.date === new Date().toISOString().split('T')[0]);
 
+  // Merge tasks and activities for the timeline
   const unfinishedTasks = tasks.filter(t => !t.done);
   const showPrompt = !isAdding && !isRecording && unfinishedTasks.length > 0;
+
+  const timelineItems = [
+    ...tasks.map(t => ({ ...t, type: 'TASK' as const })),
+    ...activities.map(a => ({
+      id: a.id,
+      label: a.title,
+      time: a.time || '00:00',
+      done: true,
+      goalId: a.goalId,
+      type: 'ACTIVITY' as const,
+      activityType: a.type
+    }))
+  ].sort((a, b) => a.time.localeCompare(b.time));
 
   const handleAddTask = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,18 +52,24 @@ export default function ScheduleScreen() {
   const handleRecordActivity = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const goalId = formData.get('goalId') as string;
-    const isUnplanned = !goalId;
+    const selection = formData.get('goalId') as string;
+    const isHabit = selection.startsWith('habit:');
     const today = new Date().toISOString().split('T')[0];
+
+    // Identify if it's a goal or negative session
+    const goalId = isHabit ? undefined : (selection || undefined);
+    const title = isHabit ? selection.replace('habit:', '') : (formData.get('title') as string);
+    const type = goalId ? 'POSITIVE' : 'NEGATIVE';
 
     const activity = {
       id: Math.random().toString(36).substr(2, 9),
-      title: formData.get('title') as string,
+      title,
       duration: Number(formData.get('duration')),
       sessions: Number(formData.get('sessions')),
       date: today,
-      type: (isUnplanned ? 'NEGATIVE' : 'POSITIVE') as 'POSITIVE' | 'NEGATIVE',
-      goalId: goalId || undefined
+      time: formData.get('time') as string,
+      type: type as 'POSITIVE' | 'NEGATIVE',
+      goalId
     };
 
     recordActivity(activity);
@@ -87,12 +107,6 @@ export default function ScheduleScreen() {
              className="w-12 h-12 md:w-16 md:h-16 bg-brand-primary/10 backdrop-blur-xl border border-brand-primary/30 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-primary shadow-2xl shadow-brand-primary/10 hover:bg-brand-primary hover:text-slate-950 transition-all duration-500 active:scale-95"
            >
              <Timer size={24} md:size={28} strokeWidth={3} />
-           </button>
-           <button 
-             onClick={() => setIsAdding(true)}
-             className="w-12 h-12 md:w-16 md:h-16 bg-orange-500/10 backdrop-blur-xl border border-orange-500/30 rounded-xl md:rounded-2xl flex items-center justify-center text-orange-400 shadow-2xl shadow-orange-500/10 hover:bg-orange-600 hover:text-white transition-all duration-500 active:scale-95"
-           >
-             <Plus size={24} md:size={28} strokeWidth={3} />
            </button>
          </div>
       </header>
@@ -183,20 +197,42 @@ export default function ScheduleScreen() {
                         <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('linked_objective')}</label>
                         <select name="goalId" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-sans font-black text-lg outline-none focus:border-brand-primary/30 appearance-none">
                             <option value="">{t('unplanned_activity')}</option>
-                            {goals.map(goal => (
-                            <option key={goal.id} value={goal.id} className="text-slate-900">{goal.title}</option>
-                            ))}
+                            <optgroup label={t('active_goals')} className="bg-slate-900 border-none">
+                                {goals.map(goal => (
+                                    <option key={goal.id} value={goal.id} className="text-white">{goal.title}</option>
+                                ))}
+                            </optgroup>
+                            <optgroup label={t('bad_habits')} className="bg-slate-900 border-none">
+                                {(studentData.habits || [])
+                                    .filter(h => h.type === 'NEGATIVE')
+                                    .map(habit => (
+                                        <option key={habit.id} value={`habit:${habit.title}`} className="text-rose-500">{habit.title}</option>
+                                    ))
+                                }
+                            </optgroup>
                         </select>
                         </div>
+                        <div className="space-y-3">
+                          <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('local_time')}</label>
+                          <input 
+                            name="time" 
+                            type="time" 
+                            required 
+                            defaultValue={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                            className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" 
+                          />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
                         <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('session_duration')}</label>
                         <input name="duration" type="number" defaultValue={60} required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
                         </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('sessions_done')}</label>
-                      <input name="sessions" type="number" defaultValue={1} required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                        <div className="space-y-3">
+                          <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('sessions_done')}</label>
+                          <input name="sessions" type="number" defaultValue={1} required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                        </div>
                     </div>
 
                     <button type="submit" className="w-full h-20 bg-brand-primary text-slate-950 rounded-3xl font-display font-black text-lg uppercase tracking-widest shadow-2xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
@@ -307,26 +343,27 @@ export default function ScheduleScreen() {
       </AnimatePresence>
 
       <section className="space-y-6 relative before:absolute before:left-10 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-10 before:w-[2px] before:bg-white/5 before:z-0">
-         {[...tasks].sort((a, b) => a.time.localeCompare(b.time)).map((task) => {
-           const linkedGoal = goals.find(g => g.id === task.goalId);
+         {timelineItems.map((item) => {
+           const linkedGoal = goals.find(g => g.id === item.goalId);
+           const isTask = item.type === 'TASK';
            return (
             <motion.div 
               layout
-              key={task.id} 
+              key={item.id} 
               className="relative z-10 flex gap-8 items-center bg-white/[0.02] backdrop-blur-md p-4 pr-8 rtl:pr-4 rtl:pl-8 rounded-[3rem] border border-white/5 hover:bg-white/[0.05] transition-all group"
             >
-                <div className={`w-20 h-20 rounded-3xl flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 ${task.done ? 'bg-orange-500 text-slate-950 border-orange-400 scale-90' : 'bg-slate-900 border-white/10 text-slate-400'}`}>
-                  <span className="text-xl font-mono font-black leading-none">{task.time.split(':')[0]}</span>
-                  <span className="text-[10px] font-mono font-black opacity-60">{task.time.split(':')[1]}</span>
+                <div className={`w-20 h-20 rounded-3xl flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950 border-orange-400' : 'bg-emerald-500 text-slate-950 border-emerald-400') : 'bg-slate-900 border-white/10 text-slate-400'} scale-90`}>
+                  <span className="text-xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>
+                  <span className="text-[10px] font-mono font-black opacity-60">{item.time.split(':')[1]}</span>
                 </div>
                 <div className="flex-1 space-y-2">
-                  <h4 className={`text-2xl font-display font-black uppercase tracking-tight transition-all duration-500 ${task.done ? 'text-slate-600 line-through' : 'text-white'}`}>
-                    {task.label}
+                  <h4 className={`text-2xl font-display font-black uppercase tracking-tight transition-all duration-500 ${item.done ? 'text-slate-600 line-through' : 'text-white'}`}>
+                    {item.label}
                   </h4>
                   <div className="flex items-center gap-4 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <Clock size={12} className="text-slate-700" />
-                        <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest">{t('status_active')}</span>
+                        {isTask ? <Clock size={12} className="text-slate-700" /> : <CheckCircle2 size={12} className="text-emerald-500" />}
+                        <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest">{isTask ? t('status_active') : t('status_completed') || 'COMPLETED'}</span>
                       </div>
                       {linkedGoal && (
                         <div className="flex items-center gap-2 bg-brand-primary/10 px-2 py-0.5 rounded-lg border border-brand-primary/20">
@@ -334,35 +371,37 @@ export default function ScheduleScreen() {
                           <span className="text-[9px] font-mono font-black text-brand-primary uppercase">{linkedGoal.title}</span>
                         </div>
                       )}
-                      {task.dueDate && (
-                        <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-xl border border-white/10 shadow-lg">
-                          <CalendarDays size={14} className="text-orange-500" />
-                          <span className="text-[11px] font-mono font-black text-white uppercase tracking-tighter">
-                            {language === 'fa' ? 'مهلت:' : 'DUE:'} {task.dueDate}
-                          </span>
+                      {!isTask && (item as any).activityType === 'NEGATIVE' && (
+                        <div className="flex items-center gap-2 bg-rose-500/10 px-2 py-0.5 rounded-lg border border-rose-500/20">
+                          <X size={10} className="text-rose-500" />
+                          <span className="text-[9px] font-mono font-black text-rose-500 uppercase">{t('deviant_session') || 'DEVIANT'}</span>
                         </div>
                       )}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <button 
-                    onClick={() => toggleTask(task.id)}
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${task.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/20' : 'bg-white/5 text-slate-700 border border-white/5 hover:border-orange-500/30 hover:text-orange-500'}`}
-                  >
-                    {task.done ? <CheckCircle2 size={28} strokeWidth={3} /> : <div className="w-8 h-8 border-4 border-current rounded-xl opacity-20" />}
-                  </button>
-                  <button 
-                    onClick={() => deleteTask(task.id)}
-                    className="w-10 h-10 rounded-xl bg-slate-950/40 flex items-center justify-center text-slate-800 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                  >
-                    <X size={16} />
-                  </button>
+                  {isTask && (
+                    <button 
+                      onClick={() => toggleTask(item.id)}
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/20' : 'bg-white/5 text-slate-700 border border-white/5 hover:border-orange-500/30 hover:text-orange-500'}`}
+                    >
+                      {item.done ? <CheckCircle2 size={28} strokeWidth={3} /> : <div className="w-8 h-8 border-4 border-current rounded-xl opacity-20" />}
+                    </button>
+                  )}
+                  {isTask && (
+                    <button 
+                      onClick={() => deleteTask(item.id)}
+                      className="w-10 h-10 rounded-xl bg-slate-950/40 flex items-center justify-center text-slate-800 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
                 </div>
             </motion.div>
            );
          })}
 
-         {tasks.length === 0 && (
+         {timelineItems.length === 0 && (
            <motion.div 
              initial={{ opacity: 0 }}
              animate={{ opacity: 1 }}
