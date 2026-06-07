@@ -326,6 +326,8 @@ const translations = {
     trading_calendar: 'تقویم معاملاتی',
     daily_stats: 'آمار روزانه',
     no_labels: 'بدون برچسب',
+    frequent_labels: 'برچسب‌های پرتکرار',
+    clear_all: 'پاکسازی همه',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -627,6 +629,8 @@ const translations = {
     trading_calendar: 'TRADING CALENDAR',
     daily_stats: 'DAILY STATS',
     no_labels: 'NO LABELS',
+    frequent_labels: 'FREQUENT LABELS',
+    clear_all: 'CLEAR ALL',
   }
 };
 

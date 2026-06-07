@@ -244,77 +244,80 @@ export default function TradingJournal() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-end">
                     <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('labels')}</label>
+                    {tempLabels.length > 0 && (
+                      <button 
+                        type="button" 
+                        onClick={() => setTempLabels([])}
+                        className="text-[8px] text-rose-500 font-black uppercase"
+                      >
+                        {t('clear_all')}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <input 
+                      value={tempLabel}
+                      onChange={(e) => setTempLabel(e.target.value)}
+                      placeholder={t('add_label')}
+                      className="flex-1 bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none focus:border-brand-primary/20"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (tempLabel.trim() && !tempLabels.includes(tempLabel.trim())) {
+                            setTempLabels([...tempLabels, tempLabel.trim()]);
+                            setTempLabel('');
+                          }
+                        }
+                      }}
+                    />
                     <button 
-                      type="button" 
-                      onClick={() => setShowLabelInput(!showLabelInput)}
-                      className="text-[10px] text-brand-primary font-black uppercase"
+                      type="button"
+                      onClick={() => {
+                        if (tempLabel.trim() && !tempLabels.includes(tempLabel.trim())) {
+                          setTempLabels([...tempLabels, tempLabel.trim()]);
+                          setTempLabel('');
+                        }
+                      }}
+                      className="p-3 bg-brand-primary text-slate-950 rounded-xl"
                     >
-                      {t('add_label')}
+                      <Plus size={14} />
                     </button>
                   </div>
-                  {showLabelInput && (
-                    <div className="space-y-3">
-                      <div className="flex gap-2">
-                        <input 
-                          value={tempLabel}
-                          onChange={(e) => setTempLabel(e.target.value)}
-                          placeholder="Tag..."
-                          className="flex-1 bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              if (tempLabel.trim() && !tempLabels.includes(tempLabel.trim())) {
-                                setTempLabels([...tempLabels, tempLabel.trim()]);
-                                setTempLabel('');
-                              }
-                            }
-                          }}
-                        />
-                        <button 
-                          type="button"
-                          onClick={() => {
-                            if (tempLabel.trim() && !tempLabels.includes(tempLabel.trim())) {
-                              setTempLabels([...tempLabels, tempLabel.trim()]);
-                              setTempLabel('');
-                            }
-                          }}
-                          className="p-3 bg-brand-primary text-slate-950 rounded-xl"
-                        >
-                          <Plus size={14} />
-                        </button>
+                  
+                  {/* Suggestions Mobile */}
+                  {allUsedLabels.length > 0 && (
+                    <div className="space-y-2 py-1">
+                      <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('frequent_labels')}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {allUsedLabels
+                          .filter(l => !tempLabels.includes(l))
+                          .slice(0, 12)
+                          .map(label => (
+                            <button
+                              key={label}
+                              type="button"
+                              onClick={() => setTempLabels([...tempLabels, label])}
+                              className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-mono text-slate-400 hover:border-brand-primary/40 hover:text-white transition-colors"
+                            >
+                              {label}
+                            </button>
+                          ))}
                       </div>
-                      
-                      {/* Suggestions */}
-                      {allUsedLabels.length > 0 && (
-                        <div className="flex flex-wrap gap-2 py-2">
-                          {allUsedLabels
-                            .filter(l => !tempLabels.includes(l))
-                            .slice(0, 8)
-                            .map(label => (
-                              <button
-                                key={label}
-                                type="button"
-                                onClick={() => setTempLabels([...tempLabels, label])}
-                                className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[9px] font-mono text-slate-400 hover:border-brand-primary/40 transition-colors"
-                              >
-                                + {label}
-                              </button>
-                            ))}
-                        </div>
-                      )}
                     </div>
                   )}
-                  <div className="flex flex-wrap gap-2">
+
+                  <div className="flex flex-wrap gap-2 pt-1">
                     {tempLabels.length === 0 && (
                       <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest italic opacity-50">{t('no_labels')}</span>
                     )}
                     {tempLabels.map(label => (
-                      <span key={label} className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] font-mono font-black text-slate-400 flex items-center gap-1">
+                      <span key={label} className="px-2.5 py-1.5 bg-brand-primary/10 border border-brand-primary/20 rounded-xl text-[9px] font-mono font-black text-brand-primary flex items-center gap-1.5">
                         #{label}
-                        <button onClick={() => setTempLabels(tempLabels.filter(l => l !== label))} className="text-rose-500 hover:text-rose-400">
+                        <button onClick={() => setTempLabels(tempLabels.filter(l => l !== label))} className="text-brand-primary hover:text-rose-500">
                           <X size={10} />
                         </button>
                       </span>
@@ -467,22 +470,25 @@ export default function TradingJournal() {
                                     </button>
                                   </div>
 
-                                  {/* Suggestions Desktop */}
+                                  {/* Suggestions Desktop Inline */}
                                   {allUsedLabels.length > 0 && (
-                                    <div className="flex flex-wrap gap-1.5 pb-3 border-b border-white/5 mb-3">
-                                      {allUsedLabels
-                                        .filter(l => !tempLabels.includes(l))
-                                        .slice(0, 6)
-                                        .map(label => (
-                                          <button
-                                            key={label}
-                                            type="button"
-                                            onClick={() => setTempLabels([...tempLabels, label])}
-                                            className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[8px] font-mono text-slate-500 hover:text-white transition-colors"
-                                          >
-                                            {label}
-                                          </button>
-                                        ))}
+                                    <div className="space-y-1.5 pb-3 border-b border-white/5 mb-3">
+                                      <p className="text-[7px] font-mono font-black text-slate-600 tracking-widest uppercase">{t('frequent_labels')}</p>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {allUsedLabels
+                                          .filter(l => !tempLabels.includes(l))
+                                          .slice(0, 8)
+                                          .map(label => (
+                                            <button
+                                              key={label}
+                                              type="button"
+                                              onClick={() => setTempLabels([...tempLabels, label])}
+                                              className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[8px] font-mono text-slate-500 hover:text-white transition-colors"
+                                            >
+                                              {label}
+                                            </button>
+                                          ))}
+                                      </div>
                                     </div>
                                   )}
 
@@ -747,14 +753,14 @@ export default function TradingJournal() {
                     <div className="flex gap-2">
                        <input 
                           id="trade-label-input"
-                          placeholder="Add label..."
-                          className="bg-slate-950 border border-white/5 rounded-xl px-3 py-1 text-white font-mono text-[10px] outline-none"
+                          placeholder={t('add_label')}
+                          className="bg-slate-950 border border-white/5 rounded-xl px-3 py-1.5 text-white font-mono text-[10px] outline-none focus:border-brand-primary/20"
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                               e.preventDefault();
                               const val = e.currentTarget.value.trim();
                               if (val && !editingTrade.labels?.includes(val)) {
-                                updateTrade({ ...editingTrade, labels: [...(editingTrade.labels || []), val] });
+                                setEditingTrade({ ...editingTrade, labels: [...(editingTrade.labels || []), val] });
                                 e.currentTarget.value = '';
                               }
                             }
@@ -765,20 +771,23 @@ export default function TradingJournal() {
 
                   {/* Suggestions in Edit Modal */}
                   {allUsedLabels.length > 0 && (
-                    <div className="flex flex-wrap gap-2 py-1">
-                      {allUsedLabels
-                        .filter(l => !editingTrade.labels?.includes(l))
-                        .slice(0, 10)
-                        .map(label => (
-                          <button
-                            key={label}
-                            type="button"
-                            onClick={() => updateTrade({ ...editingTrade, labels: [...(editingTrade.labels || []), label] })}
-                            className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-mono text-slate-500 hover:text-white transition-colors"
-                          >
-                            + {label}
-                          </button>
-                        ))}
+                    <div className="space-y-2 py-1">
+                      <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('frequent_labels')}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {allUsedLabels
+                          .filter(l => !editingTrade.labels?.includes(l))
+                          .slice(0, 15)
+                          .map(label => (
+                            <button
+                              key={label}
+                              type="button"
+                              onClick={() => setEditingTrade({ ...editingTrade, labels: [...(editingTrade.labels || []), label] })}
+                              className="px-2.5 py-1 bg-white/5 border border-white/10 rounded-xl text-[10px] font-mono text-slate-500 hover:text-white hover:border-brand-primary/40 transition-colors"
+                            >
+                              {label}
+                            </button>
+                          ))}
+                      </div>
                     </div>
                   )}
 
@@ -787,14 +796,14 @@ export default function TradingJournal() {
                       <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest italic opacity-50">{t('no_labels')}</span>
                     )}
                     {(editingTrade.labels || []).map(label => (
-                      <span key={label} className="px-2 py-1 bg-brand-primary/10 border border-brand-primary/20 rounded-xl text-[10px] font-mono font-black text-brand-primary flex items-center gap-2">
+                      <span key={label} className="px-3 py-1.5 bg-brand-primary/10 border border-brand-primary/20 rounded-xl text-[10px] font-mono font-black text-brand-primary flex items-center gap-2">
                         #{label}
                         <button 
                           type="button"
-                          onClick={() => updateTrade({ ...editingTrade, labels: (editingTrade.labels || []).filter(l => l !== label) })}
-                          className="hover:text-rose-400"
+                          onClick={() => setEditingTrade({ ...editingTrade, labels: (editingTrade.labels || []).filter(l => l !== label) })}
+                          className="hover:text-rose-500 transition-colors"
                         >
-                          <X size={12} />
+                          <X size={14} />
                         </button>
                       </span>
                     ))}
