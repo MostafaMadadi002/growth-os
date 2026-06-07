@@ -6,6 +6,12 @@ export enum UserRole {
   TRADER = 'TRADER',
 }
 
+export interface SubGoal {
+  id: string;
+  title: string;
+  done: boolean;
+}
+
 export interface Goal {
   id: string;
   title: string;
@@ -13,9 +19,11 @@ export interface Goal {
   completedSessions: number;
   frequencyPerWeek: number;
   category: 'STUDY' | 'WORK' | 'PROJECT';
-  durationMonths: number;
+  duration: number;
+  durationUnit: 'DAYS' | 'WEEKS' | 'MONTHS';
   startDate: string;
   selectedDays?: number[]; // 0-6 (Sun-Sat)
+  subGoals?: SubGoal[];
 }
 
 export interface Habit {
@@ -94,6 +102,7 @@ interface AppState {
   addGoal: (goal: Goal) => void;
   updateGoal: (goal: Goal) => void;
   deleteGoal: (goalId: string) => void;
+  toggleSubGoal: (goalId: string, subGoalId: string) => void;
   addHabit: (habit: Habit) => void;
   toggleHabit: (habitId: string) => void;
   deleteHabit: (habitId: string) => void;
@@ -141,6 +150,21 @@ export const useAppStore = create<AppState>()(
         studentData: { 
           ...state.studentData, 
           goals: (state.studentData.goals || []).filter(g => g.id !== id) 
+        }
+      })),
+
+      toggleSubGoal: (goalId, subGoalId) => set((state) => ({
+        studentData: {
+          ...state.studentData,
+          goals: (state.studentData.goals || []).map(g => {
+            if (g.id === goalId) {
+              return {
+                ...g,
+                subGoals: (g.subGoals || []).map(sg => sg.id === subGoalId ? { ...sg, done: !sg.done } : sg)
+              };
+            }
+            return g;
+          })
         }
       })),
       

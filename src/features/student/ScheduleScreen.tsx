@@ -15,7 +15,11 @@ export default function ScheduleScreen() {
 
   const tasks = studentData.tasks || [];
   const goals = studentData.goals || [];
-  const activities = (studentData.activities || []).filter(a => a.date === new Date().toISOString().split('T')[0]);
+  const activities = (studentData.activities || []);
+  const todayActivities = activities.filter(a => a.date === new Date().toISOString().split('T')[0]);
+
+  const today = new Date().toISOString().split('T')[0];
+  const dayOfWeek = new Date().getDay();
 
   // Merge tasks and activities for the timeline
   const unfinishedTasks = tasks.filter(t => !t.done);
@@ -23,7 +27,7 @@ export default function ScheduleScreen() {
 
   const timelineItems = [
     ...tasks.map(t => ({ ...t, type: 'TASK' as const })),
-    ...activities.map(a => ({
+    ...todayActivities.map(a => ({
       id: a.id,
       label: a.title,
       time: a.time || '00:00',
@@ -54,7 +58,7 @@ export default function ScheduleScreen() {
     const formData = new FormData(e.currentTarget);
     const selection = formData.get('goalId') as string;
     const isHabit = selection.startsWith('habit:');
-    const today = new Date().toISOString().split('T')[0];
+    const todayStr = new Date().toISOString().split('T')[0];
 
     // Identify if it's a goal or negative session
     const goalId = isHabit ? undefined : (selection || undefined);
@@ -75,7 +79,7 @@ export default function ScheduleScreen() {
       title,
       duration: Number(formData.get('duration')),
       sessions: Number(formData.get('sessions')),
-      date: today,
+      date: todayStr,
       time: formData.get('time') as string,
       type: type as 'POSITIVE' | 'NEGATIVE',
       goalId
@@ -85,16 +89,31 @@ export default function ScheduleScreen() {
     setIsRecording(false);
   };
 
-  const calculateWeeklyTarget = (goal: any) => {
-    const totalWeeks = goal.durationMonths * 4;
-    return Math.ceil(goal.totalSessions / totalWeeks);
+  const calculateDailyTarget = (goal: any) => {
+    const isPlannedForToday = goal.selectedDays ? goal.selectedDays.includes(dayOfWeek) : true;
+    if (!isPlannedForToday) return 0;
+    
+    // Calculate total weeks in duration
+    let totalWeeks = 1;
+    if (goal.durationUnit === 'MONTHS') totalWeeks = goal.duration * 4.34;
+    else if (goal.durationUnit === 'WEEKS') totalWeeks = goal.duration;
+    else if (goal.durationUnit === 'DAYS') totalWeeks = goal.duration / 7;
+
+    const plannedDaysPerWeek = goal.selectedDays?.length || 7;
+    const totalPlannedDays = Math.max(1, Math.round(totalWeeks * plannedDaysPerWeek));
+    
+    if (goal.totalSessions && goal.totalSessions > 0) {
+      // Logic: If user has 30 sessions in 1 month (12 planned days), target is 30/12 = 2.5 -> ceil(2.5) = 3
+      return Math.ceil(goal.totalSessions / totalPlannedDays);
+    }
+
+    // Fallback to frequency per week if totalSessions not provided
+    return Math.ceil(goal.frequencyPerWeek / plannedDaysPerWeek);
   };
 
-  const getWeeklyProgress = (goalId: string) => {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    return activities
-      .filter(a => a.goalId === goalId && new Date(a.date) >= oneWeekAgo)
+  const getTodayProgress = (goalId: string) => {
+    return todayActivities
+      .filter(a => a.goalId === goalId)
       .reduce((sum, a) => sum + a.sessions, 0);
   };
 
@@ -122,10 +141,10 @@ export default function ScheduleScreen() {
       
       {goals.length > 0 && (
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {goals.slice(0, 3).map(goal => {
-            const weeklyTarget = calculateWeeklyTarget(goal);
-            const weeklyDone = getWeeklyProgress(goal.id);
-            const progress = Math.min(100, (weeklyDone / weeklyTarget) * 100);
+          {goals.filter(g => calculateDailyTarget(g) > 0 || getTodayProgress(g.id) > 0).slice(0, 3).map(goal => {
+            const dailyTarget = calculateDailyTarget(goal);
+            const todayDone = getTodayProgress(goal.id);
+            const progress = dailyTarget > 0 ? Math.min(100, (todayDone / dailyTarget) * 100) : (todayDone > 0 ? 100 : 0);
             
             return (
               <motion.div 
@@ -136,7 +155,7 @@ export default function ScheduleScreen() {
               >
                 <div className="flex justify-between items-start">
                   <h4 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest truncate max-w-[100px]">{goal.title}</h4>
-                  <span className="text-[10px] font-mono text-brand-primary">{weeklyDone}/{weeklyTarget}</span>
+                  <span className="text-[10px] font-mono text-brand-primary">{todayDone}/{dailyTarget}</span>
                 </div>
                 <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                   <motion.div 
@@ -146,7 +165,7 @@ export default function ScheduleScreen() {
                   />
                 </div>
                 <p className="text-[9px] font-mono text-slate-400 uppercase tracking-tighter">
-                  {progress >= 100 ? t('target_achieved') || 'NODE SATURATED' : `${t('remaining_sessions') || 'SESSIONS REMAINING'}: ${Math.max(0, weeklyTarget - weeklyDone)}`}
+                  {progress >= 100 && dailyTarget > 0 ? t('target_achieved') || 'NODE SATURATED' : `${t('remaining_sessions') || 'SESSIONS REMAINING'}: ${Math.max(0, dailyTarget - todayDone)}`}
                 </p>
               </motion.div>
             );

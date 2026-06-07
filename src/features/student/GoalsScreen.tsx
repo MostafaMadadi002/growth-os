@@ -10,10 +10,22 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function GoalsScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addGoal, deleteGoal, updateGoal } = useAppStore();
+  const { studentData, addGoal, deleteGoal, updateGoal, toggleSubGoal } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [expandedGoalId, setExpandedGoalId] = useState<string | null>(null);
+  const [newSubGoals, setNewSubGoals] = useState<{id: string, title: string, done: boolean}[]>([]);
+  const [tempSubGoal, setTempSubGoal] = useState('');
+
+  const handleAddSubGoal = () => {
+    if (!tempSubGoal.trim()) return;
+    setNewSubGoals([...newSubGoals, { id: Math.random().toString(36).substr(2, 9), title: tempSubGoal, done: false }]);
+    setTempSubGoal('');
+  };
+
+  const removeSubGoal = (id: string) => {
+    setNewSubGoals(newSubGoals.filter(sg => sg.id !== id));
+  };
 
   const getGoalStats = (goalId: string) => {
     const activities = (studentData.activities || []).filter(a => a.goalId === goalId);
@@ -36,12 +48,15 @@ export default function GoalsScreen() {
       completedSessions: 0,
       frequencyPerWeek: Number(formData.get('frequencyPerWeek')) || selectedDays.length,
       category: formData.get('category') as any,
-      durationMonths: Number(formData.get('durationMonths')),
+      duration: Number(formData.get('duration')),
+      durationUnit: formData.get('durationUnit') as any,
       startDate: (formData.get('startDate') as string) || new Date().toISOString().split('T')[0],
-      selectedDays
+      selectedDays,
+      subGoals: newSubGoals
     };
     addGoal(goal);
     setIsAdding(false);
+    setNewSubGoals([]);
   };
 
   const handleUpdateGoal = (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,13 +72,21 @@ export default function GoalsScreen() {
       totalSessions: Number(formData.get('totalSessions')),
       frequencyPerWeek: Number(formData.get('frequencyPerWeek')) || selectedDays.length,
       category: formData.get('category') as any,
-      durationMonths: Number(formData.get('durationMonths')),
+      duration: Number(formData.get('duration')),
+      durationUnit: formData.get('durationUnit') as any,
       startDate: formData.get('startDate') as string,
-      selectedDays
+      selectedDays,
+      subGoals: newSubGoals
     };
     
     updateGoal(updatedGoal);
     setEditingGoal(null);
+    setNewSubGoals([]);
+  };
+
+  const openEdit = (goal: Goal) => {
+    setEditingGoal(goal);
+    setNewSubGoals(goal.subGoals || []);
   };
 
   return (
@@ -137,16 +160,38 @@ export default function GoalsScreen() {
                       />
                    </div>
                    <div className="space-y-3">
-                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('duration_months')}</label>
+                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('sessions_per_week') || 'SESSIONS PER WEEK'}</label>
                       <input 
-                        name="durationMonths" 
+                        name="frequencyPerWeek" 
                         type="number" 
                         required 
-                        defaultValue={editingGoal?.durationMonths || 1}
+                        defaultValue={editingGoal?.frequencyPerWeek || 3}
                         className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                    </div>
                 </div>
+
+                <div className="space-y-3">
+                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('duration') || 'DURATION'}</label>
+                    <div className="flex gap-4">
+                      <input 
+                        name="duration" 
+                        type="number" 
+                        required 
+                        defaultValue={editingGoal?.duration || 1}
+                        className="flex-1 bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
+                      />
+                      <select 
+                        name="durationUnit"
+                        defaultValue={editingGoal?.durationUnit || 'MONTHS'}
+                        className="w-32 bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20 appearance-none"
+                      >
+                         <option value="DAYS">{t('days')}</option>
+                         <option value="WEEKS">{t('weeks')}</option>
+                         <option value="MONTHS">{t('months')}</option>
+                      </select>
+                    </div>
+                 </div>
 
                 <div className="space-y-4">
                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('scheduled_days')}</label>
@@ -205,6 +250,37 @@ export default function GoalsScreen() {
                    </div>
                 </div>
 
+                <div className="space-y-4">
+                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('checklist') || 'CHECKLIST'}</label>
+                    <div className="flex gap-4">
+                      <input 
+                        value={tempSubGoal}
+                        onChange={(e) => setTempSubGoal(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSubGoal())}
+                        placeholder={t('add_item') || 'Add task...'}
+                        className="flex-1 bg-white/5 border border-white/5 rounded-2xl p-4 text-white font-sans text-sm focus:border-brand-primary/20 outline-none"
+                      />
+                      <button 
+                         type="button"
+                         onClick={handleAddSubGoal}
+                         className="w-14 h-14 bg-brand-primary/10 text-brand-primary rounded-2xl flex items-center justify-center hover:bg-brand-primary hover:text-slate-950 transition-all"
+                      >
+                         <Plus size={20} />
+                      </button>
+                    </div>
+                    
+                    <div className="space-y-2">
+                       {newSubGoals.map(sg => (
+                         <div key={sg.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
+                            <span className="text-sm font-sans text-slate-300">{sg.title}</span>
+                            <button type="button" onClick={() => removeSubGoal(sg.id)} className="text-slate-600 hover:text-rose-500 transition-colors">
+                               <X size={16} />
+                            </button>
+                         </div>
+                       ))}
+                    </div>
+                </div>
+
                 <button type="submit" className="w-full py-7 bg-brand-primary text-slate-950 rounded-3xl font-display font-black text-xl uppercase shadow-2xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
                    {isAdding ? t('establish_objective') : t('save_changes') || 'SAVE CHANGES'}
                 </button>
@@ -245,7 +321,7 @@ export default function GoalsScreen() {
                               {goal.selectedDays?.length || goal.frequencyPerWeek} {t('ses_week')}
                             </span>
                             <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg">
-                              {goal.durationMonths} {t('monthly_term')}
+                              {goal.duration} {t(goal.durationUnit?.toLowerCase() || 'months')}
                             </span>
                             <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg flex items-center gap-2 text-brand-primary/60">
                               <Clock size={10} />
@@ -274,7 +350,7 @@ export default function GoalsScreen() {
   
                 <div className="flex md:flex-col gap-4">
                    <button 
-                     onClick={() => setEditingGoal(goal)}
+                     onClick={() => openEdit(goal)}
                      className="flex-1 md:flex-none h-16 md:w-48 rounded-[1.5rem] bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center gap-4 font-black text-[12px] uppercase tracking-widest text-brand-primary hover:bg-brand-primary hover:text-slate-950 transition-all duration-500"
                    >
                       <Edit3 size={20} strokeWidth={3} />
@@ -308,6 +384,26 @@ export default function GoalsScreen() {
                       </div>
 
                       <div className="space-y-3">
+                        {goal.subGoals && goal.subGoals.length > 0 && (
+                          <div className="mb-8 space-y-4">
+                            <h5 className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-widest">{t('milestones') || 'MILESTONES'}</h5>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                               {goal.subGoals.map(sg => (
+                                 <button 
+                                   key={sg.id}
+                                   onClick={() => toggleSubGoal(goal.id, sg.id)}
+                                   className={`flex items-center gap-4 p-4 rounded-2xl border transition-all ${sg.done ? 'bg-brand-primary/10 border-brand-primary/20 text-brand-primary' : 'bg-white/5 border-white/5 text-slate-500 hover:border-white/10'}`}
+                                 >
+                                    <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${sg.done ? 'bg-brand-primary border-brand-primary text-slate-900' : 'border-white/10'}`}>
+                                       {sg.done && <CheckCircle2 size={12} strokeWidth={4} />}
+                                    </div>
+                                    <span className={`text-xs font-sans font-bold flex-1 text-left rtl:text-right ${sg.done ? 'line-through opacity-60' : ''}`}>{sg.title}</span>
+                                 </button>
+                               ))}
+                            </div>
+                          </div>
+                        )}
+
                         {activities.length > 0 ? activities.sort((a, b) => b.date.localeCompare(a.date)).map(activity => (
                           <div key={activity.id} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/5 group/session">
                             <div className="flex items-center gap-4">

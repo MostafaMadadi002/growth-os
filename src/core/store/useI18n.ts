@@ -292,6 +292,14 @@ const translations = {
     total_duration: 'کل مدت زمان مطالعه',
     no_sessions: 'جلسه‌ای برای این هدف ثبت نشده',
     sessions: 'جلسه',
+    checklist: 'چک‌لیست (اهداف جانبی)',
+    add_item: 'افزودن مورد...',
+    milestones: 'نقاط عطف / چک‌لیست',
+    days: 'روز',
+    weeks: 'هفته',
+    months: 'ماه',
+    duration_unit: 'واحد زمان',
+    sessions_per_week: 'تعداد جلسات در هفته',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -558,6 +566,14 @@ const translations = {
     total_duration: 'TOTAL DURATION',
     no_sessions: 'NO SESSIONS RECORDED',
     sessions: 'SESSIONS',
+    checklist: 'CHECKLIST (SUB-GOALS)',
+    add_item: 'ADD ITEM...',
+    milestones: 'MILESTONES / CHECKLIST',
+    days: 'DAYS',
+    weeks: 'WEEKS',
+    months: 'MONTHS',
+    duration_unit: 'DURATION UNIT',
+    sessions_per_week: 'SESSIONS PER WEEK',
   }
 };
 
