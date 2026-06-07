@@ -209,11 +209,11 @@ export default function TradingJournal() {
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest text-rose-400">{t('sl')}</label>
-                    <input name="sl" type="number" step="any" required value={newTradeData.sl} onChange={handleInputChange} placeholder="SL" className="w-full bg-rose-500/5 border border-rose-500/10 rounded-xl p-3 text-rose-400 font-mono text-[11px] outline-none" />
+                    <input name="sl" type="number" step="any" value={newTradeData.sl} onChange={handleInputChange} placeholder="SL" className="w-full bg-rose-500/5 border border-rose-500/10 rounded-xl p-3 text-rose-400 font-mono text-[11px] outline-none" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest text-emerald-400">{t('tp')}</label>
-                    <input name="tp" type="number" step="any" required value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-full bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3 text-emerald-400 font-mono text-[11px] outline-none" />
+                    <input name="tp" type="number" step="any" value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-full bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3 text-emerald-400 font-mono text-[11px] outline-none" />
                   </div>
                 </div>
 
@@ -394,8 +394,8 @@ export default function TradingJournal() {
                       </td>
                       <td className="p-1 px-2">
                         <div className="flex gap-1">
-                          <input name="sl" type="number" step="any" required value={newTradeData.sl} onChange={handleInputChange} placeholder="SL" className="w-1/2 bg-rose-500/5 border border-rose-500/10 rounded-lg p-2 text-rose-400 font-mono text-[10px] outline-none focus:border-rose-500/40 text-center" />
-                          <input name="tp" type="number" step="any" required value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-1/2 bg-emerald-500/5 border border-emerald-500/10 rounded-lg p-2 text-emerald-400 font-mono text-[10px] outline-none focus:border-emerald-500/40 text-center" />
+                          <input name="sl" type="number" step="any" value={newTradeData.sl} onChange={handleInputChange} placeholder="SL" className="w-1/2 bg-rose-500/5 border border-rose-500/10 rounded-lg p-2 text-rose-400 font-mono text-[10px] outline-none focus:border-rose-500/40 text-center" />
+                          <input name="tp" type="number" step="any" value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-1/2 bg-emerald-500/5 border border-emerald-500/10 rounded-lg p-2 text-emerald-400 font-mono text-[10px] outline-none focus:border-emerald-500/40 text-center" />
                         </div>
                       </td>
                       <td className="p-1 px-2">
