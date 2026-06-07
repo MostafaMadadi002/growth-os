@@ -91,6 +91,7 @@ export interface TraderNote {
 interface AppState {
   currentRoot: UserRole;
   language: 'FA' | 'EN';
+  theme: 'DARK' | 'LIGHT';
   
   studentData: {
     goals: Goal[];
@@ -107,6 +108,7 @@ interface AppState {
   
   setRoot: (root: UserRole) => void;
   setLanguage: (lang: 'FA' | 'EN') => void;
+  setTheme: (theme: 'DARK' | 'LIGHT') => void;
   
   // Student Actions
   addGoal: (goal: Goal) => void;
@@ -135,6 +137,7 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       currentRoot: UserRole.STUDENT,
       language: 'FA',
+      theme: 'DARK',
       
       studentData: {
         goals: [],
@@ -151,6 +154,7 @@ export const useAppStore = create<AppState>()(
       
       setRoot: (root) => set({ currentRoot: root }),
       setLanguage: (lang) => set({ language: lang }),
+      setTheme: (theme) => set({ theme }),
 
       importData: (data) => set((state) => ({
         ...state,

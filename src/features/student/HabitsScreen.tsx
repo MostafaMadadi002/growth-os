@@ -41,7 +41,7 @@ export default function HabitsScreen() {
               <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_12px_#3b82f6]" />
               <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('neural_pathways')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter uppercase leading-none">
+           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
              {t('branch_habits').split(' ')[0]}<span className="text-blue-500">.</span>
            </h1>
         </div>
@@ -59,7 +59,7 @@ export default function HabitsScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-slate-950/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-surface-base/80 backdrop-blur-xl"
             dir={dir}
           >
              <motion.form 
@@ -67,48 +67,48 @@ export default function HabitsScreen() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onSubmit={handleAddHabit} 
-                className="bg-slate-900 border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
+                className="bg-surface-card border border-surface-border p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
              >
                 <button 
                   type="button" 
                   onClick={() => setIsAdding(false)} 
-                  className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
+                  className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-text-secondary hover:text-text-primary transition-colors bg-surface-base p-2 rounded-full z-20"
                 >
                    <X size={18} md:size={20} />
                 </button>
                 
                 <div className="space-y-3">
-                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('pathway_identity')}</label>
+                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('pathway_identity')}</label>
                    <input 
                      name="title" 
                      required 
                      placeholder={language === 'fa' ? 'مثلاً: مطالعه عمیق صبحگاهی' : 'e.g. Early Morning Focus'} 
-                     className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 text-white font-display font-black text-2xl placeholder:text-slate-800 outline-none focus:border-blue-500/30 focus:bg-white/[0.08] transition-all" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-2xl placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all" 
                    />
                 </div>
 
                 <div className="space-y-3">
-                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('description')}</label>
+                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('description')}</label>
                    <textarea 
                      name="description" 
                      placeholder="..." 
-                     className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 text-white font-sans text-lg placeholder:text-slate-800 outline-none focus:border-blue-500/30 focus:bg-white/[0.08] transition-all min-h-[100px] resize-none" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-sans text-lg placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all min-h-[100px] resize-none" 
                    />
                 </div>
 
                 <div className="space-y-4">
-                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('polarity_selection')}</label>
+                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('polarity_selection')}</label>
                    <div className="grid grid-cols-2 gap-6">
                       {[
                         { val: 'POSITIVE', label: t('habits_good'), icon: <TrendingUp size={24} />, color: 'text-emerald-500' },
                         { val: 'NEGATIVE', label: t('habits_bad'), icon: <TrendingDown size={24} />, color: 'text-rose-500' }
                       ].map(type => (
-                        <label key={type.val} className="flex flex-col items-center gap-6 p-8 rounded-[2.5rem] border border-white/5 bg-white/5 cursor-pointer has-[:checked]:border-blue-500 has-[:checked]:bg-blue-500/10 transition-all group">
+                        <label key={type.val} className="flex flex-col items-center gap-6 p-8 rounded-[2.5rem] border border-surface-border bg-surface-base cursor-pointer has-[:checked]:border-blue-500 has-[:checked]:bg-blue-500/10 transition-all group">
                            <input type="radio" name="type" value={type.val} className="hidden" defaultChecked={type.val === 'POSITIVE'} />
                            <div className={`${type.color} group-has-[:checked]:scale-125 transition-transform duration-500`}>
                               {type.icon}
                            </div>
-                           <span className="text-[10px] font-black uppercase text-slate-600 transition-colors group-has-[:checked]:text-blue-400">{type.label}</span>
+                           <span className="text-[10px] font-black uppercase text-text-secondary transition-colors group-has-[:checked]:text-blue-400">{type.label}</span>
                         </label>
                       ))}
                    </div>
@@ -129,33 +129,33 @@ export default function HabitsScreen() {
              <motion.div 
                layout
                key={habit.id} 
-               className={`p-8 bg-white/[0.02] backdrop-blur-md border rounded-[3rem] transition-all flex items-center justify-between group hover:bg-white/[0.04] ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-white/5'}`}
+               className={`p-8 bg-surface-card border rounded-[3rem] transition-all flex items-center justify-between group hover:border-blue-500/20 ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
              >
                 <div className="flex items-center gap-6">
                     <button 
                       onClick={() => handleToggleHabit(habit.id, habit.type)}
-                      className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-500 ${isDone ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/30 scale-110' : 'bg-slate-950 border border-white/5 text-slate-700 hover:text-white hover:border-blue-500/30'}`}
+                      className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-500 ${isDone ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/30 scale-110' : 'bg-surface-base border border-surface-border text-text-secondary hover:text-text-primary hover:border-blue-500/30'}`}
                     >
                      <Zap size={28} className={isDone ? 'fill-current' : ''} />
                    </button>
                    <div>
-                      <h4 className={`text-xl font-display font-black uppercase tracking-tight leading-none mb-2 transition-colors duration-500 ${isDone ? 'text-brand-primary' : 'text-white'}`}>
+                      <h4 className={`text-xl font-display font-black uppercase tracking-tight leading-none mb-2 transition-colors duration-500 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
                         {habit.title}
                       </h4>
                       {habit.description && (
-                        <p className="text-[11px] text-slate-500 mb-3 line-clamp-2 max-w-[200px]">
+                         <p className="text-[11px] text-text-secondary mb-3 line-clamp-2 max-w-[200px]">
                           {habit.description}
                         </p>
                       )}
                       <div className="flex items-center gap-3">
-                         <span className={`text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 ${habit.type === 'POSITIVE' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                         <span className={`text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded bg-surface-base ${habit.type === 'POSITIVE' ? 'text-emerald-500' : 'text-rose-500'}`}>
                            {habit.type}_PATH
                          </span>
-                         <span className="text-[9px] font-mono font-bold text-slate-700 uppercase tracking-tighter">{t('streak')}: {habit.streak}d</span>
+                         <span className="text-[9px] font-mono font-bold text-text-secondary uppercase tracking-tighter opacity-60">{t('streak')}: {habit.streak}d</span>
                       </div>
                    </div>
                 </div>
-                <button onClick={() => deleteHabit(habit.id)} className="w-12 h-12 rounded-xl bg-slate-950/40 flex items-center justify-center text-slate-800 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                <button onClick={() => deleteHabit(habit.id)} className="w-12 h-12 rounded-xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
                    <Trash2 size={18} />
                 </button>
              </motion.div>

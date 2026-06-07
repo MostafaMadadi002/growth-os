@@ -125,7 +125,7 @@ export default function ScheduleScreen() {
               <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_#f97316]" />
               <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('chronos_sequencing')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter uppercase leading-none">
+           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
            </h1>
         </div>
@@ -151,20 +151,20 @@ export default function ScheduleScreen() {
                 key={goal.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-5 bg-white/[0.03] border border-white/5 rounded-[2rem] space-y-4"
+                className="p-5 bg-surface-card border border-surface-border rounded-[2rem] space-y-4"
               >
                 <div className="flex justify-between items-start">
-                  <h4 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest truncate max-w-[100px]">{goal.title}</h4>
+                  <h4 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest truncate max-w-[100px]">{goal.title}</h4>
                   <span className="text-[10px] font-mono text-brand-primary">{todayDone}/{dailyTarget}</span>
                 </div>
-                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                <div className="h-1 w-full bg-surface-base rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     className="h-full bg-brand-primary shadow-[0_0_8px_#10b981]"
                   />
                 </div>
-                <p className="text-[9px] font-mono text-slate-400 uppercase tracking-tighter">
+                <p className="text-[9px] font-mono text-text-secondary opacity-60 uppercase tracking-tighter">
                   {progress >= 100 && dailyTarget > 0 ? t('target_achieved') || 'NODE SATURATED' : `${t('remaining_sessions') || 'SESSIONS REMAINING'}: ${Math.max(0, dailyTarget - todayDone)}`}
                 </p>
               </motion.div>
@@ -179,36 +179,36 @@ export default function ScheduleScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-slate-950/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-surface-base/80 backdrop-blur-xl"
             dir={dir}
           >
              <motion.div 
                 initial={{ scale: 0.9, y: 20 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
-                className="bg-slate-900 border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
+                className="bg-surface-card border border-surface-border p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
              >
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/5 blur-[100px] rounded-full pointer-events-none" />
                 
                 <button 
                   type="button" 
                   onClick={() => setIsRecording(false)} 
-                  className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
+                  className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-text-secondary hover:text-text-primary transition-colors bg-surface-base p-2 rounded-full z-20"
                 >
                    <X size={18} md:size={20} />
                 </button>
 
-                <h2 className="text-3xl font-display font-black text-white mb-8">{t('record_activity')}</h2>
+                <h2 className="text-3xl font-display font-black text-text-primary mb-8">{t('record_activity')}</h2>
                 
                 <form onSubmit={handleRecordActivity} className="space-y-8 relative z-10 text-left rtl:text-right">
                     <div className="space-y-3">
-                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('activity_title')}</label>
+                      <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('activity_title')}</label>
                       <div className="relative group">
                         <input 
                           name="title" 
                           list="negative-habits"
                           placeholder={t('unplanned_activity')} 
-                          className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-xl outline-none focus:border-brand-primary/30" 
+                          className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-xl outline-none focus:border-brand-primary/30" 
                         />
                         <datalist id="negative-habits">
                           {(studentData.habits || [])
@@ -221,15 +221,15 @@ export default function ScheduleScreen() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
-                        <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('linked_objective')}</label>
-                        <select name="goalId" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-sans font-black text-lg outline-none focus:border-brand-primary/30 appearance-none">
+                        <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('linked_objective')}</label>
+                        <select name="goalId" className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-sans font-black text-lg outline-none focus:border-brand-primary/30 appearance-none">
                             <option value="">{t('unplanned_activity')}</option>
-                            <optgroup label={t('active_goals')} className="bg-slate-900 border-none">
+                            <optgroup label={t('active_goals')} className="bg-surface-card border-none">
                                 {goals.map(goal => (
-                                    <option key={goal.id} value={goal.id} className="text-white">{goal.title}</option>
+                                    <option key={goal.id} value={goal.id} className="text-text-primary">{goal.title}</option>
                                 ))}
                             </optgroup>
-                            <optgroup label={t('bad_habits')} className="bg-slate-900 border-none">
+                            <optgroup label={t('bad_habits')} className="bg-surface-card border-none">
                                 {(studentData.habits || [])
                                     .filter(h => h.type === 'NEGATIVE')
                                     .map(habit => (
@@ -240,25 +240,25 @@ export default function ScheduleScreen() {
                         </select>
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('local_time')}</label>
+                          <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('local_time')}</label>
                           <input 
                             name="time" 
                             type="time" 
                             required 
                             defaultValue={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                            className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" 
+                            className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-brand-primary/30" 
                           />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
-                        <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('session_duration')}</label>
-                        <input name="duration" type="number" defaultValue={60} required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                        <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('session_duration')}</label>
+                        <input name="duration" type="number" defaultValue={60} required className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('sessions_done')}</label>
-                          <input name="sessions" type="number" defaultValue={1} required className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                          <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('sessions_done')}</label>
+                          <input name="sessions" type="number" defaultValue={1} required className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
                         </div>
                     </div>
 
@@ -281,7 +281,7 @@ export default function ScheduleScreen() {
                 <Clock size={32} />
               </div>
               <div className="text-left rtl:text-right">
-                <h3 className="text-2xl font-display font-black text-white">{t('unknown_activity_prompt')}</h3>
+                <h3 className="text-2xl font-display font-black text-text-primary">{t('unknown_activity_prompt')}</h3>
                 <p className="text-[11px] font-mono font-black text-rose-500/60 uppercase tracking-widest mt-1">
                   {unfinishedTasks.length} {t('active_segments')} {t('remaining')}
                 </p>
@@ -301,20 +301,20 @@ export default function ScheduleScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-slate-950/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-surface-base/80 backdrop-blur-xl"
             dir={dir}
           >
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-slate-900 border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide shadow-2xl space-y-8 md:space-y-10 relative"
+              className="bg-surface-card border border-surface-border p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide shadow-2xl space-y-8 md:space-y-10 relative"
             >
                <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none" />
                <button 
                  type="button" 
                  onClick={() => setIsAdding(false)} 
-                 className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-slate-500 hover:text-white transition-colors z-20 bg-white/5 p-2 rounded-full"
+                 className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-text-secondary hover:text-text-primary transition-colors z-20 bg-surface-base p-2 rounded-full"
                >
                   <X size={18} md:size={20} />
                </button>
@@ -322,38 +322,38 @@ export default function ScheduleScreen() {
              <form onSubmit={handleAddTask} className="space-y-8 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('session_task_label')}</label>
-                    <input name="label" required placeholder="..." className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-xl outline-none focus:border-orange-500/30 focus:bg-white/[0.08]" />
+                    <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('session_task_label')}</label>
+                    <input name="label" required placeholder="..." className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-xl outline-none focus:border-orange-500/30" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('local_time')}</label>
+                    <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('local_time')}</label>
                     <input 
                       name="time" 
                       type="time" 
                       required 
                       defaultValue={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                      className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-xl outline-none focus:border-orange-500/30" 
+                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-orange-500/30" 
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('linked_objective')}</label>
-                    <select name="goalId" className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-display font-black text-lg outline-none focus:border-orange-500/30 appearance-none">
+                    <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('linked_objective')}</label>
+                    <select name="goalId" className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg outline-none focus:border-orange-500/30 appearance-none">
                       <option value="">{language === 'fa' ? 'بدون هدف' : 'No Goal'}</option>
                       {goals.map(goal => (
-                        <option key={goal.id} value={goal.id} className="text-slate-900">{goal.title}</option>
+                        <option key={goal.id} value={goal.id} className="text-text-primary bg-surface-card">{goal.title}</option>
                       ))}
                     </select>
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('target_date')}</label>
+                    <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('target_date')}</label>
                     <input 
                       name="dueDate" 
                       type="date" 
                       defaultValue={new Date().toISOString().split('T')[0]}
-                      className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold text-lg outline-none focus:border-orange-500/30" 
+                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg outline-none focus:border-orange-500/30" 
                     />
                   </div>
                 </div>
@@ -369,7 +369,7 @@ export default function ScheduleScreen() {
         )}
       </AnimatePresence>
 
-      <section className="space-y-6 relative before:absolute before:left-10 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-10 before:w-[2px] before:bg-white/5 before:z-0">
+      <section className="space-y-6 relative before:absolute before:left-10 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-10 before:w-[2px] before:bg-surface-border before:z-0">
          {timelineItems.map((item) => {
            const linkedGoal = goals.find(g => g.id === item.goalId);
            const isTask = item.type === 'TASK';
@@ -377,20 +377,20 @@ export default function ScheduleScreen() {
             <motion.div 
               layout
               key={item.id} 
-              className="relative z-10 flex gap-8 items-center bg-white/[0.02] backdrop-blur-md p-4 pr-8 rtl:pr-4 rtl:pl-8 rounded-[3rem] border border-white/5 hover:bg-white/[0.05] transition-all group"
+              className="relative z-10 flex gap-8 items-center bg-surface-card p-4 pr-8 rtl:pr-4 rtl:pl-8 rounded-[3rem] border border-surface-border hover:border-brand-primary/20 transition-all group"
             >
-                <div className={`w-20 h-20 rounded-3xl flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950 border-orange-400' : 'bg-emerald-500 text-slate-950 border-emerald-400') : 'bg-slate-900 border-white/10 text-slate-400'} scale-90`}>
+                <div className={`w-20 h-20 rounded-3xl flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950 border-orange-400' : 'bg-emerald-500 text-slate-950 border-emerald-400') : 'bg-surface-base border-surface-border text-text-secondary'} scale-90`}>
                   <span className="text-xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>
                   <span className="text-[10px] font-mono font-black opacity-60">{item.time.split(':')[1]}</span>
                 </div>
                 <div className="flex-1 space-y-2">
-                  <h4 className={`text-2xl font-display font-black uppercase tracking-tight transition-all duration-500 ${item.done ? 'text-slate-600 line-through' : 'text-white'}`}>
+                  <h4 className={`text-2xl font-display font-black uppercase tracking-tight transition-all duration-500 ${item.done ? 'text-text-secondary line-through opacity-40' : 'text-text-primary'}`}>
                     {item.label}
                   </h4>
                   <div className="flex items-center gap-4 flex-wrap">
                       <div className="flex items-center gap-2">
-                        {isTask ? <Clock size={12} className="text-slate-700" /> : <CheckCircle2 size={12} className="text-emerald-500" />}
-                        <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest">{isTask ? t('status_active') : t('status_completed') || 'COMPLETED'}</span>
+                        {isTask ? <Clock size={12} className="text-text-secondary opacity-60" /> : <CheckCircle2 size={12} className="text-emerald-500" />}
+                        <span className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest">{isTask ? t('status_active') : t('status_completed') || 'COMPLETED'}</span>
                       </div>
                       {linkedGoal && (
                         <div className="flex items-center gap-2 bg-brand-primary/10 px-2 py-0.5 rounded-lg border border-brand-primary/20">
@@ -410,7 +410,7 @@ export default function ScheduleScreen() {
                   {isTask && (
                     <button 
                       onClick={() => toggleTask(item.id)}
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/20' : 'bg-white/5 text-slate-700 border border-white/5 hover:border-orange-500/30 hover:text-orange-500'}`}
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/20' : 'bg-surface-base text-text-secondary border border-surface-border hover:border-orange-500/30 hover:text-orange-500'}`}
                     >
                       {item.done ? <CheckCircle2 size={28} strokeWidth={3} /> : <div className="w-8 h-8 border-4 border-current rounded-xl opacity-20" />}
                     </button>
@@ -418,7 +418,7 @@ export default function ScheduleScreen() {
                   {isTask && (
                     <button 
                       onClick={() => deleteTask(item.id)}
-                      className="w-10 h-10 rounded-xl bg-slate-950/40 flex items-center justify-center text-slate-800 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                      className="w-10 h-10 rounded-xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300"
                     >
                       <X size={16} />
                     </button>
@@ -432,10 +432,10 @@ export default function ScheduleScreen() {
            <motion.div 
              initial={{ opacity: 0 }}
              animate={{ opacity: 1 }}
-             className="py-32 text-center border-4 border-dashed border-white/5 rounded-[4rem] bg-white/[0.01]"
+             className="py-32 text-center border-4 border-dashed border-surface-border rounded-[4rem] bg-surface-card/40"
            >
-              <CalendarDays size={64} strokeWidth={1} className="mx-auto mb-8 text-slate-800" />
-              <p className="text-[12px] font-mono font-black text-slate-600 uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
+              <CalendarDays size={64} strokeWidth={1} className="mx-auto mb-8 text-text-secondary opacity-40" />
+              <p className="text-[12px] font-mono font-black text-text-secondary opacity-60 uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
                  {t('partition_time')} <br /> Partition Node Time For Execution
               </p>
            </motion.div>
@@ -443,17 +443,17 @@ export default function ScheduleScreen() {
       </section>
 
       <footer className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         <div className="p-10 bg-white/[0.02] backdrop-blur-md border border-white/5 rounded-[3rem] relative overflow-hidden group">
+         <div className="p-10 bg-surface-card border border-surface-border rounded-[3rem] relative overflow-hidden group">
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-orange-500/10 blur-[50px] rounded-full group-hover:bg-orange-500/20 transition-all" />
             <Hash className="text-orange-500 mb-6" size={32} />
-            <h5 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
-            <p className="text-4xl font-display font-black text-white leading-none uppercase">{tasks.length} <span className="text-sm font-mono text-slate-700">NODES</span></p>
+            <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
+            <p className="text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
          </div>
-         <div className="p-10 bg-white/[0.02] backdrop-blur-md border border-white/5 rounded-[3rem] relative overflow-hidden group">
+         <div className="p-10 bg-surface-card border border-surface-border rounded-[3rem] relative overflow-hidden group">
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 blur-[50px] rounded-full group-hover:bg-emerald-500/20 transition-all" />
             <Timer className="text-emerald-500 mb-6" size={32} />
-            <h5 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.3em] mb-2">{t('completion_load')}</h5>
-            <p className="text-4xl font-display font-black text-white leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-sm font-mono text-slate-700">PULSES</span></p>
+            <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('completion_load')}</h5>
+            <p className="text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-sm font-mono text-text-secondary opacity-60">PULSES</span></p>
          </div>
       </footer>
     </div>

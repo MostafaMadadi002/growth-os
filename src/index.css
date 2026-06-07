@@ -8,8 +8,31 @@
   
   --color-brand-primary: #10b981;
   --color-brand-secondary: #3b82f6;
-  --color-surface-base: #020617;
-  --color-surface-card: #0f172a;
+  
+  --color-surface-base: var(--background);
+  --color-surface-card: var(--card);
+  --color-surface-border: var(--border);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted);
+  --color-grid-line: var(--grid-line);
+}
+
+:root {
+  --background: #f8fafc;
+  --card: #ffffff;
+  --border: rgba(15, 23, 42, 0.08);
+  --foreground: #0f172a;
+  --muted: #64748b;
+  --grid-line: rgba(0, 0, 0, 0.03);
+}
+
+.dark {
+  --background: #020617;
+  --card: #0f172a;
+  --border: rgba(255, 255, 255, 0.05);
+  --foreground: #f8fafc;
+  --muted: #94a3b8;
+  --grid-line: rgba(255, 255, 255, 0.03);
 }
 
 @layer base {
@@ -35,26 +58,25 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    @apply bg-surface-base text-slate-300 antialiased selection:bg-brand-primary/30 selection:text-white font-sans;
+    @apply bg-surface-base text-text-primary antialiased selection:bg-brand-primary/30 selection:text-text-primary font-sans;
   }
 
   select option {
-    background-color: #0f172a; /* color-surface-card / slate-900 */
-    color: white;
+    @apply bg-surface-card text-text-primary;
   }
 }
 
 .command-card {
-  @apply bg-slate-900/40 backdrop-blur-xl border border-white/[0.04] rounded-3xl p-8 transition-all duration-500 hover:border-white/10 hover:bg-slate-900/60 shadow-2xl;
+  @apply bg-surface-card border border-surface-border rounded-3xl p-8 transition-all duration-500 hover:border-brand-primary/20 shadow-2xl;
 }
 
 .industrial-nav {
-  @apply bg-slate-950/90 backdrop-blur-3xl border-t border-white/[0.03] shadow-[0_-20px_60px_rgba(0,0,0,0.8)];
+  @apply bg-surface-base/80 backdrop-blur-3xl border-t border-surface-border shadow-2xl;
 }
 
 .data-grid {
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
 }

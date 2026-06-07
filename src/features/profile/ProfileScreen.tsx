@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   User, GraduationCap, Terminal, Globe, ChevronRight, 
-  LogOut, Shield, Zap, Download, Upload, Database
+  LogOut, Shield, Zap, Download, Upload, Database, Sun, Moon
 } from 'lucide-react';
 import { useI18n } from '../../core/store/useI18n';
 import { useAppStore, UserRole } from '../../core/stores/appStore';
@@ -10,7 +10,7 @@ import TradingCalendar from '../../components/TradingCalendar';
 
 export default function ProfileScreen() {
   const { t, language, setLanguage } = useI18n();
-  const { currentRoot, setRoot, studentData, traderData, importData } = useAppStore();
+  const { currentRoot, setRoot, studentData, traderData, importData, theme, setTheme } = useAppStore();
 
   const handleLanguageToggle = () => {
     const newLang = language === 'fa' ? 'EN' : 'FA';
@@ -114,20 +114,20 @@ export default function ProfileScreen() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 overflow-y-auto pb-44 scrollbar-hide">
+    <div className="flex flex-col h-full bg-surface-base overflow-y-auto pb-44 scrollbar-hide">
       <div className="p-4 md:p-12 space-y-8 md:space-y-12 max-w-4xl mx-auto w-full">
         {/* Profile Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
           <div className="flex items-center gap-4 md:gap-6">
-            <div className="w-16 h-16 md:w-24 md:h-24 bg-slate-900 border border-white/10 rounded-2xl md:rounded-[2.5rem] flex items-center justify-center relative shadow-2xl shrink-0">
-              <User size={24} md:size={40} className="text-brand-primary" />
-              <div className={`absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-2 md:border-4 border-slate-950 flex items-center justify-center ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500' : 'bg-emerald-500'}`}>
-                {currentRoot === UserRole.STUDENT ? <GraduationCap size={10} md:size={14} className="text-white" /> : <Terminal size={10} md:size={14} className="text-white" />}
+            <div className="w-16 h-16 md:w-24 md:h-24 bg-surface-card border border-surface-border rounded-2xl md:rounded-[2.5rem] flex items-center justify-center relative shadow-2xl shrink-0">
+              <User size={24} className="text-brand-primary md:w-10 md:h-10" />
+              <div className={`absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-2 md:border-4 border-surface-base flex items-center justify-center ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500' : 'bg-emerald-500'}`}>
+                {currentRoot === UserRole.STUDENT ? <GraduationCap size={10} className="text-white md:w-3.5 md:h-3.5" /> : <Terminal size={10} className="text-white md:w-3.5 md:h-3.5" />}
               </div>
             </div>
             <div>
-              <h1 className="text-2xl md:text-4xl font-display font-black text-white tracking-tighter uppercase leading-none">Mostafa Madadi</h1>
-              <p className="text-[9px] md:text-xs font-mono font-black text-slate-500 uppercase tracking-widest mt-1 md:mt-2 opacity-60">IDENT_ID // {language === 'fa' ? 'مصطفی مددی' : 'MOSTAFA MADADI'}</p>
+              <h1 className="text-2xl md:text-4xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">Mostafa Madadi</h1>
+              <p className="text-[9px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-widest mt-1 md:mt-2 opacity-60">IDENT_ID // {language === 'fa' ? 'مصطفی مددی' : 'MOSTAFA MADADI'}</p>
             </div>
           </div>
         </header>
@@ -136,35 +136,35 @@ export default function ProfileScreen() {
         <section className="space-y-4 md:space-y-6">
           <div className="flex items-center gap-3 px-2">
             <Zap size={14} className="text-brand-primary" />
-            <h3 className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.3em]">{t('identity_control')}</h3>
+            <h3 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.2em] md:tracking-[0.3em]">{t('identity_control')}</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             <button 
               onClick={() => setRoot(UserRole.STUDENT)}
-              className={`p-4 md:p-6 rounded-[1.5rem] md:rounded-[2.5rem] border transition-all flex items-center justify-between group ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-slate-900 border-white/5 opacity-50 hover:opacity-100 hover:bg-slate-800'}`}
+              className={`p-4 md:p-6 rounded-[1.5rem] md:rounded-[2.5rem] border transition-all flex items-center justify-between group ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base'}`}
             >
               <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-colors ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-slate-800 text-slate-500'}`}>
+                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-colors ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-surface-base text-text-secondary'}`}>
                   <GraduationCap size={18} md:size={20} />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm md:text-base font-black text-white leading-tight">{t('student_mode').split(' ')[0]}</p>
-                  <p className="text-[8px] md:text-[9px] font-mono text-slate-500 uppercase mt-0.5 md:mt-1 tracking-wider">Educational_Core</p>
+                  <p className={`text-sm md:text-base font-black leading-tight ${currentRoot === UserRole.STUDENT ? 'text-text-primary' : 'text-text-secondary'}`}>{t('student_mode').split(' ')[0]}</p>
+                  <p className="text-[8px] md:text-[9px] font-mono text-text-secondary uppercase mt-0.5 md:mt-1 tracking-wider opacity-60">Educational_Core</p>
                 </div>
               </div>
             </button>
 
             <button 
               onClick={() => setRoot(UserRole.TRADER)}
-              className={`p-6 rounded-[2.5rem] border transition-all flex items-center justify-between group ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-900 border-white/5 opacity-50 hover:opacity-100 hover:bg-slate-800'}`}
+              className={`p-6 rounded-[2.5rem] border transition-all flex items-center justify-between group ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base'}`}
             >
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${currentRoot === UserRole.TRADER ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-slate-800 text-slate-500'}`}>
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${currentRoot === UserRole.TRADER ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-surface-base text-text-secondary'}`}>
                   <Terminal size={20} />
                 </div>
                 <div className="text-left">
-                  <p className="text-base font-black text-white leading-tight">{t('trader_mode').split(' ')[0]}</p>
-                  <p className="text-[9px] font-mono text-slate-500 uppercase mt-1 tracking-wider">Financial_Node</p>
+                  <p className={`text-base font-black leading-tight ${currentRoot === UserRole.TRADER ? 'text-text-primary' : 'text-text-secondary'}`}>{t('trader_mode').split(' ')[0]}</p>
+                  <p className="text-[9px] font-mono text-text-secondary uppercase mt-1 tracking-wider opacity-60">Financial_Node</p>
                 </div>
               </div>
             </button>
@@ -177,35 +177,35 @@ export default function ProfileScreen() {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-8 md:p-12 bg-slate-900 border border-white/5 rounded-[2.5rem] space-y-8 flex flex-col items-center justify-center text-center"
+              className="p-8 md:p-12 bg-surface-card border border-surface-border rounded-[2.5rem] space-y-8 flex flex-col items-center justify-center text-center shadow-xl"
             >
               <div className="space-y-2">
-                <h4 className="text-[10px] md:text-xs font-mono font-black text-slate-500 uppercase tracking-[0.4em]">{t('total_pnl')}</h4>
+                <h4 className="text-[10px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-[0.4em]">{t('total_pnl')}</h4>
                 <div className="flex items-baseline gap-2 justify-center">
-                  <span className={`text-4xl md:text-7xl font-display font-black tracking-tighter ${totalPnL > 0 ? 'text-emerald-400' : totalPnL < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                  <span className={`text-4xl md:text-7xl font-display font-black tracking-tighter ${totalPnL > 0 ? 'text-emerald-400' : totalPnL < 0 ? 'text-rose-400' : 'text-text-secondary'}`}>
                     {totalPnL > 0 ? '+' : ''}{totalPnL}
                   </span>
-                  <span className="text-xl md:text-2xl font-mono font-black text-slate-600 uppercase">USD</span>
+                  <span className="text-xl md:text-2xl font-mono font-black text-text-secondary uppercase opacity-60">USD</span>
                 </div>
               </div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-2xl pt-4">
                 <div className="space-y-1">
-                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">TRADES_RECORDED</p>
-                  <p className="text-xl font-display font-black text-white">{(traderData?.trades || []).length}</p>
+                  <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">TRADES_RECORDED</p>
+                  <p className="text-xl font-display font-black text-text-primary">{(traderData?.trades || []).length}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">WIN_RATE</p>
+                  <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">WIN_RATE</p>
                   <p className="text-xl font-display font-black text-emerald-400">
                     {traderData?.trades?.length ? Math.round(((traderData.trades.filter(t => t.result === 'WIN').length) / traderData.trades.length) * 100) : 0}%
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">CRYPTO_NODES</p>
+                  <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">CRYPTO_NODES</p>
                   <p className="text-xl font-display font-black text-blue-400">{(traderData?.trades || []).filter(t => t.marketType === 'CRYPTO').length}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">FOREX_NODES</p>
+                  <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">FOREX_NODES</p>
                   <p className="text-xl font-display font-black text-amber-400">{(traderData?.trades || []).filter(t => t.marketType === 'FOREX').length}</p>
                 </div>
               </div>
@@ -220,12 +220,12 @@ export default function ProfileScreen() {
           <motion.section 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-900/50 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 space-y-6 md:space-y-8"
+            className="bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 space-y-6 md:space-y-8 shadow-xl"
           >
             <div className="flex justify-between items-center px-1">
               <div>
-                <h4 className="text-base md:text-lg font-display font-black text-white tracking-tight uppercase leading-none">{t('growth_heatmap')}</h4>
-                <p className="text-[8px] md:text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest mt-1">SYSTEM_CONTRIBUTIONS // 16_WEEK_LOG</p>
+                <h4 className="text-base md:text-lg font-display font-black text-text-primary tracking-tight uppercase leading-none">{t('growth_heatmap')}</h4>
+                <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest mt-1 opacity-60">SYSTEM_CONTRIBUTIONS // 16_WEEK_LOG</p>
               </div>
             </div>
             
@@ -238,12 +238,12 @@ export default function ProfileScreen() {
                 />
               ))}
             </div>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] font-mono font-black text-slate-700 uppercase tracking-widest px-1">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest px-1">
                <span className="text-rose-500">{t('bad_habits')}</span>
-               <div className="flex gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-slate-950 rounded-xl border border-white/5">
+               <div className="flex gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-surface-base rounded-xl border border-surface-border">
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-500 rounded-xs" />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-orange-500 rounded-xs" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-slate-700 rounded-xs" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-surface-card border border-surface-border rounded-xs" />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 rounded-xs" />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-500 rounded-xs" />
                </div>
@@ -255,29 +255,29 @@ export default function ProfileScreen() {
         {/* Activity Summary Section */}
         {currentRoot === UserRole.STUDENT && (
             <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <div className="p-6 md:p-8 bg-slate-900/40 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] space-y-4 md:space-y-6">
-                    <h4 className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('weekly_summary')}</h4>
+                <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] space-y-4 md:space-y-6 shadow-xl">
+                    <h4 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('weekly_summary')}</h4>
                     <div className="space-y-3 md:space-y-4">
                         {(studentData.activities || []).slice(-5).reverse().map((act, i) => (
                             <div key={i} className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${act.type === 'POSITIVE' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'}`} />
-                                    <span className="text-[12px] md:text-sm font-black text-white truncate max-w-[150px]">{act.title}</span>
+                                    <span className="text-[12px] md:text-sm font-black text-text-primary truncate max-w-[150px]">{act.title}</span>
                                 </div>
-                                <span className="text-[9px] md:text-[10px] font-mono text-slate-500 shrink-0">{act.duration}m</span>
+                                <span className="text-[9px] md:text-[10px] font-mono text-text-secondary opacity-60 shrink-0">{act.duration}m</span>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div className="p-6 md:p-8 bg-slate-900/40 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] space-y-4 md:space-y-6">
-                    <h4 className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('active_nodes')}</h4>
+                <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] space-y-4 md:space-y-6 shadow-xl">
+                    <h4 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('active_nodes')}</h4>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
-                        <div className="bg-white/5 p-4 rounded-xl md:rounded-2xl">
-                            <p className="text-[8px] md:text-[9px] font-mono font-black text-slate-600 uppercase mb-1">{t('positive')}</p>
+                        <div className="bg-surface-base p-4 rounded-xl md:rounded-2xl">
+                            <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('positive')}</p>
                             <p className="text-xl md:text-2xl font-display font-black text-emerald-500">{(studentData.activities || []).filter(a => a.type === 'POSITIVE').length}</p>
                         </div>
-                        <div className="bg-white/5 p-4 rounded-xl md:rounded-2xl">
-                            <p className="text-[8px] md:text-[9px] font-mono font-black text-slate-600 uppercase mb-1">{t('negative')}</p>
+                        <div className="bg-surface-base p-4 rounded-xl md:rounded-2xl">
+                            <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('negative')}</p>
                             <p className="text-xl md:text-2xl font-display font-black text-rose-500">{(studentData.activities || []).filter(a => a.type === 'NEGATIVE').length}</p>
                         </div>
                     </div>
@@ -287,9 +287,9 @@ export default function ProfileScreen() {
 
         {/* Strategic Goal Summary */}
         {currentRoot === UserRole.STUDENT && studentData.goals?.length > 0 && (
-          <section className="p-6 md:p-8 bg-slate-900/40 border border-white/5 rounded-[2rem] md:rounded-[2.5rem] space-y-6">
+          <section className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] space-y-6 shadow-xl">
             <div className="flex items-center justify-between px-1">
-              <h4 className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('goal_distribution') || 'STRATEGIC_DISTRIBUTION'}</h4>
+              <h4 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('goal_distribution') || 'STRATEGIC_DISTRIBUTION'}</h4>
               <Zap size={14} className="text-brand-primary" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -297,18 +297,18 @@ export default function ProfileScreen() {
                 const activities = (studentData.activities || []).filter(a => a.goalId === goal.id);
                 const totalDuration = activities.reduce((sum, a) => sum + a.duration, 0);
                 return (
-                  <div key={goal.id} className="p-5 bg-white/5 rounded-2xl border border-white/5 space-y-4">
+                  <div key={goal.id} className="p-5 bg-surface-base rounded-2xl border border-surface-border space-y-4">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="text-[12px] font-display font-black text-white uppercase tracking-tight">{goal.title}</p>
-                        <p className="text-[9px] font-mono text-slate-500 uppercase">{activities.length} {t('sessions')}</p>
+                        <p className="text-[12px] font-display font-black text-text-primary uppercase tracking-tight">{goal.title}</p>
+                        <p className="text-[9px] font-mono text-text-secondary uppercase opacity-60">{activities.length} {t('sessions')}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-mono font-black text-brand-primary leading-none">{Math.floor(totalDuration / 60)}h {totalDuration % 60}m</p>
-                        <p className="text-[8px] font-mono text-slate-700 uppercase mt-1">{t('total_duration') || 'TOTAL_TIME'}</p>
+                        <p className="text-[8px] font-mono text-text-secondary uppercase mt-1 opacity-40">{t('total_duration') || 'TOTAL_TIME'}</p>
                       </div>
                     </div>
-                    <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden p-[1px]">
+                    <div className="h-1.5 w-full bg-surface-card rounded-full overflow-hidden p-[1px] border border-surface-border/50">
                       <div 
                         className="h-full bg-brand-primary rounded-full transition-all duration-1000" 
                         style={{ width: `${Math.min(100, (goal.completedSessions / goal.totalSessions) * 100)}%` }}
@@ -322,37 +322,60 @@ export default function ProfileScreen() {
         )}
 
         {/* Configuration Section */}
-        <section className="bg-slate-900/40 border border-white/5 rounded-[2.5rem] overflow-hidden divide-y divide-white/[0.03]">
+        <section className="bg-surface-card border border-surface-border rounded-[2.5rem] overflow-hidden divide-y divide-surface-border shadow-xl">
           <button 
             onClick={handleLanguageToggle}
-            className="w-full p-8 flex items-center justify-between hover:bg-white/[0.01] transition-colors"
+            className="w-full p-8 flex items-center justify-between hover:bg-surface-base transition-colors"
           >
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
                 <Globe size={20} />
               </div>
               <div className="text-left">
-                <p className="text-sm font-black text-white uppercase">{t('language')}</p>
-                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">{language === 'fa' ? 'Persian (IR)' : 'English (US)'}</p>
+                <p className="text-sm font-black text-text-primary uppercase">{t('language')}</p>
+                <p className="text-[10px] font-mono text-text-secondary uppercase tracking-widest mt-1 opacity-60">{language === 'fa' ? 'Persian (IR)' : 'English (US)'}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
                <span className="text-[10px] font-mono font-black text-brand-primary uppercase bg-brand-primary/10 px-3 py-1.5 rounded-lg border border-brand-primary/20">{language.toUpperCase()}</span>
-               <ChevronRight size={16} className="text-slate-800" />
+               <ChevronRight size={16} className="text-text-secondary opacity-40" />
             </div>
           </button>
 
-          <button className="w-full p-8 flex items-center justify-between hover:bg-white/[0.01] transition-colors group">
+          <button 
+            onClick={() => setTheme(theme === 'DARK' ? 'LIGHT' : 'DARK')}
+            className="w-full p-8 flex items-center justify-between hover:bg-surface-base transition-colors"
+          >
+            <div className="flex items-center gap-5">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-500 ${theme === 'DARK' ? 'bg-amber-500/10 text-amber-400' : 'bg-brand-primary/10 text-brand-primary'}`}>
+                {theme === 'DARK' ? <Moon size={20} /> : <Sun size={20} />}
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-black text-text-primary uppercase">{t('theme_settings')}</p>
+                <p className="text-[10px] font-mono text-text-secondary uppercase tracking-widest mt-1 opacity-60">
+                  {theme === 'DARK' ? t('dark_mode') : t('light_mode')}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+               <span className="text-[10px] font-mono font-black text-brand-primary uppercase bg-brand-primary/10 px-3 py-1.5 rounded-lg border border-brand-primary/20 transition-all duration-500">
+                 {theme}
+               </span>
+               <ChevronRight size={16} className="text-text-secondary opacity-40" />
+            </div>
+          </button>
+
+          <button className="w-full p-8 flex items-center justify-between hover:bg-surface-base transition-colors group">
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-400 flex items-center justify-center">
                 <Shield size={20} />
               </div>
               <div className="text-left">
-                <p className="text-sm font-black text-white uppercase">{t('security')}</p>
-                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">Core system integrity check</p>
+                <p className="text-sm font-black text-text-primary uppercase">{t('security')}</p>
+                <p className="text-[10px] font-mono text-text-secondary uppercase tracking-widest mt-1 opacity-60">Core system integrity check</p>
               </div>
             </div>
-            <ChevronRight size={16} className="text-slate-800" />
+            <ChevronRight size={16} className="text-text-secondary opacity-40" />
           </button>
 
           <button className="w-full p-8 flex items-center justify-between text-rose-500 hover:bg-rose-500/5 transition-colors">
@@ -362,7 +385,7 @@ export default function ProfileScreen() {
               </div>
               <div className="text-left">
                 <p className="text-sm font-black uppercase">Terminate Node Connection</p>
-                <p className="text-[10px] font-mono text-rose-500/50 uppercase tracking-widest mt-1">Power down session</p>
+                <p className="text-[10px] font-mono text-rose-500/50 uppercase tracking-widest mt-1 opacity-60">Power down session</p>
               </div>
             </div>
             <LogOut size={18} />
@@ -374,7 +397,7 @@ export default function ProfileScreen() {
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center gap-3">
               <Database size={14} className="text-amber-500" />
-              <h3 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.3em]">{t('data_management')}</h3>
+              <h3 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em]">{t('data_management')}</h3>
             </div>
             <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -383,32 +406,32 @@ export default function ProfileScreen() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-8 bg-slate-900 border border-white/5 rounded-[2.5rem] space-y-6 group hover:border-brand-primary/20 transition-all">
+            <div className="p-8 bg-surface-card border border-surface-border rounded-[2.5rem] space-y-6 group hover:border-brand-primary/20 transition-all shadow-xl">
               <div className="flex items-center gap-5">
                 <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                   <Download size={24} />
                 </div>
                 <div>
-                  <h4 className="text-base font-black text-white uppercase leading-none mb-1">{t('backup')}</h4>
-                  <p className="text-[10px] font-mono text-slate-500 leading-relaxed uppercase">{t('backup_desc')}</p>
+                  <h4 className="text-base font-black text-text-primary uppercase leading-none mb-1">{t('backup')}</h4>
+                  <p className="text-[10px] font-mono text-text-secondary leading-relaxed uppercase opacity-60">{t('backup_desc')}</p>
                 </div>
               </div>
               <button 
                 onClick={handleExport}
-                className="w-full py-4 bg-slate-950 border border-brand-primary/20 rounded-2xl text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.2em] hover:bg-brand-primary hover:text-slate-950 transition-all shadow-xl shadow-brand-primary/5"
+                className="w-full py-4 bg-surface-base border border-surface-border rounded-2xl text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.2em] hover:bg-brand-primary hover:text-slate-950 transition-all shadow-lg"
               >
                 {t('export_json')}
               </button>
             </div>
 
-            <div className="p-8 bg-slate-900 border border-white/5 rounded-[2.5rem] space-y-6 group hover:border-rose-500/20 transition-all">
+            <div className="p-8 bg-surface-card border border-surface-border rounded-[2.5rem] space-y-6 group hover:border-rose-500/20 transition-all shadow-xl">
               <div className="flex items-center gap-5">
                 <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                   <Upload size={24} />
                 </div>
                 <div>
-                  <h4 className="text-base font-black text-white uppercase leading-none mb-1">{t('restore')}</h4>
-                  <p className="text-[10px] font-mono text-slate-500 leading-relaxed uppercase">{t('restore_desc')}</p>
+                  <h4 className="text-base font-black text-text-primary uppercase leading-none mb-1">{t('restore')}</h4>
+                  <p className="text-[10px] font-mono text-text-secondary leading-relaxed uppercase opacity-60">{t('restore_desc')}</p>
                 </div>
               </div>
               <div className="relative">
@@ -418,7 +441,7 @@ export default function ProfileScreen() {
                   onChange={handleImport}
                   className="absolute inset-0 opacity-0 cursor-pointer z-10"
                 />
-                <button className="w-full py-4 bg-slate-950 border border-rose-500/20 rounded-2xl text-[10px] font-mono font-black text-rose-500 uppercase tracking-[0.2em] hover:bg-rose-500 hover:text-white transition-all">
+                <button className="w-full py-4 bg-surface-base border border-surface-border rounded-2xl text-[10px] font-mono font-black text-rose-500 uppercase tracking-[0.2em] hover:bg-rose-500 hover:text-white transition-all shadow-lg">
                   {t('import_json')}
                 </button>
               </div>
@@ -428,11 +451,11 @@ export default function ProfileScreen() {
 
         <footer className="text-center py-6">
           <div className="flex flex-col items-center gap-4">
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-slate-900 border border-white/5 rounded-2xl">
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-surface-card border border-surface-border rounded-2xl">
               <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
-              <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-[0.35em]">GrowthOS // Stable_Release</span>
+              <span className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-[0.35em] opacity-60">GrowthOS // Stable_Release</span>
             </div>
-            <p className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">
+            <p className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-40">
               Developed by <span className="text-brand-primary">Mostafa Madadi</span>
             </p>
           </div>

@@ -367,6 +367,11 @@ const translations = {
     restore_success: 'داده‌ها با موفقیت بازیابی و در پایگاه داده SQL ثبت شدند',
     restore_fail: 'خطا در بازیابی داده‌ها. فایل نامعتبر است',
     data_integrity: 'پایداری و یکپارچگی داده‌ها فعال است',
+    theme_settings: 'تنظیمات ظاهر سیستم',
+    dark_mode: 'حالت تاریک (Cosmic)',
+    light_mode: 'حالت روشن (Minimal)',
+    switch_to_light: 'تغییر به تم روشن',
+    switch_to_dark: 'تغییر به تم تاریک',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -709,6 +714,11 @@ const translations = {
     restore_success: 'Data restored and synced with SQL database',
     restore_fail: 'Error restoring data. Invalid file format',
     data_integrity: 'Data Isolation & Integrity Active',
+    theme_settings: 'System Appearance Settings',
+    dark_mode: 'Dark Mode (Cosmic)',
+    light_mode: 'Light Mode (Minimal)',
+    switch_to_light: 'Switch to Light Theme',
+    switch_to_dark: 'Switch to Dark Theme',
   }
 };
 

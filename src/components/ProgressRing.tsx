@@ -27,7 +27,8 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="rgba(255, 255, 255, 0.05)"
+          stroke="currentColor"
+          className="text-surface-border"
           strokeWidth={strokeWidth}
           fill="none"
         />
@@ -46,8 +47,8 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-black text-white">{Math.round(progress)}%</span>
-        {label && <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{label}</span>}
+        <span className="text-2xl font-black text-text-primary">{Math.round(progress)}%</span>
+        {label && <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest opacity-60">{label}</span>}
       </div>
     </div>
   );

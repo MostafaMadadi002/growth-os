@@ -19,7 +19,15 @@ type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Report
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
   const { dir, t } = useI18n();
-  const { currentRoot } = useAppStore();
+  const { currentRoot, theme } = useAppStore();
+
+  React.useEffect(() => {
+    if (theme === 'DARK') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   const renderScreen = () => {
     switch (activeTab) {
@@ -57,16 +65,16 @@ export default function App() {
 
   return (
     <div 
-      className="flex flex-col h-screen w-full bg-slate-950 select-none overflow-hidden text-slate-200"
+      className="flex flex-col h-screen w-full bg-surface-base select-none overflow-hidden text-text-primary transition-colors duration-500"
       dir={dir}
     >
-      <header className="px-6 py-4 flex justify-between items-center bg-slate-950/40 backdrop-blur-3xl z-40 border-b border-white/[0.03]">
+      <header className="px-6 py-4 flex justify-between items-center bg-surface-base/40 backdrop-blur-3xl z-40 border-b border-surface-border">
         <div className="flex items-center gap-3">
            <div className="w-9 h-9 bg-brand-primary rounded-xl flex items-center justify-center rotate-3 shadow-lg shadow-brand-primary/20">
               <span className="text-slate-950 font-black text-lg">G</span>
            </div>
            <div>
-              <h1 className="text-lg font-display font-black text-white tracking-tighter uppercase leading-none">GrowthOS</h1>
+              <h1 className="text-lg font-display font-black text-text-primary tracking-tighter uppercase leading-none">GrowthOS</h1>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
                 <p className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">
@@ -92,13 +100,13 @@ export default function App() {
          </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-0 inset-x-0 bg-slate-950/40 backdrop-blur-3xl border-t border-white/10 z-50 px-6 pb-3 sm:pb-8 pt-2">
+      <nav className="fixed bottom-0 inset-x-0 bg-surface-base/40 backdrop-blur-3xl border-t border-surface-border z-50 px-6 pb-3 sm:pb-8 pt-2">
         <div className="max-w-md mx-auto flex justify-between items-center h-16">
           {currentTabs.map((tab) => (
             <button 
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative flex flex-col items-center justify-center gap-1 px-4 transition-all duration-500 ${activeTab === tab.id ? 'text-brand-primary' : 'text-slate-500 hover:text-slate-300'}`}
+              className={`relative flex flex-col items-center justify-center gap-1 px-4 transition-all duration-500 ${activeTab === tab.id ? 'text-brand-primary' : 'text-text-secondary hover:text-text-primary'}`}
             >
               <div className={`transition-all duration-500 ${activeTab === tab.id ? 'scale-110 -translate-y-2 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'scale-100 opacity-60'}`}>
                 {tab.icon}

@@ -46,19 +46,19 @@ export default function TradingCalendar() {
     : ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   return (
-    <div className="bg-slate-900 border border-white/5 rounded-[2.5rem] p-6 md:p-10 space-y-8">
+    <div className="bg-surface-card border border-surface-border rounded-[2.5rem] p-6 md:p-10 space-y-8 shadow-xl">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-display font-black text-white uppercase tracking-tighter">
+        <h3 className="text-xl font-display font-black text-text-primary uppercase tracking-tighter">
           {t('trading_calendar')}
         </h3>
-        <div className="flex items-center gap-4 bg-slate-950/50 p-2 rounded-2xl border border-white/5">
-          <button onClick={prevMonth} className="p-2 hover:bg-white/5 rounded-xl text-slate-400">
+        <div className="flex items-center gap-4 bg-surface-base/50 p-2 rounded-2xl border border-surface-border">
+          <button onClick={prevMonth} className="p-2 hover:bg-surface-base rounded-xl text-text-secondary">
             <ChevronLeft size={20} />
           </button>
-          <span className="text-[10px] font-mono font-black text-white uppercase tracking-widest min-w-[100px] text-center">
+          <span className="text-[10px] font-mono font-black text-text-primary uppercase tracking-widest min-w-[100px] text-center">
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </span>
-          <button onClick={nextMonth} className="p-2 hover:bg-white/5 rounded-xl text-slate-400">
+          <button onClick={nextMonth} className="p-2 hover:bg-surface-base rounded-xl text-text-secondary">
             <ChevronRight size={20} />
           </button>
         </div>
@@ -66,7 +66,7 @@ export default function TradingCalendar() {
 
       <div className="grid grid-cols-7 gap-2 md:gap-4" dir={language === 'fa' ? 'rtl' : 'ltr'}>
         {weekDays.map(day => (
-          <div key={day} className="text-center text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest pb-2">
+          <div key={day} className="text-center text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest pb-2 opacity-60">
             {day}
           </div>
         ))}
@@ -85,10 +85,10 @@ export default function TradingCalendar() {
               className={`aspect-square rounded-2xl md:rounded-3xl flex flex-col items-center justify-center relative overflow-hidden border transition-colors ${
                 status === 'profit' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
                 status === 'loss' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' :
-                'bg-slate-950 border-white/5 text-slate-600'
+                'bg-surface-base border-surface-border text-text-secondary opacity-40'
               }`}
             >
-              <span className="text-xs md:text-sm font-display font-black">{day}</span>
+              <span className="text-xs md:text-sm font-display font-black leading-none">{day}</span>
               {status !== 'neutral' && (
                 <span className="text-[7px] md:text-[9px] font-mono font-black opacity-80 mt-1">
                   {pnl > 0 ? '+' : ''}{Math.round(pnl)}

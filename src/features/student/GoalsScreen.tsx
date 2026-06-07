@@ -97,13 +97,13 @@ export default function GoalsScreen() {
               <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_12px_#10b981]" />
               <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('strategic_objectives')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-white tracking-tighter uppercase leading-none">
+           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
              {t('branch_goals').split(' ')[0]}<span className="text-brand-primary">.</span>
            </h1>
         </div>
         <button 
           onClick={() => setIsAdding(true)}
-          className="w-12 h-12 md:w-16 md:h-16 bg-brand-primary/10 backdrop-blur-xl border border-brand-primary/30 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-primary shadow-2xl shadow-brand-primary/10 hover:bg-brand-primary hover:text-slate-950 transition-all duration-500 active:scale-95"
+          className="w-12 h-12 md:w-16 md:h-16 bg-brand-primary/10 backdrop-blur-xl border border-brand-primary/30 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-primary shadow-2xl shadow-brand-primary/10 hover:bg-brand-primary hover:text-white transition-all duration-500 active:scale-95"
         >
           <Plus size={24} md:size={28} strokeWidth={3} />
         </button>
@@ -115,7 +115,7 @@ export default function GoalsScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-slate-950/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-surface-base/80 backdrop-blur-xl"
             dir={dir}
           >
              <motion.form 
@@ -123,68 +123,68 @@ export default function GoalsScreen() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onSubmit={isAdding ? handleAddGoal : handleUpdateGoal} 
-                className="bg-slate-900 border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
+                className="bg-surface-card border border-surface-border p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide space-y-8 md:space-y-10 shadow-2xl relative"
              >
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/5 blur-[100px] rounded-full pointer-events-none" />
                 
                 <button 
                   type="button" 
                   onClick={() => { setIsAdding(false); setEditingGoal(null); }} 
-                  className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full z-20"
+                  className="absolute top-6 right-6 md:top-8 md:right-8 rtl:right-auto rtl:left-6 md:rtl:left-8 text-text-secondary hover:text-text-primary transition-colors bg-surface-base p-2 rounded-full z-20"
                 >
                    <X size={18} md:size={20} />
                 </button>
                 
-                <h2 className="text-3xl font-display font-black text-white">{isAdding ? t('establish_objective') : t('edit_goal') || 'EDIT_GOAL'}</h2>
+                <h2 className="text-3xl font-display font-black text-text-primary">{isAdding ? t('establish_objective') : t('edit_goal') || 'EDIT_GOAL'}</h2>
 
                 <div className="space-y-3">
-                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('objective_header')}</label>
+                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('objective_header')}</label>
                    <input 
                      name="title" 
                      required 
                      defaultValue={editingGoal?.title || ''}
                      placeholder={language === 'fa' ? 'مثلاً: تسلط بر هوش مصنوعی' : 'e.g. Master AI Fundamentals'} 
-                     className="w-full bg-white/5 border border-white/5 rounded-2xl p-6 text-white font-display font-black text-2xl placeholder:text-slate-800 outline-none focus:border-brand-primary/30 focus:bg-white/[0.08] transition-all" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-2xl placeholder:text-text-secondary/30 outline-none focus:border-brand-primary/30 transition-all" 
                    />
                 </div>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-3">
-                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('total_required_sessions')}</label>
+                      <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('total_required_sessions')}</label>
                       <input 
                         name="totalSessions" 
                         type="number" 
                         required 
                         defaultValue={editingGoal?.totalSessions || 30}
-                        className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
+                        className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                    </div>
                    <div className="space-y-3">
-                      <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('sessions_per_week') || 'SESSIONS PER WEEK'}</label>
+                      <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('sessions_per_week') || 'SESSIONS PER WEEK'}</label>
                       <input 
                         name="frequencyPerWeek" 
                         type="number" 
                         required 
                         defaultValue={editingGoal?.frequencyPerWeek || 3}
-                        className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
+                        className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                    </div>
                 </div>
 
                 <div className="space-y-3">
-                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('duration') || 'DURATION'}</label>
+                    <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('duration') || 'DURATION'}</label>
                     <div className="flex gap-4">
                       <input 
                         name="duration" 
                         type="number" 
                         required 
                         defaultValue={editingGoal?.duration || 1}
-                        className="flex-1 bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
+                        className="flex-1 bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold outline-none focus:border-brand-primary/20" 
                       />
                       <select 
                         name="durationUnit"
                         defaultValue={editingGoal?.durationUnit || 'MONTHS'}
-                        className="w-32 bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20 appearance-none"
+                        className="w-32 bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold outline-none focus:border-brand-primary/20 appearance-none"
                       >
                          <option value="DAYS">{t('days')}</option>
                          <option value="WEEKS">{t('weeks')}</option>
@@ -194,7 +194,7 @@ export default function GoalsScreen() {
                  </div>
 
                 <div className="space-y-4">
-                  <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('scheduled_days')}</label>
+                  <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('scheduled_days')}</label>
                   <div className="flex flex-wrap gap-2">
                     {[
                       { id: 6, label: t('day_sat') },
@@ -213,7 +213,7 @@ export default function GoalsScreen() {
                           className="hidden peer" 
                           defaultChecked={editingGoal ? editingGoal.selectedDays?.includes(day.id) : day.id !== 5} 
                         />
-                        <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black text-slate-600 peer-checked:bg-white/10 peer-checked:text-brand-primary peer-checked:border-brand-primary/30 transition-all">
+                        <div className="px-4 py-2 rounded-xl bg-surface-base border border-surface-border text-[10px] font-black text-text-secondary peer-checked:bg-brand-primary/10 peer-checked:text-brand-primary peer-checked:border-brand-primary/30 transition-all">
                           {day.label}
                         </div>
                       </label>
@@ -222,43 +222,43 @@ export default function GoalsScreen() {
                 </div>
 
                 <div className="space-y-3">
-                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('start_date')}</label>
+                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('start_date')}</label>
                    <input 
                      name="startDate" 
                      type="date" 
                      defaultValue={editingGoal?.startDate || new Date().toISOString().split('T')[0]}
-                     className="w-full bg-white/5 border border-white/5 rounded-2xl p-5 text-white font-mono font-bold outline-none focus:border-brand-primary/20" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold outline-none focus:border-brand-primary/20" 
                    />
                 </div>
 
                 <div className="space-y-4">
-                   <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('core_domain')}</label>
+                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('core_domain')}</label>
                    <div className="grid grid-cols-3 gap-4">
                       {[
                         { id: 'STUDY', icon: <BookOpen size={22} />, label: t('education') },
                         { id: 'WORK', icon: <Briefcase size={22} />, label: t('trading_cat') },
                         { id: 'PROJECT', icon: <Rocket size={22} />, label: t('project') }
                       ].map(cat => (
-                        <label key={cat.id} className="flex flex-col items-center gap-4 p-5 rounded-3xl border border-white/5 bg-white/5 cursor-pointer has-[:checked]:border-brand-primary has-[:checked]:bg-brand-primary/10 group transition-all duration-300">
+                        <label key={cat.id} className="flex flex-col items-center gap-4 p-5 rounded-3xl border border-surface-border bg-surface-base cursor-pointer has-[:checked]:border-brand-primary has-[:checked]:bg-brand-primary/10 group transition-all duration-300">
                            <input type="radio" name="category" value={cat.id} className="hidden" defaultChecked={editingGoal ? editingGoal.category === cat.id : cat.id === 'STUDY'} />
-                           <div className="text-slate-500 group-has-[:checked]:text-brand-primary group-has-[:checked]:scale-110 transition-all">
+                           <div className="text-text-secondary group-has-[:checked]:text-brand-primary group-has-[:checked]:scale-110 transition-all">
                               {cat.icon}
                            </div>
-                           <span className="text-[10px] font-black uppercase text-slate-600 group-has-[:checked]:text-brand-primary opacity-60 group-has-[:checked]:opacity-100">{cat.label}</span>
+                           <span className="text-[10px] font-black uppercase text-text-secondary group-has-[:checked]:text-brand-primary opacity-60 group-has-[:checked]:opacity-100">{cat.label}</span>
                         </label>
                       ))}
                    </div>
                 </div>
 
                 <div className="space-y-4">
-                    <label className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('checklist') || 'CHECKLIST'}</label>
+                    <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('checklist') || 'CHECKLIST'}</label>
                     <div className="flex gap-4">
                       <input 
                         value={tempSubGoal}
                         onChange={(e) => setTempSubGoal(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSubGoal())}
                         placeholder={t('add_item') || 'Add task...'}
-                        className="flex-1 bg-white/5 border border-white/5 rounded-2xl p-4 text-white font-sans text-sm focus:border-brand-primary/20 outline-none"
+                        className="flex-1 bg-surface-base border border-surface-border rounded-2xl p-4 text-text-primary font-sans text-sm focus:border-brand-primary/20 outline-none"
                       />
                       <button 
                          type="button"
@@ -271,9 +271,9 @@ export default function GoalsScreen() {
                     
                     <div className="space-y-2">
                        {newSubGoals.map(sg => (
-                         <div key={sg.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
-                            <span className="text-sm font-sans text-slate-300">{sg.title}</span>
-                            <button type="button" onClick={() => removeSubGoal(sg.id)} className="text-slate-600 hover:text-rose-500 transition-colors">
+                         <div key={sg.id} className="flex items-center justify-between p-4 bg-surface-base rounded-2xl border border-surface-border">
+                            <span className="text-sm font-sans text-text-secondary">{sg.title}</span>
+                            <button type="button" onClick={() => removeSubGoal(sg.id)} className="text-text-secondary hover:text-rose-500 transition-colors">
                                <X size={16} />
                             </button>
                          </div>
