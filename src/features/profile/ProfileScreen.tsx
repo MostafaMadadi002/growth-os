@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   User, GraduationCap, Terminal, Globe, ChevronRight, 
-  LogOut, Shield, Zap
+  LogOut, Shield, Zap, Download, Upload, Database
 } from 'lucide-react';
 import { useI18n } from '../../core/store/useI18n';
 import { useAppStore, UserRole } from '../../core/stores/appStore';
@@ -10,11 +10,54 @@ import TradingCalendar from '../../components/TradingCalendar';
 
 export default function ProfileScreen() {
   const { t, language, setLanguage } = useI18n();
-  const { currentRoot, setRoot, studentData, traderData } = useAppStore();
+  const { currentRoot, setRoot, studentData, traderData, importData } = useAppStore();
 
   const handleLanguageToggle = () => {
     const newLang = language === 'fa' ? 'EN' : 'FA';
     setLanguage(newLang.toLowerCase() as 'fa' | 'en');
+  };
+
+  const handleExport = () => {
+    const data = {
+      studentData,
+      traderData,
+      systemMetadata: {
+        engine: 'PostgreSQL/Supabase',
+        backup_type: 'Relational Export',
+        exportDate: new Date().toISOString(),
+        version: '1.0.0'
+      }
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `growth_os_sql_backup_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target?.result as string);
+        if (json.studentData || json.traderData) {
+          importData(json);
+          alert(t('restore_success'));
+        } else {
+          alert(t('restore_fail'));
+        }
+      } catch (error) {
+        alert(t('restore_fail'));
+      }
+    };
+    reader.readAsText(file);
   };
 
   const totalPnL = (traderData?.trades || []).reduce((sum, trade) => sum + (trade.profitAmount || 0), 0);
@@ -324,6 +367,63 @@ export default function ProfileScreen() {
             </div>
             <LogOut size={18} />
           </button>
+        </section>
+
+        {/* Data Security & Backup */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-3">
+              <Database size={14} className="text-amber-500" />
+              <h3 className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.3em]">{t('data_management')}</h3>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[8px] font-mono font-bold text-emerald-500 uppercase tracking-widest">{t('data_integrity')}</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-8 bg-slate-900 border border-white/5 rounded-[2.5rem] space-y-6 group hover:border-brand-primary/20 transition-all">
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Download size={24} />
+                </div>
+                <div>
+                  <h4 className="text-base font-black text-white uppercase leading-none mb-1">{t('backup')}</h4>
+                  <p className="text-[10px] font-mono text-slate-500 leading-relaxed uppercase">{t('backup_desc')}</p>
+                </div>
+              </div>
+              <button 
+                onClick={handleExport}
+                className="w-full py-4 bg-slate-950 border border-brand-primary/20 rounded-2xl text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.2em] hover:bg-brand-primary hover:text-slate-950 transition-all shadow-xl shadow-brand-primary/5"
+              >
+                {t('export_json')}
+              </button>
+            </div>
+
+            <div className="p-8 bg-slate-900 border border-white/5 rounded-[2.5rem] space-y-6 group hover:border-rose-500/20 transition-all">
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Upload size={24} />
+                </div>
+                <div>
+                  <h4 className="text-base font-black text-white uppercase leading-none mb-1">{t('restore')}</h4>
+                  <p className="text-[10px] font-mono text-slate-500 leading-relaxed uppercase">{t('restore_desc')}</p>
+                </div>
+              </div>
+              <div className="relative">
+                <input 
+                  type="file" 
+                  accept=".json"
+                  onChange={handleImport}
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                />
+                <button className="w-full py-4 bg-slate-950 border border-rose-500/20 rounded-2xl text-[10px] font-mono font-black text-rose-500 uppercase tracking-[0.2em] hover:bg-rose-500 hover:text-white transition-all">
+                  {t('import_json')}
+                </button>
+              </div>
+            </div>
+          </div>
         </section>
 
         <footer className="text-center py-6">

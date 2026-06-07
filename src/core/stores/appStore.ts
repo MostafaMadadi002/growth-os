@@ -127,6 +127,7 @@ interface AppState {
   deleteTrade: (tradeId: string) => void;
   updateTrade: (trade: Trade) => void;
   addTraderNote: (note: TraderNote) => void;
+  importData: (data: Partial<AppState>) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -150,6 +151,12 @@ export const useAppStore = create<AppState>()(
       
       setRoot: (root) => set({ currentRoot: root }),
       setLanguage: (lang) => set({ language: lang }),
+
+      importData: (data) => set((state) => ({
+        ...state,
+        studentData: data.studentData || state.studentData,
+        traderData: data.traderData || state.traderData,
+      })),
       
       addGoal: (goal) => set((state) => ({
         studentData: { ...state.studentData, goals: [...(state.studentData.goals || []), goal] }
