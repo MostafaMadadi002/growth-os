@@ -347,6 +347,15 @@ const translations = {
     no_matching_trades: 'عملیاتی با این پارامترها یافت نشد',
     no_notes_for_this_trade: 'یادداشتی پیوست نشده است',
     quick_select: 'انتخاب سریع',
+    cumulative_profit: 'سود تجمعی',
+    win_loss_distribution: 'توزیع پیروزی و شکست',
+    profit_by_labels: 'سود بر اساس برچسب‌ها',
+    equity_curve: 'منحنی سرمایه',
+    trade_distribution: 'توزیع معاملات',
+    cumulative_performance: 'عملکرد تجمعی',
+    trades_label: 'معامله',
+    pnl_attribution: 'سود و زیان بر اساس دسته',
+    no_label_data: 'داده‌ای برای برچسب‌ها یافت نشد',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -669,6 +678,15 @@ const translations = {
     no_matching_trades: 'No Matching Operations Found',
     no_notes_for_this_trade: 'No Notes Attached',
     quick_select: 'Quick Select',
+    cumulative_profit: 'Cumulative Profit',
+    win_loss_distribution: 'Win/Loss Distribution',
+    profit_by_labels: 'Profit by Labels',
+    equity_curve: 'Equity Curve',
+    trade_distribution: 'Trade Distribution',
+    cumulative_performance: 'Cumulative Performance',
+    trades_label: 'Trades',
+    pnl_attribution: 'PNL Attribution',
+    no_label_data: 'No Label Data Available',
   }
 };
 

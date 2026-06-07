@@ -8,6 +8,12 @@ import {
 import { useAppStore, Trade } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
 
+import { 
+  LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
+  Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar,
+  Legend
+} from 'recharts';
+
 export default function TradingReports() {
   const { t, language } = useI18n();
   const { traderData } = useAppStore();
@@ -36,8 +42,49 @@ export default function TradingReports() {
                          trade.notes?.toLowerCase().includes(searchTerm.toLowerCase());
       
       return matchResult && matchMarket && matchLabels && matchSearch;
-    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [trades, filterResult, filterMarket, selectedLabels, searchTerm]);
+
+  // Chart Data preparation
+  const chartData = useMemo(() => {
+    // Equity Curve: Sort by date ASC for cumulative profit
+    const sortedForEquity = [...filteredTrades].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    let cumulativeProfit = 0;
+    
+    const equityCurve = sortedForEquity.map(t => {
+      cumulativeProfit += (t.profitAmount || 0) - (t.fee || 0);
+      return {
+        date: t.date,
+        profit: Number(cumulativeProfit.toFixed(2))
+      };
+    });
+
+    // Win/Loss Pie Chart
+    const winCount = filteredTrades.filter(t => t.result === 'WIN').length;
+    const lossCount = filteredTrades.filter(t => t.result === 'LOSS').length;
+    const beCount = filteredTrades.filter(t => t.result === 'BE').length;
+
+    const pieData = [
+      { name: t('win') || 'WIN', value: winCount, color: '#10b981' },
+      { name: t('loss') || 'LOSS', value: lossCount, color: '#f43f5e' },
+      { name: t('be') || 'BE', value: beCount, color: '#f59e0b' }
+    ].filter(item => item.value > 0);
+
+    // Profit by Label
+    const labelProfitMap: Record<string, number> = {};
+    filteredTrades.forEach(t => {
+      t.labels?.forEach(label => {
+        labelProfitMap[label] = (labelProfitMap[label] || 0) + (t.profitAmount || 0) - (t.fee || 0);
+      });
+    });
+
+    const barData = Object.entries(labelProfitMap).map(([name, profit]) => ({
+      name,
+      profit: Number(profit.toFixed(2))
+    })).sort((a, b) => b.profit - a.profit);
+
+    return { equityCurve, pieData, barData };
+  }, [filteredTrades, t]);
 
   // Stats calculation
   const stats = useMemo(() => {
@@ -115,6 +162,151 @@ export default function TradingReports() {
           />
         </div>
       </header>
+
+      {/* Analytics Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Equity Curve */}
+        <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-8 space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h4 className="text-sm font-mono font-black text-white uppercase tracking-widest">{t('equity_curve') || 'Equity Curve'}</h4>
+              <p className="text-[10px] text-slate-500 font-mono mt-1 uppercase">{t('cumulative_performance') || 'CUMULATIVE_PERFORMANCE'}</p>
+            </div>
+            <TrendingUp size={20} className="text-brand-primary opacity-50" />
+          </div>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData.equityCurve}>
+                <defs>
+                  <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#d946ef" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#d946ef" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                <XAxis 
+                  dataKey="date" 
+                  stroke="#475569" 
+                  fontSize={10} 
+                  tickLine={false} 
+                  axisLine={false}
+                  tickFormatter={(val) => val.split('-').slice(1).join('/')}
+                />
+                <YAxis 
+                  stroke="#475569" 
+                  fontSize={10} 
+                  tickLine={false} 
+                  axisLine={false}
+                  tickFormatter={(val) => `${val}`}
+                />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '1rem', fontSize: '10px' }}
+                  itemStyle={{ color: '#d946ef' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="profit" 
+                  stroke="#d946ef" 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#colorProfit)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Win/Loss & Label Analytics */}
+        <div className="grid grid-cols-1 gap-6">
+          {/* Win/Loss Pie */}
+          <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-8 flex flex-col md:flex-row gap-8">
+            <div className="flex-1 space-y-6">
+              <div>
+                <h4 className="text-sm font-mono font-black text-white uppercase tracking-widest">{t('win_loss_distribution') || 'Outcome Matrix'}</h4>
+                <p className="text-[10px] text-slate-500 font-mono mt-1 uppercase">{t('trade_distribution') || 'TRADE_DISTRIBUTION'}</p>
+              </div>
+              <div className="space-y-3">
+                {chartData.pieData.map((item) => (
+                  <div key={item.name} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                      <span className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-widest">{item.name}</span>
+                    </div>
+                    <span className="text-xs font-display font-black text-white">{item.value} {t('trades_label') || 'Trades'}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="w-full md:w-48 h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '1rem', fontSize: '10px' }}
+                  />
+                  <Pie
+                    data={chartData.pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={45}
+                    outerRadius={70}
+                    paddingAngle={8}
+                    dataKey="value"
+                  >
+                    {chartData.pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Profit by Label Bar Chart */}
+          <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-8 space-y-6">
+             <div className="flex justify-between items-center">
+              <div>
+                <h4 className="text-sm font-mono font-black text-white uppercase tracking-widest">{t('profit_by_labels') || 'Strategic Labels'}</h4>
+                <p className="text-[10px] text-slate-500 font-mono mt-1 uppercase">{t('pnl_attribution') || 'PNL_ATTRIBUTION'}</p>
+              </div>
+              <Tag size={20} className="text-blue-400 opacity-50" />
+            </div>
+            <div className="h-[120px] w-full">
+              {chartData.barData.length === 0 ? (
+                <div className="h-full flex items-center justify-center border border-dashed border-white/5 rounded-2xl">
+                  <p className="text-[9px] font-mono text-slate-600 uppercase tracking-widest">{t('no_label_data') || 'NO_LABEL_DATA_AVAILABLE'}</p>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData.barData} layout="vertical">
+                    <XAxis type="number" hide />
+                    <YAxis 
+                      dataKey="name" 
+                      type="category" 
+                      stroke="#475569" 
+                      fontSize={8} 
+                      width={80} 
+                      axisLine={false} 
+                      tickLine={false} 
+                    />
+                    <Tooltip 
+                      cursor={{fill: '#ffffff05'}}
+                      contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '1rem', fontSize: '10px' }}
+                    />
+                    <Bar 
+                      dataKey="profit" 
+                      radius={[0, 4, 4, 0]}
+                    >
+                      {chartData.barData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.profit >= 0 ? '#10b981' : '#f43f5e'} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Filters Bar */}
       <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 space-y-6">
