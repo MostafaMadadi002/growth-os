@@ -24,8 +24,10 @@ export default function TradingJournal() {
 
   const [tempNotes, setTempNotes] = useState('');
   const [tempFee, setTempFee] = useState('');
+  const [tempLabel, setTempLabel] = useState('');
   const [tempLabels, setTempLabels] = useState<string[]>([]);
   const [showNoteInput, setShowNoteInput] = useState(false);
+  const [showLabelInput, setShowLabelInput] = useState(false);
 
   const calculateRR = (entry: number, sl: number, tp: number) => {
     if (!entry || !sl || !tp) return '0';
@@ -80,8 +82,10 @@ export default function TradingJournal() {
     setNewTradeData({ entry: '', sl: '', tp: '', rr: '0' });
     setTempNotes('');
     setTempFee('');
+    setTempLabel('');
     setTempLabels([]);
     setShowNoteInput(false);
+    setShowLabelInput(false);
   };
 
   const handleUpdateTrade = (e: React.FormEvent<HTMLFormElement>) => {
@@ -104,6 +108,7 @@ export default function TradingJournal() {
       result: formData.get('result') as any,
       profitAmount: Number(formData.get('profitAmount')),
       notes: formData.get('notes') as string,
+      labels: editingTrade.labels,
     };
 
     updateTrade(updated);
@@ -234,6 +239,63 @@ export default function TradingJournal() {
                   </div>
                 </div>
 
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('labels')}</label>
+                    <button 
+                      type="button" 
+                      onClick={() => setShowLabelInput(!showLabelInput)}
+                      className="text-[10px] text-brand-primary font-black uppercase"
+                    >
+                      {t('add_label')}
+                    </button>
+                  </div>
+                  {showLabelInput && (
+                    <div className="flex gap-2">
+                      <input 
+                        value={tempLabel}
+                        onChange={(e) => setTempLabel(e.target.value)}
+                        placeholder="Tag..."
+                        className="flex-1 bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (tempLabel.trim()) {
+                              setTempLabels([...tempLabels, tempLabel.trim()]);
+                              setTempLabel('');
+                            }
+                          }
+                        }}
+                      />
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          if (tempLabel.trim()) {
+                            setTempLabels([...tempLabels, tempLabel.trim()]);
+                            setTempLabel('');
+                          }
+                        }}
+                        className="p-3 bg-brand-primary text-slate-950 rounded-xl"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {tempLabels.length === 0 && (
+                      <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest italic opacity-50">{t('no_labels')}</span>
+                    )}
+                    {tempLabels.map(label => (
+                      <span key={label} className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] font-mono font-black text-slate-400 flex items-center gap-1">
+                        #{label}
+                        <button onClick={() => setTempLabels(tempLabels.filter(l => l !== label))} className="text-rose-500 hover:text-rose-400">
+                          <X size={10} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
                 <textarea 
                   value={tempNotes}
                   onChange={(e) => setTempNotes(e.target.value)}
@@ -338,6 +400,59 @@ export default function TradingJournal() {
                            >
                              <MessageSquare size={14} />
                            </button>
+                           <div className="relative">
+                             <button 
+                               type="button" 
+                               onClick={() => setShowLabelInput(!showLabelInput)}
+                               className={`p-2 rounded-lg transition-colors ${tempLabels.length > 0 ? 'bg-indigo-500/20 text-indigo-400' : 'bg-white/5 text-slate-500'}`}
+                             >
+                               <Tag size={14} />
+                             </button>
+                             {showLabelInput && (
+                               <div className="absolute top-full right-0 mt-2 w-64 z-[70] bg-slate-900 border border-white/10 rounded-2xl p-4 shadow-2xl">
+                                  <div className="flex gap-2 mb-3">
+                                    <input 
+                                      value={tempLabel}
+                                      onChange={(e) => setTempLabel(e.target.value)}
+                                      placeholder="New Label..."
+                                      className="flex-1 bg-slate-950 border border-white/5 rounded-xl p-2 text-white font-mono text-[10px] outline-none"
+                                      autoFocus
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                          e.preventDefault();
+                                          if (tempLabel.trim()) {
+                                            setTempLabels([...tempLabels, tempLabel.trim()]);
+                                            setTempLabel('');
+                                          }
+                                        }
+                                      }}
+                                    />
+                                    <button 
+                                      type="button"
+                                      onClick={() => {
+                                        if (tempLabel.trim()) {
+                                          setTempLabels([...tempLabels, tempLabel.trim()]);
+                                          setTempLabel('');
+                                        }
+                                      }}
+                                      className="p-2 bg-brand-primary text-slate-950 rounded-lg"
+                                    >
+                                      <Plus size={12} />
+                                    </button>
+                                  </div>
+                                  <div className="flex flex-wrap gap-2">
+                                    {tempLabels.map(label => (
+                                      <span key={label} className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] font-mono font-black text-slate-400 flex items-center gap-1">
+                                        #{label}
+                                        <button onClick={() => setTempLabels(tempLabels.filter(l => l !== label))} className="text-rose-500">
+                                          <X size={10} />
+                                        </button>
+                                      </span>
+                                    ))}
+                                  </div>
+                               </div>
+                             )}
+                           </div>
                            {showNoteInput && (
                              <div className="absolute top-full right-0 mt-2 w-64 z-[60] bg-slate-900 border border-white/10 rounded-2xl p-4 shadow-2xl">
                                <textarea 
@@ -389,6 +504,14 @@ export default function TradingJournal() {
                       <span className={`font-black ${getResultColor(trade.result)}`}>
                         {getResultLabel(trade.result)}
                       </span>
+                      {trade.labels && trade.labels.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1 justify-center">
+                          {trade.labels.slice(0, 2).map(label => (
+                            <span key={label} className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-[7px] font-mono text-slate-500">#{label}</span>
+                          ))}
+                          {trade.labels.length > 2 && <span className="text-[7px] text-slate-600">...</span>}
+                        </div>
+                      )}
                     </td>
                     <td className={`px-4 py-4 text-center font-black ${trade.profitAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {trade.profitAmount === 0 ? '-' : trade.profitAmount}
@@ -570,6 +693,46 @@ export default function TradingJournal() {
                 <div className="space-y-1">
                   <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('trade_notes')}</label>
                   <textarea name="notes" defaultValue={editingTrade.notes} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono text-sm min-h-[120px]" />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('labels')}</label>
+                    <div className="flex gap-2">
+                       <input 
+                          id="trade-label-input"
+                          placeholder="Add label..."
+                          className="bg-slate-950 border border-white/5 rounded-xl px-3 py-1 text-white font-mono text-[10px] outline-none"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              const val = e.currentTarget.value.trim();
+                              if (val && !editingTrade.labels?.includes(val)) {
+                                updateTrade({ ...editingTrade, labels: [...(editingTrade.labels || []), val] });
+                                e.currentTarget.value = '';
+                              }
+                            }
+                          }}
+                       />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {(editingTrade.labels || []).length === 0 && (
+                      <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest italic opacity-50">{t('no_labels')}</span>
+                    )}
+                    {(editingTrade.labels || []).map(label => (
+                      <span key={label} className="px-2 py-1 bg-brand-primary/10 border border-brand-primary/20 rounded-xl text-[10px] font-mono font-black text-brand-primary flex items-center gap-2">
+                        #{label}
+                        <button 
+                          type="button"
+                          onClick={() => updateTrade({ ...editingTrade, labels: (editingTrade.labels || []).filter(l => l !== label) })}
+                          className="hover:text-rose-400"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 <motion.button

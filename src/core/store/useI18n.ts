@@ -325,6 +325,7 @@ const translations = {
     add_label: 'افزودن برچسب',
     trading_calendar: 'تقویم معاملاتی',
     daily_stats: 'آمار روزانه',
+    no_labels: 'بدون برچسب',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -625,6 +626,7 @@ const translations = {
     add_label: 'ADD LABEL',
     trading_calendar: 'TRADING CALENDAR',
     daily_stats: 'DAILY STATS',
+    no_labels: 'NO LABELS',
   }
 };
 
