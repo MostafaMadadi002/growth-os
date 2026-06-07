@@ -80,8 +80,8 @@ export default function ProfileScreen() {
               </div>
             </div>
             <div>
-              <h1 className="text-2xl md:text-4xl font-display font-black text-white tracking-tighter uppercase leading-none">{t('profile')}</h1>
-              <p className="text-[9px] md:text-xs font-mono font-black text-slate-500 uppercase tracking-widest mt-1 md:mt-2 opacity-60">IDENT_ID // GROWTH_OS_USER</p>
+              <h1 className="text-2xl md:text-4xl font-display font-black text-white tracking-tighter uppercase leading-none">Mostafa Madadi</h1>
+              <p className="text-[9px] md:text-xs font-mono font-black text-slate-500 uppercase tracking-widest mt-1 md:mt-2 opacity-60">IDENT_ID // {language === 'fa' ? 'مصطفی مددی' : 'MOSTAFA MADADI'}</p>
             </div>
           </div>
         </header>
@@ -280,9 +280,14 @@ export default function ProfileScreen() {
         </section>
 
         <footer className="text-center py-6">
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-slate-900 border border-white/5 rounded-2xl">
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
-            <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-[0.35em]">GrowthOS // Stable_Release</span>
+          <div className="flex flex-col items-center gap-4">
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-slate-900 border border-white/5 rounded-2xl">
+              <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+              <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-[0.35em]">GrowthOS // Stable_Release</span>
+            </div>
+            <p className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">
+              Developed by <span className="text-brand-primary">Mostafa Madadi</span>
+            </p>
           </div>
         </footer>
       </div>

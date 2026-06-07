@@ -51,7 +51,7 @@ export default function App() {
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
                 <p className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">
-                  {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'}
+                  {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'} // BY MOSTAFA MADADI
                 </p>
               </div>
            </div>
