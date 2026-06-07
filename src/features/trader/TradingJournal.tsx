@@ -45,6 +45,10 @@ export default function TradingJournal() {
     });
   };
 
+  const [showNoteInput, setShowNoteInput] = useState(false);
+  const [tempNotes, setTempNotes] = useState('');
+  const [tempFee, setTempFee] = useState('');
+
   const handleAddTrade = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -57,18 +61,21 @@ export default function TradingJournal() {
       positionType: formData.get('positionType') as 'BUY' | 'SELL',
       size: Number(formData.get('size')),
       riskReward: Number(newTradeData.rr),
-      fee: Number(formData.get('fee') || 0),
+      fee: Number(tempFee || 0),
       entry: Number(newTradeData.entry),
       stopLoss: Number(newTradeData.sl),
       target: Number(newTradeData.tp),
       result: formData.get('result') as any,
       profitAmount: Number(formData.get('profitAmount') || 0),
-      notes: formData.get('notes') as string,
+      notes: tempNotes,
     };
 
     addTrade(newTrade);
     setShowAddRow(false);
     setNewTradeData({ entry: '', sl: '', tp: '', rr: '0' });
+    setTempNotes('');
+    setTempFee('');
+    setShowNoteInput(false);
   };
 
   const getResultColor = (result: string) => {
@@ -114,7 +121,106 @@ export default function TradingJournal() {
 
       {/* Table-like View */}
       <form onSubmit={handleAddTrade}>
-        <div className="bg-slate-900/50 rounded-3xl border border-white/5 overflow-hidden">
+        {/* Mobile Add Form */}
+        <div className="md:hidden">
+          <AnimatePresence>
+            {showAddRow && (
+              <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="bg-slate-900 border border-brand-primary/20 rounded-[2.5rem] p-6 mb-6 space-y-4 shadow-xl"
+                dir={language === 'fa' ? 'rtl' : 'ltr'}
+              >
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('market_type')}</label>
+                    <select name="marketType" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none">
+                      <option value="FOREX">{t('forex')}</option>
+                      <option value="CRYPTO">{t('crypto')}</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('symbol')}</label>
+                    <input name="symbol" required placeholder="BTCUSDT" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none uppercase" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('position')}</label>
+                    <select name="positionType" onChange={handleInputChange} className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none">
+                      <option value="BUY">{t('buy')}</option>
+                      <option value="SELL">{t('sell')}</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('date')}</label>
+                    <input name="date" type="date" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none" defaultValue={new Date().toISOString().split('T')[0]} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('entry')}</label>
+                    <input name="entry" type="number" step="any" required value={newTradeData.entry} onChange={handleInputChange} placeholder="0.0" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest text-rose-400">{t('sl')}</label>
+                    <input name="sl" type="number" step="any" required value={newTradeData.sl} onChange={handleInputChange} placeholder="SL" className="w-full bg-rose-500/5 border border-rose-500/10 rounded-xl p-3 text-rose-400 font-mono text-[11px] outline-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest text-emerald-400">{t('tp')}</label>
+                    <input name="tp" type="number" step="any" required value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-full bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3 text-emerald-400 font-mono text-[11px] outline-none" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('lot')} / {t('margin')}</label>
+                    <input name="size" type="number" step="any" required placeholder="Size" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('fee')}</label>
+                    <input name="fee" value={tempFee} onChange={(e) => setTempFee(e.target.value)} type="number" step="any" placeholder="Spread" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('result')}</label>
+                    <select name="result" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none">
+                      <option value="WIN">{t('win_label') || t('win')}</option>
+                      <option value="LOSS">{t('loss_label') || t('loss')}</option>
+                      <option value="BE">{t('be')}</option>
+                      <option value="PENDING">{t('pending')}</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('profit_loss')}</label>
+                    <input name="profitAmount" type="number" step="any" placeholder="0.00" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none" />
+                  </div>
+                </div>
+
+                <textarea 
+                  value={tempNotes}
+                  onChange={(e) => setTempNotes(e.target.value)}
+                  placeholder={t('trade_notes')}
+                  className="w-full bg-slate-950 border border-white/5 rounded-xl p-4 text-white font-mono text-[11px] min-h-[80px] outline-none"
+                />
+
+                <div className="pt-2">
+                  <button type="submit" className="w-full bg-brand-primary text-slate-950 py-4 rounded-2xl font-display font-black uppercase text-xs shadow-lg shadow-brand-primary/20">
+                    {t('add_trade')}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Desktop View Table */}
+        <div className="bg-slate-900/50 rounded-3xl border border-white/5 overflow-hidden hidden md:block">
           <div className="overflow-x-auto">
             <table className="w-full text-left font-mono text-[11px]" dir={language === 'fa' ? 'rtl' : 'ltr'}>
               <thead>
@@ -126,6 +232,7 @@ export default function TradingJournal() {
                   <th className="px-4 py-4">{t('entry')}</th>
                   <th className="px-4 py-4">{t('sl')} / {t('tp')}</th>
                   <th className="px-4 py-4">{t('lot')} / {t('margin')}</th>
+                  <th className="px-4 py-4">{t('fee')}</th>
                   <th className="px-4 py-4">{t('rr')}</th>
                   <th className="px-4 py-4">{t('result')}</th>
                   <th className="px-4 py-4">{t('profit_loss')}</th>
@@ -172,6 +279,9 @@ export default function TradingJournal() {
                         <input name="size" type="number" step="any" required placeholder="0.10" className="w-full bg-white/5 border border-white/5 rounded-lg p-2 text-slate-300 font-mono text-[10px] outline-none focus:border-brand-primary/40 text-center" />
                       </td>
                       <td className="p-1 px-2">
+                         <input value={tempFee} onChange={(e) => setTempFee(e.target.value)} type="number" step="any" placeholder="0.0" className="w-full bg-white/5 border border-white/5 rounded-lg p-2 text-slate-400 font-mono text-[10px] outline-none focus:border-brand-primary/40 text-center" />
+                      </td>
+                      <td className="p-1 px-2">
                         <div className="w-full bg-brand-primary/10 border border-brand-primary/20 rounded-lg p-2 text-brand-primary font-mono text-[10px] text-center font-black">
                           1:{newTradeData.rr}
                         </div>
@@ -189,11 +299,27 @@ export default function TradingJournal() {
                       </td>
                       <td className="p-1 px-2">
                         <div className="flex items-center justify-center gap-1">
+                           <button 
+                             type="button" 
+                             onClick={() => setShowNoteInput(!showNoteInput)}
+                             className={`p-2 rounded-lg transition-colors ${tempNotes ? 'bg-brand-primary/20 text-brand-primary' : 'bg-white/5 text-slate-500'}`}
+                           >
+                             <MessageSquare size={14} />
+                           </button>
+                           {showNoteInput && (
+                             <div className="absolute top-full right-0 mt-2 w-64 z-[60] bg-slate-900 border border-white/10 rounded-2xl p-4 shadow-2xl">
+                               <textarea 
+                                 value={tempNotes}
+                                 onChange={(e) => setTempNotes(e.target.value)}
+                                 className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[10px] min-h-[100px] outline-none"
+                                 placeholder={t('trade_notes')}
+                                 autoFocus
+                               />
+                             </div>
+                           )}
                            <button type="submit" className="p-2.5 bg-brand-primary text-slate-950 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-lg shadow-brand-primary/20">
                              <Plus size={14} className="stroke-[3]" />
                            </button>
-                           <input name="fee" type="hidden" value="0" />
-                           <input name="notes" type="hidden" value="" />
                         </div>
                       </td>
                     </motion.tr>
@@ -211,7 +337,7 @@ export default function TradingJournal() {
                     <td className="px-4 py-4 text-slate-400 whitespace-nowrap">{trade.date}</td>
                     <td className="px-4 py-4 font-black text-white">{trade.symbol}</td>
                     <td className="px-4 py-4 text-slate-500">{t(trade.marketType.toLowerCase())}</td>
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4 text-center">
                       <span className={`px-2 py-1 rounded-md text-[9px] font-black uppercase ${
                         trade.positionType === 'BUY' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
                       }`}>
@@ -225,27 +351,28 @@ export default function TradingJournal() {
                        <span className="text-emerald-400/60">{trade.target}</span>
                     </td>
                     <td className="px-4 py-4 text-slate-400">{trade.size}</td>
+                    <td className="px-4 py-4 text-slate-500">{trade.fee || 0}</td>
                     <td className="px-4 py-4 text-slate-400">1:{trade.riskReward}</td>
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4 text-center">
                       <span className={`font-black ${getResultColor(trade.result)}`}>
                         {getResultLabel(trade.result)}
                       </span>
                     </td>
-                    <td className={`px-4 py-4 font-black ${trade.profitAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                    <td className={`px-4 py-4 text-center font-black ${trade.profitAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {trade.profitAmount === 0 ? '-' : trade.profitAmount}
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-2">
                         {trade.notes && (
                           <button 
-                            onClick={() => setSelectedTradeNotes(trade)}
+                            onClick={(e) => { e.preventDefault(); setSelectedTradeNotes(trade); }}
                             className="p-2 bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors"
                           >
                             <MessageSquare size={14} />
                           </button>
                         )}
                         <button 
-                          onClick={() => deleteTrade(trade.id)}
+                          onClick={(e) => { e.preventDefault(); deleteTrade(trade.id); }}
                           className="p-2 bg-rose-500/10 rounded-xl text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <X size={14} />
@@ -258,6 +385,69 @@ export default function TradingJournal() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card List */}
+      <div className="md:hidden space-y-4">
+        {trades.length === 0 && !showAddRow && (
+          <div className="py-20 text-center text-slate-600 uppercase font-black tracking-widest opacity-50">
+            NO_TRADES_IN_DATABASE
+          </div>
+        )}
+        {trades.map((trade) => (
+          <motion.div 
+            key={trade.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-900 border border-white/5 rounded-[2rem] p-6 space-y-4 relative group"
+            dir={language === 'fa' ? 'rtl' : 'ltr'}
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <h4 className="text-xl font-display font-black text-white">{trade.symbol}</h4>
+                <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{trade.date} // {t(trade.marketType.toLowerCase())}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`px-3 py-1.5 rounded-xl font-display font-black text-[10px] uppercase shadow-lg ${
+                  trade.positionType === 'BUY' ? 'bg-emerald-500/10 text-emerald-400 shadow-emerald-500/5' : 'bg-rose-500/10 text-rose-400 shadow-rose-500/5'
+                }`}>
+                  {t(trade.positionType === 'BUY' ? 'buy' : 'sell')}
+                </span>
+                <button onClick={() => deleteTrade(trade.id)} className="p-2 text-rose-500/40 hover:text-rose-500">
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="bg-white/5 rounded-2xl p-4">
+                <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest mb-1">{t('entry')}</p>
+                <p className="text-sm font-display font-black text-white">{trade.entry}</p>
+              </div>
+              <div className="bg-white/5 rounded-2xl p-4">
+                <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest mb-1">{t('profit_loss')}</p>
+                <p className={`text-sm font-display font-black ${trade.profitAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                  {trade.profitAmount > 0 ? '+' : ''}{trade.profitAmount} USD
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest px-1">
+              <div className="flex gap-3">
+                 <span>SL: <span className="text-rose-400">{trade.stopLoss}</span></span>
+                 <span>TP: <span className="text-emerald-400">{trade.target}</span></span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`font-black ${getResultColor(trade.result)}`}>{getResultLabel(trade.result)}</span>
+                {trade.notes && (
+                  <button onClick={() => setSelectedTradeNotes(trade)} className="text-brand-primary">
+                    <MessageSquare size={14} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </form>
 
