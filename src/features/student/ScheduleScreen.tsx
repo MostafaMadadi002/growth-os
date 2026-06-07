@@ -95,7 +95,7 @@ export default function ScheduleScreen() {
     
     // Calculate total weeks in duration
     let totalWeeks = 1;
-    if (goal.durationUnit === 'MONTHS') totalWeeks = goal.duration * 4.34;
+    if (goal.durationUnit === 'MONTHS') totalWeeks = goal.duration * 4; // User prefers exact 4 weeks
     else if (goal.durationUnit === 'WEEKS') totalWeeks = goal.duration;
     else if (goal.durationUnit === 'DAYS') totalWeeks = goal.duration / 7;
 
@@ -103,12 +103,12 @@ export default function ScheduleScreen() {
     const totalPlannedDays = Math.max(1, Math.round(totalWeeks * plannedDaysPerWeek));
     
     if (goal.totalSessions && goal.totalSessions > 0) {
-      // Logic: If user has 30 sessions in 1 month (12 planned days), target is 30/12 = 2.5 -> ceil(2.5) = 3
-      return Math.ceil(goal.totalSessions / totalPlannedDays);
+      // Logic: 30 sessions / 12 planned days = 2.5
+      return Number((goal.totalSessions / totalPlannedDays).toFixed(1));
     }
 
     // Fallback to frequency per week if totalSessions not provided
-    return Math.ceil(goal.frequencyPerWeek / plannedDaysPerWeek);
+    return Number((goal.frequencyPerWeek / plannedDaysPerWeek).toFixed(1));
   };
 
   const getTodayProgress = (goalId: string) => {

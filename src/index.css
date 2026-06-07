@@ -37,6 +37,11 @@
     overflow: hidden;
     @apply bg-surface-base text-slate-300 antialiased selection:bg-brand-primary/30 selection:text-white font-sans;
   }
+
+  select option {
+    background-color: #0f172a; /* color-surface-card / slate-900 */
+    color: white;
+  }
 }
 
 .command-card {

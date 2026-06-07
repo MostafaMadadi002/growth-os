@@ -220,7 +220,7 @@ export default function TradingJournal() {
                       name="marketType" 
                       value={newTradeData.marketType}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none"
+                      className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none focus:border-brand-primary/20 cursor-pointer [color-scheme:dark]"
                     >
                       <option value="FOREX">{t('forex')}</option>
                       <option value="CRYPTO">{t('crypto')}</option>
@@ -246,7 +246,7 @@ export default function TradingJournal() {
                       name="positionType" 
                       value={newTradeData.positionType}
                       onChange={handleInputChange} 
-                      className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none"
+                      className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none focus:border-brand-primary/20 cursor-pointer [color-scheme:dark]"
                     >
                       <option value="BUY">{t('buy')}</option>
                       <option value="SELL">{t('sell')}</option>
@@ -314,7 +314,7 @@ export default function TradingJournal() {
                       name="result" 
                       value={newTradeData.result}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none"
+                      className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none focus:border-brand-primary/20 cursor-pointer [color-scheme:dark]"
                     >
                       <option value="PENDING">{t('pending')}</option>
                       <option value="WIN">{t('win_label') || t('win')}</option>
@@ -489,7 +489,7 @@ export default function TradingJournal() {
                           name="marketType" 
                           value={newTradeData.marketType}
                           onChange={handleInputChange}
-                          className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 appearance-none text-center"
+                          className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 cursor-pointer [color-scheme:dark]"
                         >
                           <option value="FOREX">FX</option>
                           <option value="CRYPTO">CR</option>
@@ -500,7 +500,7 @@ export default function TradingJournal() {
                           name="positionType" 
                           value={newTradeData.positionType}
                           onChange={handleInputChange}
-                          className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 appearance-none text-center font-black"
+                          className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 cursor-pointer font-black [color-scheme:dark]"
                         >
                           <option value="BUY" className="text-emerald-400">BUY</option>
                           <option value="SELL" className="text-rose-400">SELL</option>
@@ -548,7 +548,7 @@ export default function TradingJournal() {
                           name="result" 
                           value={newTradeData.result}
                           onChange={handleInputChange}
-                          className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 appearance-none text-center"
+                          className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 cursor-pointer [color-scheme:dark]"
                         >
                           <option value="PENDING">{t('pending')}</option>
                           <option value="WIN">{t('win_label') || t('win')}</option>
@@ -868,7 +868,7 @@ export default function TradingJournal() {
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('result')}</label>
-                        <select name="result" defaultValue={editingTrade.result || 'PENDING'} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold">
+                        <select name="result" defaultValue={editingTrade.result || 'PENDING'} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold cursor-pointer outline-none focus:border-brand-primary/20 [color-scheme:dark]">
                           <option value="WIN">{t('win_label') || t('win')}</option>
                           <option value="LOSS">{t('loss_label') || t('loss')}</option>
                           <option value="BE">{t('be')}</option>
@@ -895,14 +895,14 @@ export default function TradingJournal() {
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1">
                       <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('position')}</label>
-                      <select name="positionType" defaultValue={editingTrade.positionType || 'BUY'} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold">
+                      <select name="positionType" defaultValue={editingTrade.positionType || 'BUY'} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold cursor-pointer outline-none focus:border-brand-primary/20 [color-scheme:dark]">
                         <option value="BUY">{t('buy')}</option>
                         <option value="SELL">{t('sell')}</option>
                       </select>
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('market_type')}</label>
-                      <select name="marketType" defaultValue={editingTrade.marketType || 'FOREX'} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold">
+                      <select name="marketType" defaultValue={editingTrade.marketType || 'FOREX'} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold cursor-pointer outline-none focus:border-brand-primary/20 [color-scheme:dark]">
                         <option value="FOREX">{t('forex')}</option>
                         <option value="CRYPTO">{t('crypto')}</option>
                       </select>
