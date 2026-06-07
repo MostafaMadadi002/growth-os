@@ -6,6 +6,7 @@ import {
 import { useI18n } from '../../core/store/useI18n';
 import { useAppStore, UserRole } from '../../core/stores/appStore';
 import { motion } from 'motion/react';
+import TradingCalendar from '../../components/TradingCalendar';
 
 export default function ProfileScreen() {
   const { t, language, setLanguage } = useI18n();
@@ -129,42 +130,46 @@ export default function ProfileScreen() {
 
         {/* Trading Summary - ONLY for Trader */}
         {currentRoot === UserRole.TRADER && (
-          <motion.section 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-8 md:p-12 bg-slate-900 border border-white/5 rounded-[2.5rem] space-y-8 flex flex-col items-center justify-center text-center"
-          >
-            <div className="space-y-2">
-              <h4 className="text-[10px] md:text-xs font-mono font-black text-slate-500 uppercase tracking-[0.4em]">{t('total_pnl')}</h4>
-              <div className="flex items-baseline gap-2 justify-center">
-                <span className={`text-4xl md:text-7xl font-display font-black tracking-tighter ${totalPnL > 0 ? 'text-emerald-400' : totalPnL < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
-                  {totalPnL > 0 ? '+' : ''}{totalPnL}
-                </span>
-                <span className="text-xl md:text-2xl font-mono font-black text-slate-600 uppercase">USD</span>
+          <>
+            <motion.section 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-8 md:p-12 bg-slate-900 border border-white/5 rounded-[2.5rem] space-y-8 flex flex-col items-center justify-center text-center"
+            >
+              <div className="space-y-2">
+                <h4 className="text-[10px] md:text-xs font-mono font-black text-slate-500 uppercase tracking-[0.4em]">{t('total_pnl')}</h4>
+                <div className="flex items-baseline gap-2 justify-center">
+                  <span className={`text-4xl md:text-7xl font-display font-black tracking-tighter ${totalPnL > 0 ? 'text-emerald-400' : totalPnL < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                    {totalPnL > 0 ? '+' : ''}{totalPnL}
+                  </span>
+                  <span className="text-xl md:text-2xl font-mono font-black text-slate-600 uppercase">USD</span>
+                </div>
               </div>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-2xl pt-4">
-              <div className="space-y-1">
-                <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">TRADES_RECORDED</p>
-                <p className="text-xl font-display font-black text-white">{(traderData?.trades || []).length}</p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-2xl pt-4">
+                <div className="space-y-1">
+                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">TRADES_RECORDED</p>
+                  <p className="text-xl font-display font-black text-white">{(traderData?.trades || []).length}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">WIN_RATE</p>
+                  <p className="text-xl font-display font-black text-emerald-400">
+                    {traderData?.trades?.length ? Math.round(((traderData.trades.filter(t => t.result === 'WIN').length) / traderData.trades.length) * 100) : 0}%
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">CRYPTO_NODES</p>
+                  <p className="text-xl font-display font-black text-blue-400">{(traderData?.trades || []).filter(t => t.marketType === 'CRYPTO').length}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">FOREX_NODES</p>
+                  <p className="text-xl font-display font-black text-amber-400">{(traderData?.trades || []).filter(t => t.marketType === 'FOREX').length}</p>
+                </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">WIN_RATE</p>
-                <p className="text-xl font-display font-black text-emerald-400">
-                  {traderData?.trades?.length ? Math.round(((traderData.trades.filter(t => t.result === 'WIN').length) / traderData.trades.length) * 100) : 0}%
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">CRYPTO_NODES</p>
-                <p className="text-xl font-display font-black text-blue-400">{(traderData?.trades || []).filter(t => t.marketType === 'CRYPTO').length}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">FOREX_NODES</p>
-                <p className="text-xl font-display font-black text-amber-400">{(traderData?.trades || []).filter(t => t.marketType === 'FOREX').length}</p>
-              </div>
-            </div>
-          </motion.section>
+            </motion.section>
+
+            <TradingCalendar />
+          </>
         )}
 
         {/* GitHub Heatmap - ONLY for Student */}

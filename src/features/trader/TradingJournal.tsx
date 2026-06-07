@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Plus, X, MessageSquare 
+  Plus, X, MessageSquare, Edit3, Save, Tag, Trash2
 } from 'lucide-react';
 import { useAppStore, Trade } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
 
 export default function TradingJournal() {
   const { t, language } = useI18n();
-  const { traderData, addTrade, deleteTrade } = useAppStore();
+  const { traderData, addTrade, deleteTrade, updateTrade } = useAppStore();
   const [showAddRow, setShowAddRow] = useState(false);
+  const [editingTrade, setEditingTrade] = useState<Trade | null>(null);
   const [selectedTradeNotes, setSelectedTradeNotes] = useState<Trade | null>(null);
 
   const trades = traderData.trades || [];
@@ -21,7 +22,12 @@ export default function TradingJournal() {
     rr: '0'
   });
 
-  const calculateRR = (entry: number, sl: number, tp: number, pos: string) => {
+  const [tempNotes, setTempNotes] = useState('');
+  const [tempFee, setTempFee] = useState('');
+  const [tempLabels, setTempLabels] = useState<string[]>([]);
+  const [showNoteInput, setShowNoteInput] = useState(false);
+
+  const calculateRR = (entry: number, sl: number, tp: number) => {
     if (!entry || !sl || !tp) return '0';
     const risk = Math.abs(entry - sl);
     const reward = Math.abs(tp - entry);
@@ -37,17 +43,11 @@ export default function TradingJournal() {
         const entry = Number(name === 'entry' ? value : updated.entry);
         const sl = Number(name === 'sl' ? value : updated.sl);
         const tp = Number(name === 'tp' ? value : updated.tp);
-        const formData = new FormData(e.target.form!);
-        const pos = formData.get('positionType') as string;
-        updated.rr = calculateRR(entry, sl, tp, pos);
+        updated.rr = calculateRR(entry, sl, tp);
       }
       return updated;
     });
   };
-
-  const [showNoteInput, setShowNoteInput] = useState(false);
-  const [tempNotes, setTempNotes] = useState('');
-  const [tempFee, setTempFee] = useState('');
 
   const handleAddTrade = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,14 +68,46 @@ export default function TradingJournal() {
       result: formData.get('result') as any,
       profitAmount: Number(formData.get('profitAmount') || 0),
       notes: tempNotes,
+      labels: tempLabels,
     };
 
     addTrade(newTrade);
     setShowAddRow(false);
+    resetForm();
+  };
+
+  const resetForm = () => {
     setNewTradeData({ entry: '', sl: '', tp: '', rr: '0' });
     setTempNotes('');
     setTempFee('');
+    setTempLabels([]);
     setShowNoteInput(false);
+  };
+
+  const handleUpdateTrade = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!editingTrade) return;
+    const formData = new FormData(e.currentTarget);
+    
+    const updated: Trade = {
+      ...editingTrade,
+      marketType: formData.get('marketType') as 'FOREX' | 'CRYPTO',
+      symbol: (formData.get('symbol') as string).toUpperCase(),
+      date: formData.get('date') as string,
+      positionType: formData.get('positionType') as 'BUY' | 'SELL',
+      size: Number(formData.get('size')),
+      entry: Number(formData.get('entry')),
+      stopLoss: Number(formData.get('sl')),
+      target: Number(formData.get('tp')),
+      riskReward: Number(calculateRR(Number(formData.get('entry')), Number(formData.get('sl')), Number(formData.get('tp')))),
+      fee: Number(formData.get('fee')),
+      result: formData.get('result') as any,
+      profitAmount: Number(formData.get('profitAmount')),
+      notes: formData.get('notes') as string,
+    };
+
+    updateTrade(updated);
+    setEditingTrade(null);
   };
 
   const getResultColor = (result: string) => {
@@ -98,7 +130,7 @@ export default function TradingJournal() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-8 pb-32">
+    <div className="p-4 md:p-8 space-y-8 pb-32 overflow-y-auto h-full scrollbar-hide">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-2xl md:text-4xl font-display font-black text-white tracking-tighter uppercase leading-none">
@@ -111,16 +143,16 @@ export default function TradingJournal() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setShowAddRow(!showAddRow)}
+          onClick={() => { setShowAddRow(!showAddRow); if(showAddRow) resetForm(); }}
           className={`${showAddRow ? 'bg-rose-500/10 text-rose-400' : 'bg-brand-primary text-slate-950'} px-6 py-3 rounded-2xl font-display font-black uppercase text-xs flex items-center gap-2 shadow-lg shadow-brand-primary/20`}
         >
           {showAddRow ? <X size={16} /> : <Plus size={16} />}
-          {showAddRow ? t('cancel') || 'CANCEL' : t('add_trade')}
+          {showAddRow ? t('cancel') : t('add_trade')}
         </motion.button>
       </header>
 
-      {/* Table-like View */}
-      <form onSubmit={handleAddTrade}>
+      {/* Desktop View Form Wrapper */}
+      <form onSubmit={editingTrade ? handleUpdateTrade : handleAddTrade}>
         {/* Mobile Add Form */}
         <div className="md:hidden">
           <AnimatePresence>
@@ -190,10 +222,10 @@ export default function TradingJournal() {
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('result')}</label>
                     <select name="result" className="w-full bg-slate-950 border border-white/5 rounded-xl p-3 text-white font-mono text-[11px] outline-none">
+                      <option value="PENDING">{t('pending')}</option>
                       <option value="WIN">{t('win_label') || t('win')}</option>
                       <option value="LOSS">{t('loss_label') || t('loss')}</option>
                       <option value="BE">{t('be')}</option>
-                      <option value="PENDING">{t('pending')}</option>
                     </select>
                   </div>
                   <div className="space-y-1">
@@ -261,7 +293,7 @@ export default function TradingJournal() {
                         </select>
                       </td>
                       <td className="p-1 px-2">
-                        <select name="positionType" onChange={handleInputChange} className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 appearance-none text-center font-black">
+                        <select name="positionType" className="w-full bg-slate-950/50 border border-white/5 rounded-lg p-2 text-white font-mono text-[10px] outline-none focus:border-brand-primary/40 appearance-none text-center font-black">
                           <option value="BUY" className="text-emerald-400">BUY</option>
                           <option value="SELL" className="text-rose-400">SELL</option>
                         </select>
@@ -327,7 +359,7 @@ export default function TradingJournal() {
                 </AnimatePresence>
                 {trades.length === 0 ? (
                   <tr>
-                    <td colSpan={11} className="py-20 text-center text-slate-600 uppercase font-black tracking-widest opacity-50">
+                    <td colSpan={12} className="py-20 text-center text-slate-600 uppercase font-black tracking-widest opacity-50">
                       NO_TRADES_IN_DATABASE
                     </td>
                   </tr>
@@ -363,6 +395,12 @@ export default function TradingJournal() {
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-2">
+                        <button 
+                          onClick={(e) => { e.preventDefault(); setEditingTrade(trade); }}
+                          className="p-2 bg-white/5 rounded-xl text-slate-400 hover:text-white transition-colors"
+                        >
+                          <Edit3 size={14} />
+                        </button>
                         {trade.notes && (
                           <button 
                             onClick={(e) => { e.preventDefault(); setSelectedTradeNotes(trade); }}
@@ -375,7 +413,7 @@ export default function TradingJournal() {
                           onClick={(e) => { e.preventDefault(); deleteTrade(trade.id); }}
                           className="p-2 bg-rose-500/10 rounded-xl text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                          <X size={14} />
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </td>
@@ -413,8 +451,11 @@ export default function TradingJournal() {
                 }`}>
                   {t(trade.positionType === 'BUY' ? 'buy' : 'sell')}
                 </span>
+                <button onClick={() => setEditingTrade(trade)} className="p-2 text-slate-500">
+                  <Edit3 size={16} />
+                </button>
                 <button onClick={() => deleteTrade(trade.id)} className="p-2 text-rose-500/40 hover:text-rose-500">
-                  <X size={16} />
+                  <Trash2 size={16} />
                 </button>
               </div>
             </div>
@@ -446,10 +487,104 @@ export default function TradingJournal() {
                 )}
               </div>
             </div>
+
+            {trade.labels && trade.labels.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
+                {trade.labels.map(label => (
+                  <span key={label} className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] font-mono font-black text-slate-400">
+                    #{label}
+                  </span>
+                ))}
+              </div>
+            )}
           </motion.div>
         ))}
       </div>
     </form>
+
+      {/* Edit Modal */}
+      <AnimatePresence>
+        {editingTrade && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setEditingTrade(null)}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-2xl bg-slate-900 border border-white/5 rounded-[40px] overflow-hidden shadow-2xl"
+              dir={language === 'fa' ? 'rtl' : 'ltr'}
+            >
+              <div className="p-8 border-b border-white/5 flex justify-between items-center">
+                <h3 className="text-xl font-display font-black text-white uppercase tracking-tighter">{t('edit')}</h3>
+                <button 
+                  onClick={() => setEditingTrade(null)}
+                  className="p-3 bg-white/5 rounded-2xl text-slate-400 hover:text-white transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <form onSubmit={handleUpdateTrade} className="p-8 space-y-6 overflow-y-auto max-h-[70vh] scrollbar-hide">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('symbol')}</label>
+                      <input name="symbol" defaultValue={editingTrade.symbol} required className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold uppercase" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('result')}</label>
+                      <select name="result" defaultValue={editingTrade.result} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold">
+                        <option value="WIN">{t('win_label') || t('win')}</option>
+                        <option value="LOSS">{t('loss_label') || t('loss')}</option>
+                        <option value="BE">{t('be')}</option>
+                        <option value="PENDING">{t('pending')}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('profit_loss')}</label>
+                      <input name="profitAmount" type="number" step="any" defaultValue={editingTrade.profitAmount} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('date')}</label>
+                      <input name="date" type="date" defaultValue={editingTrade.date} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono font-bold" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* HIDDEN FIELDS TO CARRY OVER */}
+                <input type="hidden" name="marketType" value={editingTrade.marketType} />
+                <input type="hidden" name="positionType" value={editingTrade.positionType} />
+                <input type="hidden" name="size" value={editingTrade.size} />
+                <input type="hidden" name="entry" value={editingTrade.entry} />
+                <input type="hidden" name="sl" value={editingTrade.stopLoss} />
+                <input type="hidden" name="tp" value={editingTrade.target} />
+                <input type="hidden" name="fee" value={editingTrade.fee || 0} />
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('trade_notes')}</label>
+                  <textarea name="notes" defaultValue={editingTrade.notes} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-mono text-sm min-h-[120px]" />
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="w-full bg-brand-primary text-slate-950 py-5 rounded-2xl font-display font-black uppercase text-sm shadow-lg shadow-brand-primary/20"
+                >
+                  {t('save')}
+                </motion.button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Note View Modal */}
       <AnimatePresence>

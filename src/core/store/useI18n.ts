@@ -319,6 +319,12 @@ const translations = {
     total_pnl: 'کل سود و ضرر',
     trade_notes: 'یادداشت‌های معامله',
     cancel: 'انصراف',
+    edit: 'ویرایش',
+    save: 'ذخیره',
+    labels: 'برچسب‌ها',
+    add_label: 'افزودن برچسب',
+    trading_calendar: 'تقویم معاملاتی',
+    daily_stats: 'آمار روزانه',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -613,6 +619,12 @@ const translations = {
     total_pnl: 'TOTAL P&L',
     trade_notes: 'TRADE NOTES',
     cancel: 'CANCEL',
+    edit: 'EDIT',
+    save: 'SAVE',
+    labels: 'LABELS',
+    add_label: 'ADD LABEL',
+    trading_calendar: 'TRADING CALENDAR',
+    daily_stats: 'DAILY STATS',
   }
 };
 

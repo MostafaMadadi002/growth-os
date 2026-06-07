@@ -78,6 +78,7 @@ export interface Trade {
   result: 'WIN' | 'LOSS' | 'BE' | 'PENDING';
   profitAmount: number;
   notes?: string;
+  labels?: string[];
 }
 
 export interface TraderNote {
