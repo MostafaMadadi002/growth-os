@@ -65,10 +65,19 @@ export interface ScheduleTask {
 
 export interface Trade {
   id: string;
+  marketType: 'FOREX' | 'CRYPTO';
   symbol: string;
+  date: string;
+  positionType: 'BUY' | 'SELL';
+  size: number; // lot for Forex, margin for Crypto
+  riskReward: number;
+  fee: number; // spread for Forex, commission for Crypto
   entry: number;
-  exit?: number;
-  status: 'OPEN' | 'CLOSED';
+  stopLoss: number;
+  target: number;
+  result: 'WIN' | 'LOSS' | 'BE' | 'PENDING';
+  profitAmount: number;
+  notes?: string;
 }
 
 export interface TraderNote {
@@ -111,6 +120,12 @@ interface AppState {
   addTask: (task: ScheduleTask) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
+
+  // Trader Actions
+  addTrade: (trade: Trade) => void;
+  deleteTrade: (tradeId: string) => void;
+  updateTrade: (trade: Trade) => void;
+  addTraderNote: (note: TraderNote) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -386,17 +401,24 @@ export const useAppStore = create<AppState>()(
         }
       })),
 
-      addTraderTrade: (trade) => set((state) => ({
+      addTrade: (trade) => set((state) => ({
         traderData: {
           ...state.traderData,
           trades: [...(state.traderData.trades || []), trade],
         }
       })),
 
-      deleteTraderTrade: (id) => set((state) => ({
+      deleteTrade: (id) => set((state) => ({
         traderData: {
           ...state.traderData,
           trades: (state.traderData.trades || []).filter(t => t.id !== id),
+        }
+      })),
+
+      updateTrade: (trade) => set((state) => ({
+        traderData: {
+          ...state.traderData,
+          trades: (state.traderData.trades || []).map(t => t.id === trade.id ? trade : t),
         }
       })),
       

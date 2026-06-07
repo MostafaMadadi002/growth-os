@@ -11,8 +11,9 @@ import GoalsScreen from './features/student/GoalsScreen';
 import HabitsScreen from './features/student/HabitsScreen';
 import ScheduleScreen from './features/student/ScheduleScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
+import TradingJournal from './features/trader/TradingJournal';
 
-type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile';
+type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
@@ -25,16 +26,31 @@ export default function App() {
       case 'Habits': return <HabitsScreen />;
       case 'Schedule': return <ScheduleScreen />;
       case 'Profile': return <ProfileScreen />;
+      case 'Journal': return <TradingJournal />;
       default: return <GoalsScreen />;
     }
   };
 
-  const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
+  const studentTabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: 'Goals', label: 'branch_goals', icon: <Target size={20} /> },
     { id: 'Habits', label: 'branch_habits', icon: <Activity size={20} /> },
     { id: 'Schedule', label: 'schedule', icon: <CalendarDays size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
   ];
+
+  const traderTabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
+    { id: 'Journal', label: 'trading_journal', icon: <CalendarDays size={20} /> },
+    { id: 'Profile', label: 'profile', icon: <User size={20} /> },
+  ];
+
+  const currentTabs = currentRoot === UserRole.STUDENT ? studentTabs : traderTabs;
+
+  // Reset tab if current active tab is not in current root tabs
+  React.useEffect(() => {
+    if (!currentTabs.find(t => t.id === activeTab)) {
+      setActiveTab(currentTabs[0].id);
+    }
+  }, [currentRoot]);
 
   return (
     <div 
@@ -75,7 +91,7 @@ export default function App() {
 
       <nav className="fixed bottom-0 inset-x-0 bg-slate-950/40 backdrop-blur-3xl border-t border-white/10 z-50 px-6 pb-3 sm:pb-8 pt-2">
         <div className="max-w-md mx-auto flex justify-between items-center h-16">
-          {tabs.map((tab) => (
+          {currentTabs.map((tab) => (
             <button 
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
