@@ -12,8 +12,9 @@ import HabitsScreen from './features/student/HabitsScreen';
 import ScheduleScreen from './features/student/ScheduleScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
 import TradingJournal from './features/trader/TradingJournal';
+import TradingReports from './features/trader/TradingReports';
 
-type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal';
+type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Reports';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
@@ -27,6 +28,7 @@ export default function App() {
       case 'Schedule': return <ScheduleScreen />;
       case 'Profile': return <ProfileScreen />;
       case 'Journal': return <TradingJournal />;
+      case 'Reports': return <TradingReports />;
       default: return <GoalsScreen />;
     }
   };
@@ -40,6 +42,7 @@ export default function App() {
 
   const traderTabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: 'Journal', label: 'trading_journal', icon: <CalendarDays size={20} /> },
+    { id: 'Reports', label: 'reports', icon: <Activity size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
   ];
 

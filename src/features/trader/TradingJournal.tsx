@@ -16,7 +16,21 @@ export default function TradingJournal() {
   const trades = traderData.trades || [];
   
   // Reusable Labels System
-  const allUsedLabels = Array.from(new Set(trades.flatMap(t => t.labels || [])));
+  const DEFAULT_LABELS = [
+    t('strategy_a') || 'Strategy A',
+    t('strategy_b') || 'Strategy B',
+    t('fomo') || 'FOMO',
+    t('emotional') || 'Emotional',
+    t('revenge_trade') || 'Revenge Trade',
+    t('trend_follow') || 'Trend Follow',
+    t('counter_trend') || 'Counter Trend',
+    t('breakout') || 'Breakout'
+  ];
+
+  const allUsedLabels = Array.from(new Set([
+    ...DEFAULT_LABELS,
+    ...trades.flatMap(t => t.labels || [])
+  ]));
 
   const [newTradeData, setNewTradeData] = useState({
     symbol: '',
@@ -366,40 +380,41 @@ export default function TradingJournal() {
                     </button>
                   </div>
                   
-                  {/* Suggestions Mobile */}
-                  {allUsedLabels.length > 0 && (
-                    <div className="space-y-2 py-1">
-                      <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('frequent_labels')}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {allUsedLabels
-                          .filter(l => !tempLabels.includes(l))
-                          .slice(0, 12)
-                          .map(label => (
+                  {/* Default & Frequent Suggestions Mobile */}
+                  <div className="space-y-2 py-1">
+                    <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('select_labels') || 'SELECT LABELS'}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {allUsedLabels
+                        .map(label => {
+                          const isSelected = tempLabels.includes(label);
+                          return (
                             <button
                               key={label}
                               type="button"
-                              onClick={() => setTempLabels([...tempLabels, label])}
-                              className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-mono text-slate-400 hover:border-brand-primary/40 hover:text-white transition-colors"
+                              onClick={() => {
+                                if (isSelected) {
+                                  setTempLabels(tempLabels.filter(l => l !== label));
+                                } else {
+                                  setTempLabels([...tempLabels, label]);
+                                }
+                              }}
+                              className={`px-3 py-1.5 border rounded-xl text-[10px] font-mono transition-all ${
+                                isSelected 
+                                ? 'bg-brand-primary text-slate-950 border-brand-primary' 
+                                : 'bg-white/5 border-white/10 text-slate-400 hover:border-brand-primary/40'
+                              }`}
                             >
-                              {label}
+                              {isSelected ? '✓ ' : '+ '}{label}
                             </button>
-                          ))}
-                      </div>
+                          );
+                        })}
                     </div>
-                  )}
+                  </div>
 
                   <div className="flex flex-wrap gap-2 pt-1">
                     {tempLabels.length === 0 && (
                       <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-widest italic opacity-50">{t('no_labels')}</span>
                     )}
-                    {tempLabels.map(label => (
-                      <span key={label} className="px-2.5 py-1.5 bg-brand-primary/10 border border-brand-primary/20 rounded-xl text-[9px] font-mono font-black text-brand-primary flex items-center gap-1.5">
-                        #{label}
-                        <button onClick={() => setTempLabels(tempLabels.filter(l => l !== label))} className="text-brand-primary hover:text-rose-500">
-                          <X size={10} />
-                        </button>
-                      </span>
-                    ))}
                   </div>
                 </div>
 
@@ -602,27 +617,36 @@ export default function TradingJournal() {
                                     </button>
                                   </div>
 
-                                  {/* Suggestions Desktop Inline */}
-                                  {allUsedLabels.length > 0 && (
-                                    <div className="space-y-1.5 pb-3 border-b border-white/5 mb-3">
-                                      <p className="text-[7px] font-mono font-black text-slate-600 tracking-widest uppercase">{t('frequent_labels')}</p>
-                                      <div className="flex flex-wrap gap-1.5">
-                                        {allUsedLabels
-                                          .filter(l => !tempLabels.includes(l))
-                                          .slice(0, 8)
-                                          .map(label => (
+                                  {/* Multi-Select Suggestions Desktop Inline */}
+                                  <div className="space-y-2 pb-3 mb-3 shrink-0">
+                                    <p className="text-[7px] font-mono font-black text-slate-600 tracking-widest uppercase">{t('quick_select') || 'QUICK SELECT'}</p>
+                                    <div className="flex flex-wrap gap-1.5 max-h-[120px] overflow-y-auto scrollbar-hide">
+                                      {allUsedLabels
+                                        .map(label => {
+                                          const isSelected = tempLabels.includes(label);
+                                          return (
                                             <button
                                               key={label}
                                               type="button"
-                                              onClick={() => setTempLabels([...tempLabels, label])}
-                                              className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[8px] font-mono text-slate-500 hover:text-white transition-colors"
+                                              onClick={() => {
+                                                if (isSelected) {
+                                                  setTempLabels(tempLabels.filter(l => l !== label));
+                                                } else {
+                                                  setTempLabels([...tempLabels, label]);
+                                                }
+                                              }}
+                                              className={`px-2 py-1 border rounded text-[8px] font-mono transition-all ${
+                                                isSelected
+                                                ? 'bg-brand-primary text-slate-950 border-brand-primary'
+                                                : 'bg-white/5 border-white/10 text-slate-500 hover:text-white'
+                                              }`}
                                             >
                                               {label}
                                             </button>
-                                          ))}
-                                      </div>
+                                          );
+                                        })}
                                     </div>
-                                  )}
+                                  </div>
 
                                   <div className="flex flex-wrap gap-2">
                                     {tempLabels.map(label => (
@@ -908,9 +932,6 @@ export default function TradingJournal() {
                   <div className="space-y-1">
                     <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('labels')}</label>
                     <div className="bg-slate-950 border border-white/5 rounded-2xl p-6 space-y-4">
-                      {/* Note: In a real app we might want more complex label management here, 
-                          but for now we'll allow seeing them and provide a hint that labels are managed via add for now,
-                          or actually let's implement a simple text input for labels in the edit modal as well. */}
                       <p className="text-[10px] text-slate-500 italic mb-2">{t('labels_edit_hint') || 'Use commas to separate labels'}</p>
                       <input 
                         id="modal-labels-input"
@@ -922,9 +943,9 @@ export default function TradingJournal() {
 
                       {allUsedLabels.length > 0 && (
                         <div className="space-y-2">
-                          <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('frequent_labels')}</p>
+                          <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest">{t('quick_select') || 'QUICK SELECT'}</p>
                           <div className="flex flex-wrap gap-2">
-                            {allUsedLabels.slice(0, 8).map(label => (
+                            {allUsedLabels.map(label => (
                               <button
                                 key={label}
                                 type="button"
@@ -932,14 +953,16 @@ export default function TradingJournal() {
                                   const input = document.getElementById('modal-labels-input') as HTMLInputElement;
                                   if (input) {
                                     const currentValues = input.value.split(',').map(v => v.trim()).filter(Boolean);
-                                    if (!currentValues.includes(label)) {
+                                    if (currentValues.includes(label)) {
+                                      input.value = currentValues.filter(v => v !== label).join(', ');
+                                    } else {
                                       input.value = [...currentValues, label].join(', ');
                                     }
                                   }
                                 }}
-                                className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-[9px] font-mono text-slate-500 hover:text-white transition-colors"
+                                className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-mono text-slate-400 hover:text-white transition-colors"
                               >
-                                + {label}
+                                {label}
                               </button>
                             ))}
                           </div>
