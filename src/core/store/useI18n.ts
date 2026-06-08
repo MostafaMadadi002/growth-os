@@ -377,6 +377,8 @@ const translations = {
     losses: 'معاملات ضررده',
     breakeven: 'سر به سر',
     profit: 'سود',
+    done: 'انجام شد',
+    mark_done: 'ثبت اجرا',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -729,6 +731,8 @@ const translations = {
     losses: 'Losses',
     breakeven: 'Breakeven',
     profit: 'Profit',
+    done: 'Done',
+    mark_done: 'Log Progress',
   }
 };
 

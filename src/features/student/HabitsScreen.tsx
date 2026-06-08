@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Plus, Activity, X, Zap, 
-  TrendingUp, TrendingDown, Trash2
+  TrendingUp, TrendingDown, Trash2, Check
 } from 'lucide-react';
 import { useAppStore, Habit } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
@@ -34,20 +34,20 @@ export default function HabitsScreen() {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="space-y-8 md:space-y-12 w-full pb-20">
-      <header className="flex justify-between items-center md:items-end">
+    <div className="space-y-8 md:space-y-12 w-full pb-32">
+      <header className="flex justify-between items-center md:items-end px-2">
         <div>
-           <div className="flex items-center gap-3 mb-2 md:mb-4">
-              <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_12px_#3b82f6]" />
-              <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('neural_pathways')}</span>
+           <div className="flex items-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]" />
+              <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('habits')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
-             {t('branch_habits').split(' ')[0]}<span className="text-blue-500">.</span>
+           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
+             {t('habits').split(' ')[0]}<span className="text-blue-500">.</span>
            </h1>
         </div>
         <button 
           onClick={() => setIsAdding(true)}
-          className="w-12 h-12 md:w-16 md:h-16 bg-blue-500/10 backdrop-blur-xl border border-blue-500/30 rounded-xl md:rounded-2xl flex items-center justify-center text-blue-400 shadow-2xl shadow-blue-500/10 hover:bg-blue-600 hover:text-white transition-all duration-500 active:scale-95"
+          className="w-12 h-12 md:w-16 md:h-16 bg-blue-500 text-slate-950 rounded-xl md:rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/20 active:scale-95 transition-all"
         >
           <Plus size={24} md:size={28} strokeWidth={3} />
         </button>
@@ -122,44 +122,66 @@ export default function HabitsScreen() {
         )}
       </AnimatePresence>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 px-1">
          {(studentData.habits || []).map((habit) => {
-           const isDone = habit.lastCheck === today;
-           return (
-             <motion.div 
-               layout
-               key={habit.id} 
-               className={`p-8 bg-surface-card border rounded-[3rem] transition-all duration-500 flex items-center justify-between group shadow-xl hover:shadow-2xl ${isDone ? 'border-brand-primary border-2' : 'border-surface-border'}`}
-             >
-                <div className="flex items-center gap-6">
-                    <button 
-                      onClick={() => handleToggleHabit(habit.id, habit.type)}
-                      className={`w-16 h-16 rounded-[1.8rem] flex items-center justify-center transition-all duration-500 active:scale-90 ${isDone ? 'bg-brand-primary text-slate-950 shadow-xl shadow-brand-primary/40 scale-110' : 'bg-surface-base border border-surface-border text-text-secondary hover:text-brand-primary md:hover:scale-110'}`}
-                    >
-                     <Zap size={28} className={isDone ? 'fill-current' : ''} />
-                   </button>
-                   <div>
-                      <h4 className={`text-xl font-display font-black uppercase tracking-tight leading-none mb-2 transition-colors duration-500 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
+            const isDone = habit.lastCheck === today;
+            return (
+              <motion.div 
+                layout
+                key={habit.id} 
+                className={`p-5 md:p-8 bg-surface-card border rounded-[2rem] md:rounded-[3rem] transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6 group shadow-sm ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
+              >
+                <div className="flex items-center gap-4 md:gap-6 flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
+                      <h4 className={`text-xl md:text-2xl font-display font-black uppercase tracking-tight truncate transition-colors duration-300 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
                         {habit.title}
                       </h4>
-                      {habit.description && (
-                         <p className="text-[11px] text-text-secondary mb-3 line-clamp-2 max-w-[180px] opacity-60">
-                          {habit.description}
-                        </p>
-                      )}
-                      <div className="flex items-center gap-3">
-                         <span className={`text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border border-surface-border/50 bg-surface-base ${habit.type === 'POSITIVE' ? 'text-emerald-500' : 'text-rose-500'}`}>
-                           {habit.type}_PATH
-                         </span>
-                         <span className="text-[9px] font-mono font-bold text-text-secondary uppercase tracking-tighter opacity-40">{t('streak')}: {habit.streak}d</span>
+                      <div className="flex items-center gap-3 mt-1.5">
+                         <div className="flex items-center gap-2 bg-surface-base px-2.5 py-1 rounded-xl border border-surface-border/50">
+                            <span className="text-xs font-mono font-black text-brand-primary tabular-nums">
+                              {habit.streak}
+                            </span>
+                            <span className="text-[9px] font-mono font-bold text-text-secondary uppercase opacity-60 tracking-wider">
+                              {t('days')} {t('streak')}
+                            </span>
+                         </div>
+                         <div className={`px-2 py-1 rounded-xl border border-surface-border/50 bg-surface-base flex items-center gap-1.5`}>
+                            {habit.type === 'POSITIVE' ? <TrendingUp size={10} className="text-emerald-500" /> : <TrendingDown size={10} className="text-rose-500" />}
+                            <span className={`text-[9px] font-mono font-black uppercase ${habit.type === 'POSITIVE' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                              {habit.type === 'POSITIVE' ? t('habits_good').split(' ')[0] : t('habits_bad').split(' ')[0]}
+                            </span>
+                         </div>
                       </div>
                    </div>
                 </div>
-                <button onClick={() => deleteHabit(habit.id)} className="w-12 h-12 rounded-2xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 transform translate-x-2 md:group-hover:translate-x-0">
-                   <Trash2 size={18} />
-                </button>
-             </motion.div>
-           );
+
+                <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
+                    <button 
+                      onClick={() => handleToggleHabit(habit.id, habit.type)}
+                      className={`flex-1 md:flex-none px-6 h-14 md:h-16 rounded-2xl md:rounded-[1.8rem] flex items-center justify-center transition-all duration-300 active:scale-95 gap-3 ${isDone ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
+                    >
+                      {isDone ? (
+                        <>
+                          <Check size={20} md:size={24} strokeWidth={3} />
+                          <span className="text-[11px] md:text-sm font-display font-black uppercase tracking-wider">{t('done')}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Zap size={18} md:size={20} className="opacity-30" />
+                          <span className="text-[11px] md:text-sm font-mono font-black uppercase tracking-wider opacity-60">{t('mark_done')}</span>
+                        </>
+                      )}
+                    </button>
+                    
+                    <button 
+                      onClick={() => deleteHabit(habit.id)} 
+                      className="p-4 text-text-secondary/20 hover:text-rose-500 transition-colors"
+                    >
+                       <Trash2 size={18} />
+                    </button>
+                </div>
+              </motion.div>
+            );
          })}
 
          {(studentData.habits || []).length === 0 && (
