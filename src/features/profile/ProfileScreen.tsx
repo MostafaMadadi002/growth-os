@@ -107,27 +107,28 @@ export default function ProfileScreen() {
   const getRowIndex = (jsDay: number) => (jsDay + 1) % 7;
 
   const getDayColor = (day: { intensity: number, score: number, pos: number, neg: number }) => {
-    // Base color for empty nodes
-    if (day.pos === 0 && day.neg === 0) return 'bg-white/5 border border-white/5';
+    // If no activity at all
+    if (day.pos === 0 && day.neg === 0) {
+      return 'bg-white/[0.05] border border-white/[0.02]';
+    }
     
-    // Positive dominates (Good habits + Task completions)
+    // Calculate color based on dominant activity
+    // score = pos - neg
+    
     if (day.score > 0) {
-      if (day.pos >= 5) return 'bg-emerald-400 shadow-[0_0_10px_#34d399]';
-      if (day.pos >= 3) return 'bg-emerald-500 shadow-[0_0_6px_#10b981]';
-      if (day.pos >= 1) return 'bg-emerald-600/80';
-      return 'bg-emerald-900/40';
+      // Positive Dominant
+      if (day.score >= 4) return 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.3)]';
+      if (day.score >= 2) return 'bg-emerald-500';
+      return 'bg-emerald-600/70';
+    } else if (day.score < 0) {
+      // Negative Dominant
+      if (day.score <= -4) return 'bg-rose-400 shadow-[0_0_10px_rgba(248,113,113,0.3)]';
+      if (day.score <= -2) return 'bg-rose-500';
+      return 'bg-rose-600/70';
+    } else {
+      // Balanced Activity (e.g. 1 pos + 1 neg)
+      return 'bg-amber-500/50 border border-amber-500/20';
     }
-    
-    // Negative dominates (Bad habits recorded)
-    if (day.score < 0) {
-      if (day.neg >= 5) return 'bg-rose-400 shadow-[0_0_10px_#f87171]';
-      if (day.neg >= 3) return 'bg-rose-500 shadow-[0_0_6px_#ef4444]';
-      if (day.neg >= 1) return 'bg-rose-600/80';
-      return 'bg-rose-900/40';
-    }
-
-    // Neutral balance but active (pos == neg)
-    return 'bg-amber-500/40 border border-amber-500/20';
   };
 
   return (
@@ -260,34 +261,31 @@ export default function ProfileScreen() {
               </div>
             </div>
             
-            <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide pt-4">
+            <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide pt-4 relative">
               {/* Day Labels Column */}
-              <div className="grid grid-rows-7 gap-1 md:gap-1.5 py-1 text-[7px] md:text-[9px] font-mono font-black text-text-secondary uppercase shrink-0">
-                <span className="flex items-center h-3 md:h-5">{t('sat')}</span>
+              <div className="grid grid-rows-7 gap-1 md:gap-1.5 text-[8px] md:text-[9px] font-mono font-black text-text-secondary uppercase shrink-0 relative z-10">
+                <span className="flex items-center h-3 md:h-5 text-brand-primary">{t('sat')}</span>
                 <span className="flex items-center h-3 md:h-5 opacity-20">{t('sun')}</span>
-                <span className="flex items-center h-3 md:h-5">{t('mon')}</span>
+                <span className="flex items-center h-3 md:h-5 opacity-40">{t('mon')}</span>
                 <span className="flex items-center h-3 md:h-5 opacity-20">{t('tue')}</span>
-                <span className="flex items-center h-3 md:h-5">{t('wed')}</span>
+                <span className="flex items-center h-3 md:h-5 opacity-40">{t('wed')}</span>
                 <span className="flex items-center h-3 md:h-5 opacity-20">{t('thu')}</span>
-                <span className="flex items-center h-3 md:h-5">{t('fri')}</span>
+                <span className="flex items-center h-3 md:h-5 opacity-40">{t('fri')}</span>
               </div>
 
               {/* Heatmap Grid Wrapper */}
-              <div className="relative">
+              <div className="relative z-10">
                 {/* Heatmap Grid */}
-                <div className="grid grid-rows-7 grid-flow-col gap-1 md:gap-1.5 auto-cols-max">
+                <div className="grid grid-rows-7 grid-flow-col gap-1 md:gap-1.5 auto-cols-max relative">
                   {heatmapData.map((day, i) => {
                     const isToday = day.date === new Date().toISOString().split('T')[0];
-                    const isSaturday = day.dayOfWeek === 6;
-                    
                     return (
                       <div 
                         key={i} 
                         title={`${day.date} | Pos: ${day.pos} | Neg: ${day.neg}`}
                         className={`w-3 h-3 md:w-5 md:h-5 rounded-sm transition-all duration-500 hover:scale-150 relative cursor-pointer
                           ${getDayColor(day)} 
-                          ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_15px_rgba(163,163,255,0.6)]' : ''}
-                          ${isSaturday ? 'ring-1 ring-white/10 ring-offset-1 z-0' : ''}
+                          ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_15px_rgba(var(--brand-primary-rgb),0.6)]' : ''}
                         `}
                       />
                     );
