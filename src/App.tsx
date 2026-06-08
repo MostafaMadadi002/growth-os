@@ -108,10 +108,10 @@ export default function App() {
               onClick={() => setActiveTab(tab.id)}
               className={`relative flex flex-col items-center justify-center gap-1 px-4 transition-all duration-500 ${activeTab === tab.id ? 'text-brand-primary' : 'text-text-secondary hover:text-text-primary'}`}
             >
-              <div className={`transition-all duration-500 ${activeTab === tab.id ? 'scale-110 -translate-y-2 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'scale-100 opacity-60'}`}>
+              <div className={`transition-all duration-500 ${activeTab === tab.id ? 'scale-110 -translate-y-1 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'scale-100 opacity-60'}`}>
                 {tab.icon}
               </div>
-              <span className={`text-[10px] font-display font-black uppercase tracking-tighter transition-all duration-500 ${activeTab === tab.id ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+              <span className="text-[10px] font-display font-black uppercase tracking-tighter transition-all duration-500">
                 {t(tab.label)}
               </span>
               

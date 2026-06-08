@@ -126,8 +126,8 @@ export default function ProfileScreen() {
               </div>
             </div>
             <div>
-              <h1 className="text-2xl md:text-4xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">Mostafa Madadi</h1>
-              <p className="text-[9px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-widest mt-1 md:mt-2 opacity-60">IDENT_ID // {language === 'fa' ? 'مصطفی مددی' : 'MOSTAFA MADADI'}</p>
+              <h1 className="text-2xl md:text-4xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">{language === 'fa' ? 'مهمان' : 'GUEST'}</h1>
+              <p className="text-[9px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-widest mt-1 md:mt-2 opacity-60">IDENT_ID // {language === 'fa' ? 'مهمان' : 'GUEST'}</p>
             </div>
           </div>
         </header>
