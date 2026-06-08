@@ -119,20 +119,20 @@ export default function ScheduleScreen() {
 
   return (
     <div className="p-4 md:p-12 space-y-8 md:space-y-12 max-w-4xl mx-auto w-full rtl:font-farsi">
-      <header className="flex justify-between items-center md:items-end">
+      <header className="flex justify-between items-center md:items-end px-2">
         <div>
-           <div className="flex items-center gap-3 mb-2 md:mb-4">
-              <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_#f97316]" />
-              <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('chronos_sequencing')}</span>
+           <div className="flex items-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+              <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('schedule')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
+           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
            </h1>
         </div>
-         <div className="flex gap-2 md:gap-4">
+         <div className="flex gap-2">
            <button 
              onClick={() => setIsRecording(true)}
-             className="w-12 h-12 md:w-16 md:h-16 bg-brand-primary/10 backdrop-blur-xl border border-brand-primary/30 rounded-xl md:rounded-2xl flex items-center justify-center text-brand-primary shadow-2xl shadow-brand-primary/10 hover:bg-brand-primary hover:text-slate-950 transition-all duration-500 active:scale-95"
+             className="w-12 h-12 md:w-16 md:h-16 bg-brand-primary text-slate-950 rounded-xl md:rounded-2xl flex items-center justify-center shadow-xl shadow-brand-primary/20 hover:scale-105 transition-all active:scale-95"
            >
              <Timer size={24} md:size={28} strokeWidth={3} />
            </button>
@@ -372,7 +372,7 @@ export default function ScheduleScreen() {
         )}
       </AnimatePresence>
 
-      <section className="space-y-6 relative before:absolute before:left-12 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-12 before:w-[1px] before:bg-surface-border before:z-0 pb-20">
+      <section className="space-y-4 relative before:absolute before:left-10 md:before:left-14 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-10 md:rtl:before:right-14 before:w-[1px] before:bg-surface-border before:z-0 pb-20">
          {timelineItems.map((item) => {
            const linkedGoal = goals.find(g => g.id === item.goalId);
            const isTask = item.type === 'TASK';
@@ -380,50 +380,44 @@ export default function ScheduleScreen() {
             <motion.div 
               layout
               key={item.id} 
-              className="relative z-10 flex gap-8 items-center bg-surface-card/60 backdrop-blur-md p-6 pr-10 rtl:pr-6 rtl:pl-10 rounded-[3.5rem] border border-surface-border hover:border-brand-primary/20 transition-all duration-500 group shadow-lg"
+              className="relative z-10 flex gap-4 md:gap-8 items-center bg-surface-card p-4 md:p-6 rounded-[2rem] md:rounded-[3.5rem] border border-surface-border hover:border-brand-primary/20 transition-all shadow-sm group"
             >
-                <div className={`w-24 h-24 rounded-[2.5rem] flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 group-hover:scale-105 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950 border-orange-400' : 'bg-emerald-500 text-slate-950 border-emerald-400') : 'bg-surface-base border-surface-border text-text-secondary'} shrink-0`}>
-                  <span className="text-2xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>
-                  <span className="text-[11px] font-mono font-black opacity-60 mt-1">{item.time.split(':')[1]}</span>
+                <div className={`w-14 h-14 md:w-24 md:h-24 rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center border shadow-lg transition-all duration-300 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950' : 'bg-emerald-500 text-slate-950') : 'bg-surface-base border-surface-border text-text-secondary'} shrink-0`}>
+                  <span className="text-lg md:text-2xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>
+                  <span className="text-[9px] md:text-[11px] font-mono font-black opacity-60">{item.time.split(':')[1]}</span>
                 </div>
-                <div className="flex-1 space-y-2">
-                  <h4 className={`text-2xl md:text-3xl font-display font-black uppercase tracking-tight transition-all duration-500 ${item.done ? 'text-text-secondary line-through opacity-30 px-2' : 'text-text-primary'}`}>
+                <div className="flex-1 space-y-1">
+                  <h4 className={`text-lg md:text-3xl font-display font-black uppercase tracking-tight transition-all ${item.done ? 'text-text-secondary line-through opacity-30' : 'text-text-primary'}`}>
                     {item.label}
                   </h4>
-                  <div className="flex items-center gap-4 flex-wrap px-2">
-                      <div className="flex items-center gap-2">
-                        {isTask ? <Clock size={12} className="text-orange-500 opacity-60" /> : <CheckCircle2 size={12} className="text-emerald-500" />}
-                        <span className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">{isTask ? t('status_active') : t('status_completed') || 'COMPLETED'}</span>
+                  <div className="flex items-center gap-2 md:gap-4 flex-wrap">
+                      <div className="flex items-center gap-1.5">
+                        {isTask ? <Clock size={10} className="text-orange-500" /> : <CheckCircle2 size={10} className="text-emerald-500" />}
+                        <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-widest opacity-60">{isTask ? t('status_active') : t('status_completed')}</span>
                       </div>
                       {linkedGoal && (
-                        <div className="flex items-center gap-2 bg-brand-primary/10 px-3 py-1 rounded-full border border-brand-primary/20 group-hover:bg-brand-primary/20 transition-colors">
-                          <Plus size={10} className="text-brand-primary" />
-                          <span className="text-[9px] font-mono font-black text-brand-primary uppercase tracking-widest">{linkedGoal.title}</span>
-                        </div>
-                      )}
-                      {!isTask && (item as any).activityType === 'NEGATIVE' && (
-                        <div className="flex items-center gap-2 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
-                          <X size={10} className="text-rose-500" />
-                          <span className="text-[9px] font-mono font-black text-rose-500 uppercase tracking-widest">{t('deviant_session') || 'DEVIANT'}</span>
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-brand-primary/10">
+                          <Plus size={8} className="text-brand-primary" />
+                          <span className="text-[8px] md:text-[10px] font-mono font-bold text-brand-primary uppercase">{linkedGoal.title}</span>
                         </div>
                       )}
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                   {isTask && (
                     <button 
                       onClick={() => toggleTask(item.id)}
-                      className={`w-16 h-16 rounded-[1.8rem] flex items-center justify-center transition-all duration-500 active:scale-95 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/30' : 'bg-surface-base text-text-secondary border border-surface-border hover:border-orange-500/30 hover:text-orange-500 hover:scale-110'}`}
+                      className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-[1.8rem] flex items-center justify-center transition-all active:scale-95 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-md' : 'bg-surface-base text-text-secondary border border-surface-border'}`}
                     >
-                      {item.done ? <CheckCircle2 size={28} strokeWidth={3} /> : <div className="w-8 h-8 border-4 border-current rounded-xl opacity-20" />}
+                      {item.done ? <CheckCircle2 size={20} md:size={28} strokeWidth={3} /> : <div className="w-5 h-5 border-2 border-current rounded-lg opacity-20" />}
                     </button>
                   )}
                   {isTask && (
                     <button 
                       onClick={() => deleteTask(item.id)}
-                      className="w-12 h-12 rounded-2xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 transform translate-x-2 md:group-hover:translate-x-0"
+                      className="p-2 text-text-secondary/40 hover:text-rose-500 transition-all"
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={16} />
                     </button>
                   )}
                 </div>

@@ -68,9 +68,9 @@ export default function App() {
       className="flex flex-col h-screen w-full bg-surface-base select-none overflow-hidden text-text-primary transition-colors duration-500"
       dir={dir}
     >
-      <header className="px-6 py-4 flex justify-between items-center bg-surface-base/60 backdrop-blur-3xl z-40 border-b border-surface-border">
+      <header className="px-6 py-4 flex justify-between items-center bg-surface-card z-40 border-b border-surface-border">
         <div className="flex items-center gap-3">
-           <div className="w-10 h-10 bg-brand-primary rounded-2xl flex items-center justify-center rotate-3 shadow-xl shadow-brand-primary/20 group cursor-pointer transition-all hover:rotate-0 hover:scale-110">
+           <div className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20 group cursor-pointer transition-all hover:scale-110">
               <span className="text-slate-950 font-black text-xl">G</span>
            </div>
            <div>
@@ -78,49 +78,48 @@ export default function App() {
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
                 <p className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">
-                  {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'} // SYSTEM_ACTIVE
+                  {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'} // ACTIVE
                 </p>
               </div>
            </div>
         </div>
       </header>
 
-      <main className="flex-1 relative overflow-hidden data-grid">
-         <div className="absolute inset-0 bg-gradient-to-b from-surface-base/80 via-transparent to-surface-base/80 pointer-events-none" />
+      <main className="flex-1 relative overflow-hidden bg-surface-base">
          <AnimatePresence mode="wait">
            <motion.div
              key={activeTab}
-             initial={{ opacity: 0, x: dir === 'ltr' ? 20 : -20 }}
-             animate={{ opacity: 1, x: 0 }}
-             exit={{ opacity: 0, x: dir === 'ltr' ? -20 : 20 }}
-             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -10 }}
+             transition={{ duration: 0.3, ease: 'easeOut' }}
              className="h-full overflow-y-auto pb-32 pt-6 px-4 md:px-8"
            >
-             <div className="max-w-4xl mx-auto">
+             <div className="max-w-4xl mx-auto mb-10">
                {renderScreen()}
              </div>
            </motion.div>
          </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-6 inset-x-6 h-20 glass-card rounded-[2.5rem] z-50 px-8 flex items-center justify-between shadow-2xl max-w-lg mx-auto">
+      <nav className="fixed bottom-0 md:bottom-6 inset-x-0 md:inset-x-6 h-20 md:h-20 bg-surface-card md:rounded-[2.5rem] z-50 px-8 flex items-center justify-between border-t md:border border-surface-border shadow-2xl max-w-lg mx-auto">
         {currentTabs.map((tab) => (
           <button 
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`relative flex flex-col items-center justify-center gap-1.5 transition-all duration-500 ${activeTab === tab.id ? 'text-brand-primary' : 'text-text-secondary hover:text-text-primary'}`}
+            className={`relative flex-1 md:flex-none flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${activeTab === tab.id ? 'text-brand-primary' : 'text-text-secondary hover:text-text-primary'}`}
           >
-            <div className={`transition-all duration-500 ${activeTab === tab.id ? 'scale-110 -translate-y-1 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'scale-100 opacity-50'}`}>
+            <div className={`transition-all duration-300 ${activeTab === tab.id ? 'scale-110 -translate-y-0.5' : 'scale-100 opacity-50'}`}>
               {tab.icon}
             </div>
-            <span className={`text-[9px] font-display font-black uppercase tracking-widest transition-all duration-500 ${activeTab === tab.id ? 'opacity-100' : 'opacity-40'}`}>
+            <span className={`text-[9px] font-display font-black uppercase tracking-widest transition-all duration-300 ${activeTab === tab.id ? 'opacity-100' : 'opacity-40'}`}>
               {t(tab.label)}
             </span>
             
             {activeTab === tab.id && (
               <motion.div 
                 layoutId="nav-indicator"
-                className="absolute -bottom-4 w-1 h-1 bg-brand-primary rounded-full shadow-[0_0_10px_#10b981]"
+                className="absolute -bottom-2 w-1.5 h-1.5 bg-brand-primary rounded-full shadow-[0_0_10px_#10b981]"
               />
             )}
           </button>
