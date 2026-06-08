@@ -298,51 +298,50 @@ export default function GoalsScreen() {
             <motion.div 
               layout
               key={goal.id} 
-              className="group space-y-4"
+              className="group"
             >
-              <div className="bg-white/[0.02] backdrop-blur-sm border border-white/5 p-8 md:p-10 rounded-[3rem] group-hover:bg-white/[0.04] group-hover:border-brand-primary/20 transition-all flex flex-col md:flex-row md:items-center justify-between gap-10">
+              <div className="bg-surface-card border border-surface-border p-8 md:p-10 rounded-[3rem] group-hover:bg-surface-card group-hover:border-brand-primary/20 transition-all duration-500 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-10">
                 <div className="flex-1 space-y-8">
                     <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-brand-primary border border-white/5 shadow-inner cursor-pointer" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>
+                      <div className="w-14 h-14 bg-surface-base rounded-2xl flex items-center justify-center text-brand-primary border border-surface-border shadow-inner cursor-pointer transition-transform hover:scale-110 active:scale-95" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>
                          {goal.category === 'STUDY' ? <BookOpen size={24} /> : goal.category === 'WORK' ? <Briefcase size={24} /> : <Rocket size={24} />}
                       </div>
                       <div className="flex-1">
                          <div className="flex items-center gap-3">
-                           <h3 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-none mb-2 group-hover:text-brand-primary transition-colors cursor-pointer" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>{goal.title}</h3>
+                           <h3 className="text-3xl font-display font-black text-text-primary uppercase tracking-tight leading-none mb-2 group-hover:text-brand-primary transition-colors cursor-pointer" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>{goal.title}</h3>
                            <button 
                              onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}
-                             className="text-slate-600 hover:text-brand-primary transition-colors"
+                             className="text-text-secondary hover:text-brand-primary transition-colors"
                            >
                              {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                            </button>
                          </div>
                          <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg">
+                            <span className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest bg-surface-base px-3 py-1 rounded-lg opacity-60">
                               {goal.selectedDays?.length || goal.frequencyPerWeek} {t('ses_week')}
                             </span>
-                            <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg">
+                            <span className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest bg-surface-base px-3 py-1 rounded-lg opacity-60">
                               {goal.duration} {t(goal.durationUnit?.toLowerCase() || 'months')}
                             </span>
-                            <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg flex items-center gap-2 text-brand-primary/60">
+                            <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-widest bg-surface-base px-3 py-1 rounded-lg flex items-center gap-2 opacity-80">
                               <Clock size={10} />
                               {Math.floor(totalDuration / 60)}h {totalDuration % 60}m
                             </span>
-                            <span className="text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">{t(goal.category.toLowerCase())}</span>
                          </div>
                       </div>
                    </div>
                    
                    <div className="space-y-4">
                       <div className="flex justify-between items-end px-2">
-                         <span className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-wider">{t('progress_rate')}: {Math.round((goal.completedSessions / goal.totalSessions) * 100)}%</span>
-                         <span className="text-[11px] font-mono font-black text-white bg-brand-primary/10 px-3 py-1 rounded-full">{goal.completedSessions} / {goal.totalSessions}</span>
+                         <span className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-wider opacity-60">{t('progress_rate')}: {Math.round((goal.completedSessions / goal.totalSessions) * 100)}%</span>
+                         <span className="text-[11px] font-mono font-black text-brand-primary bg-brand-primary/10 px-3 py-1 rounded-full border border-brand-primary/20">{goal.completedSessions} / {goal.totalSessions}</span>
                       </div>
-                      <div className="h-3 w-full bg-slate-950 rounded-full overflow-hidden p-[2px] border border-white/5">
+                      <div className="h-3 w-full bg-surface-base rounded-full overflow-hidden p-[2px] border border-surface-border">
                          <motion.div 
                            initial={{ width: 0 }}
                            animate={{ width: `${(goal.completedSessions / goal.totalSessions) * 100}%` }}
-                           transition={{ duration: 1, ease: 'circOut' }}
-                           className="h-full bg-gradient-to-r from-brand-primary/50 to-brand-primary rounded-full shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                           className="h-full bg-gradient-to-r from-brand-primary/50 to-brand-primary rounded-full shadow-[0_0_15px_rgba(16,185,129,0.3)]"
                          />
                       </div>
                    </div>
@@ -351,14 +350,14 @@ export default function GoalsScreen() {
                 <div className="flex md:flex-col gap-4">
                    <button 
                      onClick={() => openEdit(goal)}
-                     className="flex-1 md:flex-none h-16 md:w-48 rounded-[1.5rem] bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center gap-4 font-black text-[12px] uppercase tracking-widest text-brand-primary hover:bg-brand-primary hover:text-slate-950 transition-all duration-500"
+                     className="flex-1 md:flex-none h-16 md:w-48 rounded-[1.5rem] bg-brand-primary shadow-xl shadow-brand-primary/10 flex items-center justify-center gap-4 font-black text-[12px] uppercase tracking-widest text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                    >
-                      <Edit3 size={20} strokeWidth={3} />
+                      <Edit3 size={18} strokeWidth={3} />
                       {t('edit_goal') || 'EDIT'}
                    </button>
                    <button 
                     onClick={() => deleteGoal(goal.id)}
-                    className="w-16 h-16 md:w-48 md:h-12 rounded-[1.25rem] bg-slate-950/40 border border-white/5 text-slate-700 hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all flex items-center justify-center px-4 gap-2"
+                    className="w-16 h-16 md:w-48 md:h-12 rounded-[1.25rem] bg-surface-base border border-surface-border text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all flex items-center justify-center px-4 gap-2"
                    >
                       <X size={18} />
                       <span className="hidden md:block text-[10px] uppercase font-black">{language === 'fa' ? 'حذف' : 'DELETE'}</span>
@@ -372,14 +371,14 @@ export default function GoalsScreen() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden bg-white/[0.01] rounded-[2rem] border border-white/5"
+                    className="overflow-hidden bg-surface-card/30 rounded-[2.5rem] border border-surface-border mt-4"
                   >
-                    <div className="p-8 space-y-6">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-[11px] font-mono font-black text-slate-500 uppercase tracking-widest">{t('session_history') || 'SESSION LOG'}</h4>
-                        <div className="flex items-center gap-4">
-                          <span className="text-[10px] font-mono text-slate-400">{t('total_duration') || 'TOTAL'}: {Math.floor(totalDuration / 60)}h {totalDuration % 60}m</span>
-                          <span className="text-[10px] font-mono text-slate-400">{t('total_sessions') || 'SESSIONS'}: {activities.length}</span>
+                    <div className="p-8 space-y-8">
+                      <div className="flex items-center justify-between px-2">
+                        <h4 className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">{t('session_history') || 'SESSION LOG'}</h4>
+                        <div className="flex items-center gap-6">
+                          <span className="text-[10px] font-mono text-text-secondary opacity-60">{t('total_duration') || 'TOTAL'}: {Math.floor(totalDuration / 60)}h {totalDuration % 60}m</span>
+                          <span className="text-[10px] font-mono text-text-secondary opacity-60">{t('total_sessions') || 'SESSIONS'}: {activities.length}</span>
                         </div>
                       </div>
 
@@ -405,22 +404,22 @@ export default function GoalsScreen() {
                         )}
 
                         {activities.length > 0 ? activities.sort((a, b) => b.date.localeCompare(a.date)).map(activity => (
-                          <div key={activity.id} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/5 group/session">
+                          <div key={activity.id} className="flex items-center justify-between p-5 bg-surface-base/50 rounded-2xl border border-surface-border group/session hover:scale-[1.01] transition-transform">
                             <div className="flex items-center gap-4">
-                              <div className="w-2 h-2 rounded-full bg-brand-primary/40 group-hover/session:bg-brand-primary transition-colors" />
+                              <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_8px_#10b981]" />
                               <div>
-                                <p className="text-sm font-display font-bold text-white uppercase tracking-tight">{activity.title}</p>
-                                <p className="text-[10px] font-mono text-slate-600">{activity.date} • {activity.time || '00:00'}</p>
+                                <p className="text-sm font-display font-black text-text-primary uppercase tracking-tight">{activity.title}</p>
+                                <p className="text-[10px] font-mono text-text-secondary opacity-60">{activity.date} • {activity.time || '00:00'}</p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-[10px] font-mono font-black text-brand-primary">{activity.duration}m</p>
-                              <p className="text-[9px] font-mono text-slate-600 uppercase">{activity.sessions} {t('sessions')}</p>
+                              <p className="text-[11px] font-mono font-black text-brand-primary">{activity.duration}m</p>
+                              <p className="text-[9px] font-mono text-text-secondary uppercase opacity-40">{activity.sessions} {t('sessions')}</p>
                             </div>
                           </div>
                         )) : (
-                          <div className="py-12 text-center">
-                            <p className="text-[10px] font-mono text-slate-700 uppercase tracking-widest">{t('no_sessions') || 'NO SESSIONS RECORDED'}</p>
+                          <div className="py-20 text-center bg-surface-base/20 rounded-3xl border border-dashed border-surface-border">
+                            <p className="text-[10px] font-mono text-text-secondary uppercase tracking-[0.3em] opacity-40">{t('no_sessions') || 'NO SESSIONS RECORDED'}</p>
                           </div>
                         )}
                       </div>

@@ -117,56 +117,69 @@ export default function ProfileScreen() {
     <div className="flex flex-col h-full bg-surface-base overflow-y-auto pb-44 scrollbar-hide">
       <div className="p-4 md:p-12 space-y-8 md:space-y-12 max-w-4xl mx-auto w-full">
         {/* Profile Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
-          <div className="flex items-center gap-4 md:gap-6">
-            <div className="w-16 h-16 md:w-24 md:h-24 bg-surface-card border border-surface-border rounded-2xl md:rounded-[2.5rem] flex items-center justify-center relative shadow-2xl shrink-0">
-              <User size={24} className="text-brand-primary md:w-10 md:h-10" />
-              <div className={`absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border-2 md:border-4 border-surface-base flex items-center justify-center ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500' : 'bg-emerald-500'}`}>
-                {currentRoot === UserRole.STUDENT ? <GraduationCap size={10} className="text-white md:w-3.5 md:h-3.5" /> : <Terminal size={10} className="text-white md:w-3.5 md:h-3.5" />}
-              </div>
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 px-2">
+          <div className="flex items-center gap-6 md:gap-10">
+            <div className="relative group">
+               <div className="absolute -inset-1 bg-gradient-to-tr from-brand-primary/20 to-indigo-500/20 rounded-[3rem] blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+               <div className="w-20 h-20 md:w-32 md:h-32 bg-surface-card border border-surface-border rounded-[2.5rem] md:rounded-[4rem] flex items-center justify-center relative shadow-3xl shrink-0">
+                 <User size={32} className="text-brand-primary md:w-12 md:h-12" />
+                 <div className={`absolute -bottom-2 -right-2 w-8 h-8 md:w-12 md:h-12 rounded-xl md:rounded-[1.5rem] border-4 md:border-8 border-surface-base flex items-center justify-center shadow-xl ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 shadow-indigo-500/20' : 'bg-emerald-500 shadow-emerald-500/20'}`}>
+                   {currentRoot === UserRole.STUDENT ? <GraduationCap size={14} className="text-white md:w-5 md:h-5" /> : <Terminal size={14} className="text-white md:w-5 md:h-5" />}
+                 </div>
+               </div>
             </div>
             <div>
-              <h1 className="text-2xl md:text-4xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">{language === 'fa' ? 'مهمان' : 'GUEST'}</h1>
-              <p className="text-[9px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-widest mt-1 md:mt-2 opacity-60">IDENT_ID // {language === 'fa' ? 'مهمان' : 'GUEST'}</p>
+               <div className="flex items-center gap-3 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_12px_#10b981]" />
+                  <span className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-[0.4em] opacity-40">SYSTEM_OPERATOR</span>
+               </div>
+               <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
+                 {language === 'fa' ? 'مهمان' : 'GUEST'}<span className="text-brand-primary">.</span>
+               </h1>
+               <p className="text-[10px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-[0.2em] mt-3 opacity-60">IDENT_ID // ACCESS_GRANTED</p>
             </div>
           </div>
         </header>
 
         {/* Root Switcher Section */}
-        <section className="space-y-4 md:space-y-6">
-          <div className="flex items-center gap-3 px-2">
-            <Zap size={14} className="text-brand-primary" />
-            <h3 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.2em] md:tracking-[0.3em]">{t('identity_control')}</h3>
+        <section className="space-y-6">
+          <div className="flex items-center gap-4 px-2">
+            <div className="w-8 h-8 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+              <Zap size={16} className="text-brand-primary" />
+            </div>
+            <h3 className="text-[10px] md:text-[11px] font-mono font-black text-text-secondary uppercase tracking-[0.3em]">{t('identity_control')}</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <button 
               onClick={() => setRoot(UserRole.STUDENT)}
-              className={`p-4 md:p-6 rounded-[1.5rem] md:rounded-[2.5rem] border transition-all flex items-center justify-between group ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base'}`}
+              className={`p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base shadow-xl'}`}
             >
-              <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-colors ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-surface-base text-text-secondary'}`}>
-                  <GraduationCap size={18} md:size={20} />
+              <div className="flex items-center gap-6 relative z-10">
+                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 text-white shadow-[0_0_25px_rgba(99,102,241,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
+                  <GraduationCap size={24} md:size={28} />
                 </div>
                 <div className="text-left">
-                  <p className={`text-sm md:text-base font-black leading-tight ${currentRoot === UserRole.STUDENT ? 'text-text-primary' : 'text-text-secondary'}`}>{t('student_mode').split(' ')[0]}</p>
-                  <p className="text-[8px] md:text-[9px] font-mono text-text-secondary uppercase mt-0.5 md:mt-1 tracking-wider opacity-60">Educational_Core</p>
+                  <p className={`text-lg md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.STUDENT ? 'text-text-primary' : 'text-text-secondary'}`}>{t('student_mode').split(' ')[0]}</p>
+                  <p className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase mt-1 tracking-widest opacity-40">Educational_Core</p>
                 </div>
               </div>
+              {currentRoot === UserRole.STUDENT && <div className="absolute right-0 top-0 bottom-0 w-1 bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.8)]" />}
             </button>
 
             <button 
               onClick={() => setRoot(UserRole.TRADER)}
-              className={`p-6 rounded-[2.5rem] border transition-all flex items-center justify-between group ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base'}`}
+              className={`p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base shadow-xl'}`}
             >
-              <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${currentRoot === UserRole.TRADER ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-surface-base text-text-secondary'}`}>
-                  <Terminal size={20} />
+              <div className="flex items-center gap-6 relative z-10">
+                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.TRADER ? 'bg-emerald-500 text-white shadow-[0_0_25px_rgba(16,185,129,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
+                  <Terminal size={24} />
                 </div>
                 <div className="text-left">
-                  <p className={`text-base font-black leading-tight ${currentRoot === UserRole.TRADER ? 'text-text-primary' : 'text-text-secondary'}`}>{t('trader_mode').split(' ')[0]}</p>
-                  <p className="text-[9px] font-mono text-text-secondary uppercase mt-1 tracking-wider opacity-60">Financial_Node</p>
+                  <p className={`text-lg md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.TRADER ? 'text-text-primary' : 'text-text-secondary'}`}>{t('trader_mode').split(' ')[0]}</p>
+                  <p className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase mt-1 tracking-widest opacity-40">Financial_Node</p>
                 </div>
               </div>
+              {currentRoot === UserRole.TRADER && <div className="absolute right-0 top-0 bottom-0 w-1 bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]" />}
             </button>
           </div>
         </section>

@@ -181,22 +181,26 @@ export default function TradingJournal() {
 
   return (
     <div className="p-4 md:p-8 space-y-8 pb-32 overflow-y-auto h-full scrollbar-hide">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-2">
         <div>
-          <h2 className="text-2xl md:text-4xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
-            {t('trading_journal')}
+           <div className="flex items-center gap-3 mb-2">
+              <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_12px_#10b981]" />
+              <span className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.4em] opacity-40">TRADING_DATABASE</span>
+           </div>
+          <h2 className="text-3xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
+            {t('trading_journal').split(' ')[0]}<span className="text-brand-primary">.</span>
           </h2>
-          <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest mt-2">
-            STABLE_TRADING_NODE // {trades.length} SESSIONS_RECORDED
+          <p className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest mt-2 opacity-60">
+             NODE_SESSION_COUNT // {trades.length}
           </p>
         </div>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => { setShowAddRow(!showAddRow); if(showAddRow) resetForm(); }}
-          className={`${showAddRow ? 'bg-rose-500/10 text-rose-400' : 'bg-brand-primary text-slate-950'} px-6 py-3 rounded-2xl font-display font-black uppercase text-xs flex items-center gap-2 shadow-lg shadow-brand-primary/20`}
+          className={`${showAddRow ? 'bg-surface-base border border-surface-border text-text-secondary' : 'bg-brand-primary text-slate-950'} px-8 py-4 rounded-[1.5rem] font-display font-black uppercase text-xs flex items-center gap-3 shadow-2xl transition-all`}
         >
-          {showAddRow ? <X size={16} /> : <Plus size={16} />}
+          {showAddRow ? <X size={18} /> : <Plus size={18} strokeWidth={3} />}
           {showAddRow ? t('cancel') : t('add_trade')}
         </motion.button>
       </header>
@@ -429,23 +433,22 @@ export default function TradingJournal() {
           </AnimatePresence>
         </div>
 
-        <div className="bg-surface-card rounded-3xl border border-surface-border overflow-hidden hidden md:block">
+        <div className="bg-surface-card rounded-[2.5rem] border border-surface-border overflow-hidden hidden md:block shadow-2xl">
           <form onSubmit={handleAddTrade} className="overflow-x-auto">
             <table className="w-full text-left font-mono text-[11px]" dir={language === 'fa' ? 'rtl' : 'ltr'}>
               <thead>
-                <tr className="bg-surface-base text-text-secondary uppercase tracking-widest border-b border-surface-border">
-                  <th className="px-4 py-4">{t('date')}</th>
-                  <th className="px-4 py-4">{t('symbol')}</th>
-                  <th className="px-4 py-4">{t('market_type')}</th>
-                  <th className="px-4 py-4">{t('position')}</th>
-                  <th className="px-4 py-4">{t('entry')}</th>
-                  <th className="px-4 py-4">{t('sl')} / {t('tp')}</th>
-                  <th className="px-4 py-4">{t('lot')} / {t('margin')}</th>
-                  <th className="px-4 py-4">{t('fee')}</th>
-                  <th className="px-4 py-4">{t('rr')}</th>
-                  <th className="px-4 py-4">{t('result')}</th>
-                  <th className="px-4 py-4">{t('profit_loss')}</th>
-                  <th className="px-4 py-4"></th>
+                <tr className="bg-surface-base text-text-secondary uppercase tracking-[0.2em] border-b border-surface-border font-black opacity-60">
+                  <th className="px-6 py-6">{t('date')}</th>
+                  <th className="px-6 py-6">{t('symbol')}</th>
+                  <th className="px-6 py-6">{t('market_type')}</th>
+                  <th className="px-6 py-6">{t('position')}</th>
+                  <th className="px-6 py-6">{t('entry')}</th>
+                  <th className="px-6 py-6">{t('sl')} / {t('tp')}</th>
+                  <th className="px-6 py-6">{t('lot')}</th>
+                  <th className="px-6 py-6">{t('rr')}</th>
+                  <th className="px-6 py-6">{t('result')}</th>
+                  <th className="px-6 py-6">{t('profit_loss')}</th>
+                  <th className="px-6 py-6"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-border/50">

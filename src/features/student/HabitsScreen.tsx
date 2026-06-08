@@ -122,19 +122,19 @@ export default function HabitsScreen() {
         )}
       </AnimatePresence>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
          {(studentData.habits || []).map((habit) => {
            const isDone = habit.lastCheck === today;
            return (
              <motion.div 
                layout
                key={habit.id} 
-               className={`p-8 bg-surface-card border rounded-[3rem] transition-all flex items-center justify-between group hover:border-blue-500/20 ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
+               className={`p-8 bg-surface-card border rounded-[3rem] transition-all duration-500 flex items-center justify-between group shadow-xl hover:shadow-2xl ${isDone ? 'border-brand-primary border-2' : 'border-surface-border'}`}
              >
                 <div className="flex items-center gap-6">
                     <button 
                       onClick={() => handleToggleHabit(habit.id, habit.type)}
-                      className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all duration-500 ${isDone ? 'bg-brand-primary text-slate-950 shadow-2xl shadow-brand-primary/30 scale-110' : 'bg-surface-base border border-surface-border text-text-secondary hover:text-text-primary hover:border-blue-500/30'}`}
+                      className={`w-16 h-16 rounded-[1.8rem] flex items-center justify-center transition-all duration-500 active:scale-90 ${isDone ? 'bg-brand-primary text-slate-950 shadow-xl shadow-brand-primary/40 scale-110' : 'bg-surface-base border border-surface-border text-text-secondary hover:text-brand-primary md:hover:scale-110'}`}
                     >
                      <Zap size={28} className={isDone ? 'fill-current' : ''} />
                    </button>
@@ -143,19 +143,19 @@ export default function HabitsScreen() {
                         {habit.title}
                       </h4>
                       {habit.description && (
-                         <p className="text-[11px] text-text-secondary mb-3 line-clamp-2 max-w-[200px]">
+                         <p className="text-[11px] text-text-secondary mb-3 line-clamp-2 max-w-[180px] opacity-60">
                           {habit.description}
                         </p>
                       )}
                       <div className="flex items-center gap-3">
-                         <span className={`text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded bg-surface-base ${habit.type === 'POSITIVE' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                         <span className={`text-[9px] font-mono font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border border-surface-border/50 bg-surface-base ${habit.type === 'POSITIVE' ? 'text-emerald-500' : 'text-rose-500'}`}>
                            {habit.type}_PATH
                          </span>
-                         <span className="text-[9px] font-mono font-bold text-text-secondary uppercase tracking-tighter opacity-60">{t('streak')}: {habit.streak}d</span>
+                         <span className="text-[9px] font-mono font-bold text-text-secondary uppercase tracking-tighter opacity-40">{t('streak')}: {habit.streak}d</span>
                       </div>
                    </div>
                 </div>
-                <button onClick={() => deleteHabit(habit.id)} className="w-12 h-12 rounded-xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                <button onClick={() => deleteHabit(habit.id)} className="w-12 h-12 rounded-2xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 transform translate-x-2 md:group-hover:translate-x-0">
                    <Trash2 size={18} />
                 </button>
              </motion.div>

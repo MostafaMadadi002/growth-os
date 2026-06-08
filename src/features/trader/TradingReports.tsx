@@ -67,7 +67,7 @@ export default function TradingReports() {
     const pieData = [
       { name: t('win') || 'WIN', value: winCount, color: '#10b981' },
       { name: t('loss') || 'LOSS', value: lossCount, color: '#f43f5e' },
-      { name: t('be') || 'BE', value: beCount, color: '#f59e0b' }
+      { name: t('be') || 'BE', value: beCount, color: '#3b82f6' }
     ].filter(item => item.value > 0);
 
     // Profit by Label
@@ -125,40 +125,39 @@ export default function TradingReports() {
   return (
     <div className="p-6 pb-32 space-y-8" dir={language === 'fa' ? 'rtl' : 'ltr'}>
       {/* Header & Main Stats */}
-      <header className="space-y-6">
-        <div>
-          <h2 className="text-3xl font-display font-black text-text-primary tracking-tighter uppercase mb-1">
-            {t('performance_analytics') || 'Performance Analytics'}
-          </h2>
-          <p className="text-text-secondary font-mono text-[10px] uppercase tracking-widest">
-            {t('data_summary') || 'DATA_SUMMARY_DASHBOARD'} // {filteredTrades.length} {t('trades_found') || 'TRADES FOUND'}
-          </p>
+      <header className="space-y-6 px-2">
+        <div className="flex items-center gap-3 mb-2">
+           <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_12px_#10b981]" />
+           <span className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.4em] opacity-40">ANALYTICS_NODE</span>
         </div>
+        <h2 className="text-3xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase mb-6 leading-none">
+          {t('performance_analytics') || 'Performance Analytics'}<span className="text-brand-primary">.</span>
+        </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard 
             label={t('win_rate') || 'Win Rate'} 
             value={`${stats.winRate}%`} 
             subValue={`${stats.wins}W / ${stats.losses}L`}
-            icon={<Activity className="text-brand-primary" size={20} />} 
+            icon={<div className="p-3 bg-brand-primary/10 rounded-2xl border border-brand-primary/20"><Activity className="text-brand-primary" size={24} /></div>} 
           />
           <StatCard 
             label={t('net_profit') || 'Net Profit'} 
             value={`${stats.netProfit} USD`} 
             subValue={`${t('avg_per_trade') || 'Avg:'} ${stats.avgProfit}`}
-            icon={Number(stats.netProfit) >= 0 ? <TrendingUp className="text-emerald-400" size={20} /> : <TrendingDown className="text-rose-400" size={20} />} 
+            icon={<div className={`p-3 rounded-2xl border ${Number(stats.netProfit) >= 0 ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/10 border-rose-500/20 text-rose-400'}`}>{Number(stats.netProfit) >= 0 ? <TrendingUp size={24} /> : <TrendingDown size={24} />}</div>} 
           />
           <StatCard 
             label={t('total_trades') || 'Total Trades'} 
             value={stats.totalTrades.toString()} 
             subValue={t('closed_positions') || 'Closed Positions'}
-            icon={<Calendar className="text-blue-400" size={20} />} 
+            icon={<div className="p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20"><Calendar className="text-blue-400" size={24} /></div>} 
           />
           <StatCard 
             label={t('filtered_results') || 'Filtered results'} 
             value={filteredTrades.length.toString()} 
             subValue={t('visible_in_list') || 'Visible in list'}
-            icon={<Filter className="text-amber-400" size={20} />} 
+            icon={<div className="p-3 bg-amber-500/10 rounded-2xl border border-amber-500/20"><Filter className="text-amber-400" size={24} /></div>} 
           />
         </div>
       </header>
@@ -166,43 +165,62 @@ export default function TradingReports() {
       {/* Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Equity Curve */}
-        <div className="bg-surface-card border border-surface-border rounded-[2.5rem] p-8 space-y-6">
-          <div className="flex justify-between items-center">
+        <div className="bg-surface-card border border-surface-border rounded-[2.5rem] p-10 space-y-8 shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] pointer-events-none group-hover:bg-brand-primary/10 transition-all duration-700" />
+          <div className="flex justify-between items-center relative z-10">
             <div>
-              <h4 className="text-sm font-mono font-black text-text-primary uppercase tracking-widest">{t('equity_curve') || 'Equity Curve'}</h4>
-              <p className="text-[10px] text-text-secondary font-mono mt-1 uppercase">{t('cumulative_performance') || 'CUMULATIVE_PERFORMANCE'}</p>
+              <h4 className="text-sm font-mono font-black text-text-primary uppercase tracking-[0.2em]">{t('equity_curve') || 'Equity Curve'}</h4>
+              <p className="text-[10px] text-text-secondary font-mono mt-1 uppercase opacity-60 tracking-widest">{t('cumulative_performance') || 'CUMULATIVE_PERFORMANCE'}</p>
             </div>
-            <TrendingUp size={20} className="text-brand-primary opacity-50" />
+            <TrendingUp size={24} className="text-brand-primary opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[350px] w-full relative z-10">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData.equityCurve}>
                 <defs>
                   <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#d946ef" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#d946ef" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                <CartesianGrid strokeDasharray="8 8" stroke="currentColor" className="text-surface-border/30" vertical={false} />
                 <XAxis 
                   dataKey="date" 
-                  stroke="#475569" 
+                  stroke="currentColor"
+                  className="text-text-secondary/40 font-mono"
                   fontSize={10} 
                   tickLine={false} 
                   axisLine={false}
                   tickFormatter={(val) => val.split('-').slice(1).join('/')}
                 />
+                <YAxis 
+                  stroke="currentColor" 
+                  className="text-text-secondary/40 font-mono"
+                  fontSize={10} 
+                  tickLine={false} 
+                  axisLine={false}
+                />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--color-surface-card)', border: '1px solid var(--color-surface-border)', borderRadius: '1rem', fontSize: '10px', color: 'var(--color-text-primary)' }}
-                  itemStyle={{ color: '#d946ef' }}
+                  cursor={{ stroke: '#10b981', strokeWidth: 1, strokeDasharray: '4 4' }}
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(9, 9, 11, 0.95)', 
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid var(--color-surface-border)', 
+                    borderRadius: '1.5rem', 
+                    fontSize: '11px', 
+                    color: 'white',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                  }}
+                  itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="profit" 
-                  stroke="#d946ef" 
-                  strokeWidth={3}
+                  stroke="#10b981" 
+                  strokeWidth={4}
                   fillOpacity={1} 
                   fill="url(#colorProfit)" 
+                  animationDuration={2000}
                 />
               </AreaChart>
             </ResponsiveContainer>

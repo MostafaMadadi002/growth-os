@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   CalendarDays, Clock, CheckCircle2, 
-  Plus, Timer, Hash, X
+  Plus, Timer, Hash, X, Trash2
 } from 'lucide-react';
 import { useAppStore } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
@@ -140,7 +140,7 @@ export default function ScheduleScreen() {
       </header>
       
       {goals.length > 0 && (
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {goals.filter(g => calculateDailyTarget(g) > 0 || getTodayProgress(g.id) > 0).slice(0, 3).map(goal => {
             const dailyTarget = calculateDailyTarget(goal);
             const todayDone = getTodayProgress(goal.id);
@@ -151,20 +151,23 @@ export default function ScheduleScreen() {
                 key={goal.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-5 bg-surface-card border border-surface-border rounded-[2rem] space-y-4"
+                className="p-6 bg-surface-card border border-surface-border rounded-[2.5rem] space-y-4 shadow-xl hover:border-brand-primary/20 transition-all duration-500"
               >
                 <div className="flex justify-between items-start">
-                  <h4 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest truncate max-w-[100px]">{goal.title}</h4>
-                  <span className="text-[10px] font-mono text-brand-primary">{todayDone}/{dailyTarget}</span>
+                  <h4 className="text-[10px] font-mono font-black text-text-primary uppercase tracking-widest truncate max-w-[120px]">{goal.title}</h4>
+                  <div className="flex items-center gap-1.5 bg-brand-primary/10 px-2 py-0.5 rounded-lg border border-brand-primary/20">
+                    <span className="text-[10px] font-mono font-black text-brand-primary">{todayDone}/{dailyTarget}</span>
+                  </div>
                 </div>
-                <div className="h-1 w-full bg-surface-base rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-surface-base rounded-full overflow-hidden border border-surface-border/30">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
-                    className="h-full bg-brand-primary shadow-[0_0_8px_#10b981]"
+                    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="h-full bg-brand-primary shadow-[0_0_10px_#10b981]"
                   />
                 </div>
-                <p className="text-[9px] font-mono text-text-secondary opacity-60 uppercase tracking-tighter">
+                <p className="text-[9px] font-mono font-black text-text-secondary opacity-40 uppercase tracking-widest">
                   {progress >= 100 && dailyTarget > 0 ? t('target_achieved') || 'NODE SATURATED' : `${t('remaining_sessions') || 'SESSIONS REMAINING'}: ${Math.max(0, dailyTarget - todayDone)}`}
                 </p>
               </motion.div>
@@ -369,7 +372,7 @@ export default function ScheduleScreen() {
         )}
       </AnimatePresence>
 
-      <section className="space-y-6 relative before:absolute before:left-10 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-10 before:w-[2px] before:bg-surface-border before:z-0">
+      <section className="space-y-6 relative before:absolute before:left-12 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-12 before:w-[1px] before:bg-surface-border before:z-0 pb-20">
          {timelineItems.map((item) => {
            const linkedGoal = goals.find(g => g.id === item.goalId);
            const isTask = item.type === 'TASK';
@@ -377,40 +380,40 @@ export default function ScheduleScreen() {
             <motion.div 
               layout
               key={item.id} 
-              className="relative z-10 flex gap-8 items-center bg-surface-card p-4 pr-8 rtl:pr-4 rtl:pl-8 rounded-[3rem] border border-surface-border hover:border-brand-primary/20 transition-all group"
+              className="relative z-10 flex gap-8 items-center bg-surface-card/60 backdrop-blur-md p-6 pr-10 rtl:pr-6 rtl:pl-10 rounded-[3.5rem] border border-surface-border hover:border-brand-primary/20 transition-all duration-500 group shadow-lg"
             >
-                <div className={`w-20 h-20 rounded-3xl flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950 border-orange-400' : 'bg-emerald-500 text-slate-950 border-emerald-400') : 'bg-surface-base border-surface-border text-text-secondary'} scale-90`}>
-                  <span className="text-xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>
-                  <span className="text-[10px] font-mono font-black opacity-60">{item.time.split(':')[1]}</span>
+                <div className={`w-24 h-24 rounded-[2.5rem] flex flex-col items-center justify-center border shadow-2xl transition-all duration-500 group-hover:scale-105 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950 border-orange-400' : 'bg-emerald-500 text-slate-950 border-emerald-400') : 'bg-surface-base border-surface-border text-text-secondary'} shrink-0`}>
+                  <span className="text-2xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>
+                  <span className="text-[11px] font-mono font-black opacity-60 mt-1">{item.time.split(':')[1]}</span>
                 </div>
                 <div className="flex-1 space-y-2">
-                  <h4 className={`text-2xl font-display font-black uppercase tracking-tight transition-all duration-500 ${item.done ? 'text-text-secondary line-through opacity-40' : 'text-text-primary'}`}>
+                  <h4 className={`text-2xl md:text-3xl font-display font-black uppercase tracking-tight transition-all duration-500 ${item.done ? 'text-text-secondary line-through opacity-30 px-2' : 'text-text-primary'}`}>
                     {item.label}
                   </h4>
-                  <div className="flex items-center gap-4 flex-wrap">
+                  <div className="flex items-center gap-4 flex-wrap px-2">
                       <div className="flex items-center gap-2">
-                        {isTask ? <Clock size={12} className="text-text-secondary opacity-60" /> : <CheckCircle2 size={12} className="text-emerald-500" />}
-                        <span className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest">{isTask ? t('status_active') : t('status_completed') || 'COMPLETED'}</span>
+                        {isTask ? <Clock size={12} className="text-orange-500 opacity-60" /> : <CheckCircle2 size={12} className="text-emerald-500" />}
+                        <span className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">{isTask ? t('status_active') : t('status_completed') || 'COMPLETED'}</span>
                       </div>
                       {linkedGoal && (
-                        <div className="flex items-center gap-2 bg-brand-primary/10 px-2 py-0.5 rounded-lg border border-brand-primary/20">
+                        <div className="flex items-center gap-2 bg-brand-primary/10 px-3 py-1 rounded-full border border-brand-primary/20 group-hover:bg-brand-primary/20 transition-colors">
                           <Plus size={10} className="text-brand-primary" />
-                          <span className="text-[9px] font-mono font-black text-brand-primary uppercase">{linkedGoal.title}</span>
+                          <span className="text-[9px] font-mono font-black text-brand-primary uppercase tracking-widest">{linkedGoal.title}</span>
                         </div>
                       )}
                       {!isTask && (item as any).activityType === 'NEGATIVE' && (
-                        <div className="flex items-center gap-2 bg-rose-500/10 px-2 py-0.5 rounded-lg border border-rose-500/20">
+                        <div className="flex items-center gap-2 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
                           <X size={10} className="text-rose-500" />
-                          <span className="text-[9px] font-mono font-black text-rose-500 uppercase">{t('deviant_session') || 'DEVIANT'}</span>
+                          <span className="text-[9px] font-mono font-black text-rose-500 uppercase tracking-widest">{t('deviant_session') || 'DEVIANT'}</span>
                         </div>
                       )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   {isTask && (
                     <button 
                       onClick={() => toggleTask(item.id)}
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/20' : 'bg-surface-base text-text-secondary border border-surface-border hover:border-orange-500/30 hover:text-orange-500'}`}
+                      className={`w-16 h-16 rounded-[1.8rem] flex items-center justify-center transition-all duration-500 active:scale-95 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/30' : 'bg-surface-base text-text-secondary border border-surface-border hover:border-orange-500/30 hover:text-orange-500 hover:scale-110'}`}
                     >
                       {item.done ? <CheckCircle2 size={28} strokeWidth={3} /> : <div className="w-8 h-8 border-4 border-current rounded-xl opacity-20" />}
                     </button>
@@ -418,9 +421,9 @@ export default function ScheduleScreen() {
                   {isTask && (
                     <button 
                       onClick={() => deleteTask(item.id)}
-                      className="w-10 h-10 rounded-xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all duration-300"
+                      className="w-12 h-12 rounded-2xl bg-surface-base/40 flex items-center justify-center text-text-secondary/40 hover:text-rose-500 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 transform translate-x-2 md:group-hover:translate-x-0"
                     >
-                      <X size={16} />
+                      <Trash2 size={18} />
                     </button>
                   )}
                 </div>
