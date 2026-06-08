@@ -57,20 +57,54 @@ export default function ProfileScreen() {
 
   const totalPnL = (traderData?.trades || []).reduce((sum, trade) => sum + (trade.profitAmount || 0), 0);
 
-  // Generate heatmap data for the last 112 days
-  const heatmapData = Array.from({ length: 112 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (111 - i));
-    const dateStr = date.toISOString().split('T')[0];
-    const log = (studentData.activityLogs || []).find(l => l.date === dateStr);
-    return {
-      date: dateStr,
-      intensity: log ? Math.min(Math.abs(log.score || 0), 4) : 0,
-      score: log ? log.score : 0,
-      pos: log ? (log.posCount || (log.score > 0 ? log.score : 0)) : 0,
-      neg: log ? (log.negCount || (log.score < 0 ? Math.abs(log.score) : 0)) : 0
-    };
-  });
+  // Generate heatmap data for the last 16 weeks (112 days)
+  // To align the grid, we find how many days back we need to go to start on a Saturday
+  // In JS getDay(): 0=Sun, 1=Mon, ..., 6=Sat
+  // We want the start to be Saturday.
+  const heatmapData = React.useMemo(() => {
+    const today = new Date();
+    const daysRequested = 112; // 16 weeks
+    
+    // Find the current date's weekday (0=Sun, 6=Sat)
+    // We want the grid to end on "today" but align rows to weekdays.
+    // To make the grid consistent, we should actually start from a Saturday long ago.
+    
+    // Total days to show including padding to align the first day to a Saturday
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - daysRequested);
+    
+    // How many days do we need to go back further to hit a Saturday?
+    // If startDate is Sun (0), we need to go back 1 day to Sat (6).
+    // If startDate is Sat (6), we are good (0 days).
+    // offset = (jsDay + 1) % 7
+    const dayOfWeek = startDate.getDay();
+    const offset = (dayOfWeek + 1) % 7; 
+    startDate.setDate(startDate.getDate() - offset);
+    
+    const totalDaysToRender = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    
+    return Array.from({ length: totalDaysToRender }, (_, i) => {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+      const dateStr = date.toISOString().split('T')[0];
+      const log = (studentData.activityLogs || []).find(l => l.date === dateStr);
+      
+      return {
+        date: dateStr,
+        intensity: log ? Math.min(Math.max(log.count || 0, 0), 4) : 0,
+        score: log ? log.score : 0,
+        pos: log ? (log.posCount || 0) : 0,
+        neg: log ? (log.negCount || 0) : 0,
+        dayOfWeek: date.getDay()
+      };
+    });
+  }, [studentData.activityLogs]);
+
+  // JS Day 6 is Saturday. In Persian it's the start of the week.
+  // We'll sort the grid so the rows represent: Sat, Sun, Mon, Tue, Wed, Thu, Fri
+  // Row Index = (JSDay + 1) % 7
+  // Logic: 6 (Sat) -> 0 | 0 (Sun) -> 1 | 1 (Mon) -> 2 ... 5 (Fri) -> 6
+  const getRowIndex = (jsDay: number) => (jsDay + 1) % 7;
 
   const getDayColor = (day: { intensity: number, score: number, pos: number, neg: number }) => {
     if (day.intensity === 0) return 'bg-slate-950';
@@ -238,30 +272,39 @@ export default function ProfileScreen() {
               </div>
             </div>
             
-            <div className="flex gap-3 md:gap-6 overflow-x-auto pb-4 scrollbar-hide pt-2">
+            <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide pt-4">
               {/* Day Labels Column */}
-              <div className="flex flex-col justify-between py-1 text-[8px] font-mono font-black text-text-secondary uppercase opacity-40 shrink-0">
-                <span>{t('sat')}</span>
-                <span className="opacity-0">.</span>
-                <span>{t('mon')}</span>
-                <span className="opacity-0">.</span>
-                <span>{t('wed')}</span>
-                <span className="opacity-0">.</span>
-                <span>{t('fri')}</span>
+              <div className="grid grid-rows-7 py-1 text-[8px] md:text-[9px] font-mono font-black text-text-secondary uppercase opacity-40 shrink-0">
+                <span className="flex items-center h-3 md:h-5">{t('sat')}</span>
+                <span className="flex items-center h-3 md:h-5">{t('sun')}</span>
+                <span className="flex items-center h-3 md:h-5">{t('mon')}</span>
+                <span className="flex items-center h-3 md:h-5">{t('tue')}</span>
+                <span className="flex items-center h-3 md:h-5">{t('wed')}</span>
+                <span className="flex items-center h-3 md:h-5">{t('thu')}</span>
+                <span className="flex items-center h-3 md:h-5">{t('fri')}</span>
               </div>
 
-              {/* Heatmap Grid */}
-              <div className="grid grid-rows-7 grid-flow-col gap-1 md:gap-1.5 auto-cols-max">
-                {heatmapData.map((day, i) => {
-                  const isToday = day.date === new Date().toISOString().split('T')[0];
-                  return (
-                    <div 
-                      key={i} 
-                      title={`${day.date} | Pos: ${day.pos} Neg: ${day.neg} | Balance: ${day.pos + day.neg > 0 ? Math.round((day.pos/(day.pos+day.neg))*100) : 0}%`}
-                      className={`w-2.5 h-2.5 md:w-4 md:h-4 rounded-sm transition-all duration-500 hover:scale-150 relative z-10 ${getDayColor(day)} ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110' : ''}`}
-                    />
-                  );
-                })}
+              {/* Heatmap Grid Wrapper */}
+              <div className="relative">
+                {/* Heatmap Grid */}
+                <div className="grid grid-rows-7 grid-flow-col gap-1 md:gap-1.5 auto-cols-max">
+                  {heatmapData.map((day, i) => {
+                    const isToday = day.date === new Date().toISOString().split('T')[0];
+                    const isSaturday = day.dayOfWeek === 6;
+                    
+                    return (
+                      <div 
+                        key={i} 
+                        title={`${day.date} | Pos: ${day.pos} | Neg: ${day.neg}`}
+                        className={`w-3 h-3 md:w-5 md:h-5 rounded-sm transition-all duration-500 hover:scale-150 relative cursor-pointer
+                          ${getDayColor(day)} 
+                          ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_12px_rgba(var(--brand-primary-rgb),0.4)]' : ''}
+                          ${isSaturday ? 'border border-white/5' : ''}
+                        `}
+                      />
+                    );
+                  })}
+                </div>
               </div>
             </div>
 

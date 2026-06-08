@@ -233,7 +233,13 @@ export const useAppStore = create<AppState>()(
           }
           return h;
         });
-        return { studentData: { ...state.studentData, habits } };
+        return { 
+          studentData: { 
+            ...state.studentData, 
+            habits,
+            activityLogs: newLogs
+          } 
+        };
       }),
 
       deleteHabit: (id) => set((state) => ({
