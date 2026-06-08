@@ -274,7 +274,7 @@ export default function ProfileScreen() {
             
             <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide pt-4">
               {/* Day Labels Column */}
-              <div className="grid grid-rows-7 py-1 text-[8px] md:text-[9px] font-mono font-black text-text-secondary uppercase opacity-40 shrink-0">
+              <div className="grid grid-rows-7 gap-1 md:gap-1.5 py-1 text-[8px] md:text-[9px] font-mono font-black text-text-secondary uppercase opacity-40 shrink-0">
                 <span className="flex items-center h-3 md:h-5">{t('sat')}</span>
                 <span className="flex items-center h-3 md:h-5">{t('sun')}</span>
                 <span className="flex items-center h-3 md:h-5">{t('mon')}</span>
@@ -298,7 +298,7 @@ export default function ProfileScreen() {
                         title={`${day.date} | Pos: ${day.pos} | Neg: ${day.neg}`}
                         className={`w-3 h-3 md:w-5 md:h-5 rounded-sm transition-all duration-500 hover:scale-150 relative cursor-pointer
                           ${getDayColor(day)} 
-                          ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_12px_rgba(var(--brand-primary-rgb),0.4)]' : ''}
+                          ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_12px_rgba(163,163,255,0.4)]' : ''}
                           ${isSaturday ? 'border border-white/5' : ''}
                         `}
                       />
@@ -308,16 +308,16 @@ export default function ProfileScreen() {
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest px-1">
-               <span className="text-rose-500">{t('bad_habits')}</span>
-               <div className="flex gap-1.5 px-3 py-1.5 md:px-4 md:py-2 bg-surface-base rounded-xl border border-surface-border">
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-500 rounded-xs" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-orange-500 rounded-xs" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-surface-card border border-surface-border rounded-xs" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 rounded-xs" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-500 rounded-xs" />
+            <div className="flex flex-row justify-between items-center gap-2 md:gap-4 text-[7px] md:text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest px-1">
+               <span className="text-rose-500 shrink-0">{t('bad_habits')}</span>
+               <div className="flex gap-1 md:gap-1.5 px-2 py-1.5 md:px-4 md:py-2 bg-surface-base rounded-xl border border-surface-border shrink-0">
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-500 rounded-sm" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-orange-500 rounded-sm" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-surface-card border border-surface-border rounded-sm" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 rounded-sm" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-500 rounded-sm" />
                </div>
-               <span className="text-emerald-500">{t('good_habits')}</span>
+               <span className="text-emerald-500 shrink-0">{t('good_habits')}</span>
             </div>
           </motion.section>
         )}
