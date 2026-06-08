@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Target, Activity, CalendarDays, User
+  Target, Activity, CalendarDays, User, Settings as SettingsIcon
 } from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
 import { useAppStore, UserRole } from './core/stores/appStore';
@@ -11,10 +11,11 @@ import GoalsScreen from './features/student/GoalsScreen';
 import HabitsScreen from './features/student/HabitsScreen';
 import ScheduleScreen from './features/student/ScheduleScreen';
 import ProfileScreen from './features/profile/ProfileScreen';
+import { SettingsScreen } from './features/settings/SettingsScreen';
 import TradingJournal from './features/trader/TradingJournal';
 import TradingReports from './features/trader/TradingReports';
 
-type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Reports';
+type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Reports' | 'Settings';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
@@ -35,6 +36,7 @@ export default function App() {
       case 'Habits': return <HabitsScreen />;
       case 'Schedule': return <ScheduleScreen />;
       case 'Profile': return <ProfileScreen />;
+      case 'Settings': return <SettingsScreen />;
       case 'Journal': return <TradingJournal />;
       case 'Reports': return <TradingReports />;
       default: return <GoalsScreen />;
@@ -46,12 +48,14 @@ export default function App() {
     { id: 'Habits', label: 'branch_habits', icon: <Activity size={20} /> },
     { id: 'Schedule', label: 'schedule', icon: <CalendarDays size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
+    { id: 'Settings', label: 'settings', icon: <SettingsIcon size={20} /> },
   ];
 
   const traderTabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: 'Journal', label: 'trading_journal', icon: <CalendarDays size={20} /> },
     { id: 'Reports', label: 'reports', icon: <Activity size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
+    { id: 'Settings', label: 'settings', icon: <SettingsIcon size={20} /> },
   ];
 
   const currentTabs = currentRoot === UserRole.STUDENT ? studentTabs : traderTabs;
@@ -102,7 +106,7 @@ export default function App() {
          </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-0 md:bottom-6 inset-x-0 md:inset-x-6 h-20 md:h-20 bg-surface-card md:rounded-[2.5rem] z-50 px-8 flex items-center justify-between border-t md:border border-surface-border shadow-2xl max-w-lg mx-auto">
+      <nav className="fixed bottom-0 md:bottom-6 inset-x-0 md:inset-x-6 h-20 md:h-20 bg-surface-card md:rounded-[2.5rem] z-50 px-4 md:px-8 flex items-center justify-between border-t md:border border-surface-border shadow-2xl max-w-lg mx-auto">
         {currentTabs.map((tab) => (
           <button 
             key={tab.id}
