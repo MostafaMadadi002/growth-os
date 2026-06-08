@@ -351,23 +351,22 @@ export const useAppStore = create<AppState>()(
         const tasks = (studentData.tasks || []).map(t => {
           if (t.id === taskId) {
             const nowDone = !t.done;
+            const logIndex = logs.findIndex(l => l.date === today);
             
             if (nowDone) {
-              // Record as Activity if marked as done
+              // Record as Activity
               const activityId = Math.random().toString(36).substr(2, 9);
-              const newActivity: StudentActivity = {
+              updatedActivities.push({
                 id: activityId,
                 date: today,
                 title: t.label,
-                duration: 60, // Default 1 hour
+                duration: 60,
                 sessions: 1,
                 type: 'POSITIVE',
                 goalId: t.goalId
-              };
-              updatedActivities.push(newActivity);
+              });
 
-              // Update Logs
-              const logIndex = logs.findIndex(l => l.date === today);
+              // Add to Logs
               if (logIndex > -1) {
                 logs[logIndex].count += 1;
                 logs[logIndex].score += 1;
@@ -376,22 +375,26 @@ export const useAppStore = create<AppState>()(
                 logs.push({ date: today, count: 1, posCount: 1, negCount: 0, score: 1 });
               }
 
-              // Update Goal
               if (t.goalId) {
                 updatedGoals = updatedGoals.map(g => 
                   g.id === t.goalId ? { ...g, completedSessions: Math.min(g.completedSessions + 1, g.totalSessions) } : g
                 );
               }
+            } else {
+              // Undo Activity
+              updatedActivities = updatedActivities.filter(a => a.title !== t.label || a.date !== today);
+              
+              // Subtract from Logs
+              if (logIndex > -1) {
+                logs[logIndex].count = Math.max(0, logs[logIndex].count - 1);
+                logs[logIndex].score -= 1;
+                logs[logIndex].posCount = Math.max(0, (logs[logIndex].posCount || 0) - 1);
+              }
 
-              // Update Habit
-              const habitTitle = t.goalId 
-                ? (updatedGoals.find(g => g.id === t.goalId)?.title || t.label)
-                : t.label;
-              const existingHabit = updatedHabits.find(h => h.title === habitTitle && h.type === 'POSITIVE');
-              if (existingHabit) {
-                updatedHabits = updatedHabits.map(h => h.id === existingHabit.id ? { ...h, streak: h.streak + 1, lastCheck: today } : h);
-              } else {
-                updatedHabits.push({ id: Math.random().toString(36).substr(2, 9), title: habitTitle, type: 'POSITIVE', streak: 1, lastCheck: today });
+              if (t.goalId) {
+                updatedGoals = updatedGoals.map(g => 
+                  g.id === t.goalId ? { ...g, completedSessions: Math.max(g.completedSessions - 1, 0) } : g
+                );
               }
             }
 

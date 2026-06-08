@@ -107,39 +107,27 @@ export default function ProfileScreen() {
   const getRowIndex = (jsDay: number) => (jsDay + 1) % 7;
 
   const getDayColor = (day: { intensity: number, score: number, pos: number, neg: number }) => {
-    if (day.intensity === 0) return 'bg-slate-950';
+    // Base color for empty nodes
+    if (day.pos === 0 && day.neg === 0) return 'bg-white/5 border border-white/5';
     
-    const total = day.pos + day.neg;
-    const balance = total > 0 ? day.pos / total : 0.5;
+    // Positive dominates (Good habits + Task completions)
+    if (day.score > 0) {
+      if (day.pos >= 5) return 'bg-emerald-400 shadow-[0_0_10px_#34d399]';
+      if (day.pos >= 3) return 'bg-emerald-500 shadow-[0_0_6px_#10b981]';
+      if (day.pos >= 1) return 'bg-emerald-600/80';
+      return 'bg-emerald-900/40';
+    }
     
-    if (balance >= 0.9) {
-        if (day.intensity === 1) return 'bg-emerald-500/20';
-        if (day.intensity === 2) return 'bg-emerald-500/40';
-        if (day.intensity === 3) return 'bg-emerald-500/70';
-        return 'bg-emerald-500';
+    // Negative dominates (Bad habits recorded)
+    if (day.score < 0) {
+      if (day.neg >= 5) return 'bg-rose-400 shadow-[0_0_10px_#f87171]';
+      if (day.neg >= 3) return 'bg-rose-500 shadow-[0_0_6px_#ef4444]';
+      if (day.neg >= 1) return 'bg-rose-600/80';
+      return 'bg-rose-900/40';
     }
-    if (balance >= 0.6) {
-        if (day.intensity === 1) return 'bg-teal-500/20';
-        if (day.intensity === 2) return 'bg-teal-500/40';
-        if (day.intensity === 3) return 'bg-teal-500/70';
-        return 'bg-teal-500';
-    }
-    if (balance >= 0.4) {
-        if (day.intensity === 1) return 'bg-slate-700/30';
-        if (day.intensity === 2) return 'bg-slate-700/50';
-        if (day.intensity === 3) return 'bg-slate-700/80';
-        return 'bg-slate-700';
-    }
-    if (balance >= 0.2) {
-        if (day.intensity === 1) return 'bg-orange-500/20';
-        if (day.intensity === 2) return 'bg-orange-500/40';
-        if (day.intensity === 3) return 'bg-orange-500/70';
-        return 'bg-orange-500';
-    }
-    if (day.intensity === 1) return 'bg-rose-500/20';
-    if (day.intensity === 2) return 'bg-rose-500/40';
-    if (day.intensity === 3) return 'bg-rose-500/70';
-    return 'bg-rose-500';
+
+    // Neutral balance but active (pos == neg)
+    return 'bg-amber-500/40 border border-amber-500/20';
   };
 
   return (
@@ -274,13 +262,13 @@ export default function ProfileScreen() {
             
             <div className="flex gap-4 md:gap-8 overflow-x-auto pb-6 scrollbar-hide pt-4">
               {/* Day Labels Column */}
-              <div className="grid grid-rows-7 gap-1 md:gap-1.5 py-1 text-[8px] md:text-[9px] font-mono font-black text-text-secondary uppercase opacity-40 shrink-0">
+              <div className="grid grid-rows-7 gap-1 md:gap-1.5 py-1 text-[7px] md:text-[9px] font-mono font-black text-text-secondary uppercase shrink-0">
                 <span className="flex items-center h-3 md:h-5">{t('sat')}</span>
-                <span className="flex items-center h-3 md:h-5">{t('sun')}</span>
+                <span className="flex items-center h-3 md:h-5 opacity-20">{t('sun')}</span>
                 <span className="flex items-center h-3 md:h-5">{t('mon')}</span>
-                <span className="flex items-center h-3 md:h-5">{t('tue')}</span>
+                <span className="flex items-center h-3 md:h-5 opacity-20">{t('tue')}</span>
                 <span className="flex items-center h-3 md:h-5">{t('wed')}</span>
-                <span className="flex items-center h-3 md:h-5">{t('thu')}</span>
+                <span className="flex items-center h-3 md:h-5 opacity-20">{t('thu')}</span>
                 <span className="flex items-center h-3 md:h-5">{t('fri')}</span>
               </div>
 
@@ -298,8 +286,8 @@ export default function ProfileScreen() {
                         title={`${day.date} | Pos: ${day.pos} | Neg: ${day.neg}`}
                         className={`w-3 h-3 md:w-5 md:h-5 rounded-sm transition-all duration-500 hover:scale-150 relative cursor-pointer
                           ${getDayColor(day)} 
-                          ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_12px_rgba(163,163,255,0.4)]' : ''}
-                          ${isSaturday ? 'border border-white/5' : ''}
+                          ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_15px_rgba(163,163,255,0.6)]' : ''}
+                          ${isSaturday ? 'ring-1 ring-white/10 ring-offset-1 z-0' : ''}
                         `}
                       />
                     );
