@@ -93,9 +93,9 @@ export default function App() {
              animate={{ opacity: 1, y: 0 }}
              exit={{ opacity: 0, y: -10 }}
              transition={{ duration: 0.3, ease: 'easeOut' }}
-             className="h-full overflow-y-auto pb-32 pt-6 px-4 md:px-8"
+             className="h-full overflow-y-auto pb-44 px-2 md:px-4"
            >
-             <div className="max-w-4xl mx-auto mb-10">
+             <div className="max-w-4xl mx-auto">
                {renderScreen()}
              </div>
            </motion.div>

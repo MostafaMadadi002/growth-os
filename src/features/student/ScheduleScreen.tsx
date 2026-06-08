@@ -118,7 +118,7 @@ export default function ScheduleScreen() {
   };
 
   return (
-    <div className="p-4 md:p-12 space-y-8 md:space-y-12 max-w-4xl mx-auto w-full rtl:font-farsi">
+    <div className="space-y-8 md:space-y-12 w-full pb-20">
       <header className="flex justify-between items-center md:items-end px-2">
         <div>
            <div className="flex items-center gap-3">

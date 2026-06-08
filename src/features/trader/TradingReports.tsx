@@ -86,6 +86,39 @@ export default function TradingReports() {
     return { equityCurve, pieData, barData };
   }, [filteredTrades, t]);
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const isFa = language === 'fa';
+      return (
+        <div className={`bg-surface-card border border-surface-border p-4 rounded-2xl shadow-xl space-y-3 min-w-[150px] ${isFa ? 'text-right' : 'text-left'}`} dir={isFa ? 'rtl' : 'ltr'}>
+          {label && (
+            <div className="border-b border-surface-border pb-2">
+               <p className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-[0.2em] opacity-40 mb-1">
+                 {t('date') || 'DATE'}
+               </p>
+               <p className="text-xs font-display font-black text-text-primary">
+                 {label}
+               </p>
+            </div>
+          )}
+          <div className="space-y-2.5">
+            {payload.map((entry: any, index: number) => (
+              <div key={index} className="flex items-center justify-between gap-6">
+                <span className="text-[9px] font-mono font-bold text-text-secondary uppercase tracking-widest">
+                  {t(entry.name?.toLowerCase()) || entry.name}
+                </span>
+                <span className="text-sm font-display font-black" style={{ color: entry.color || entry.fill || '#10b981' }}>
+                  {entry.value.toLocaleString()} {entry.name === 'profit' ? 'USD' : ''}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   // Stats calculation
   const stats = useMemo(() => {
     const closedTrades = filteredTrades.filter(t => t.result !== 'PENDING');
@@ -134,7 +167,7 @@ export default function TradingReports() {
           {t('performance_analytics') || 'Performance Analytics'}<span className="text-brand-primary">.</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-1">
           <StatCard 
             label={t('win_rate') || 'Win Rate'} 
             value={`${stats.winRate}%`} 
@@ -199,18 +232,7 @@ export default function TradingReports() {
                   tickLine={false} 
                   axisLine={false}
                 />
-                <Tooltip 
-                  cursor={{ stroke: '#10b981', strokeWidth: 1 }}
-                  contentStyle={{ 
-                    backgroundColor: 'var(--color-surface-card)', 
-                    border: '1px solid var(--color-surface-border)', 
-                    borderRadius: '1rem', 
-                    fontSize: '11px', 
-                    color: 'var(--color-text-primary)',
-                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-                  }}
-                  itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
-                />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#10b981', strokeWidth: 1, strokeDasharray: '4 4' }} />
                 <Area 
                   type="monotone" 
                   dataKey="profit" 
@@ -249,9 +271,7 @@ export default function TradingReports() {
             <div className="w-full md:w-48 h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--color-surface-card)', border: '1px solid var(--color-surface-border)', borderRadius: '1rem', fontSize: '10px', color: 'var(--color-text-primary)' }}
-                  />
+                  <Tooltip content={<CustomTooltip />} />
                   <Pie
                     data={chartData.pieData}
                     cx="50%"
@@ -298,8 +318,8 @@ export default function TradingReports() {
                       tickLine={false} 
                     />
                     <Tooltip 
-                      cursor={{fill: '#ffffff05'}}
-                      contentStyle={{ backgroundColor: 'var(--color-surface-card)', border: '1px solid var(--color-surface-border)', borderRadius: '1rem', fontSize: '10px', color: 'var(--color-text-primary)' }}
+                      cursor={{fill: 'currentColor', opacity: 0.05}}
+                      content={<CustomTooltip />}
                     />
                     <Bar 
                       dataKey="profit" 
@@ -471,7 +491,7 @@ export default function TradingReports() {
                 </div>
 
                 {/* Middle: Stats Grid */}
-                <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 px-4 border-l border-r border-surface-border">
+                <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-4 px-4 py-4 md:py-0 md:border-x border-surface-border">
                   <MiniStat label={t('profit_loss') || 'P/L'} value={`${trade.profitAmount} USD`} color={getResultColor(trade.result)} />
                   <MiniStat label={t('entry') || 'Entry'} value={trade.entry.toString()} />
                   <MiniStat label={t('risk_reward') || 'R:R'} value={trade.riskReward.toString()} />

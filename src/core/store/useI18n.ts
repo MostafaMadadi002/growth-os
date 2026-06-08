@@ -372,6 +372,11 @@ const translations = {
     light_mode: 'حالت روشن (Minimal)',
     switch_to_light: 'تغییر به تم روشن',
     switch_to_dark: 'تغییر به تم تاریک',
+    equity: 'سرمایه',
+    wins: 'معاملات سودده',
+    losses: 'معاملات ضررده',
+    breakeven: 'سر به سر',
+    profit: 'سود',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -719,6 +724,11 @@ const translations = {
     light_mode: 'Light Mode (Minimal)',
     switch_to_light: 'Switch to Light Theme',
     switch_to_dark: 'Switch to Dark Theme',
+    equity: 'Equity',
+    wins: 'Wins',
+    losses: 'Losses',
+    breakeven: 'Breakeven',
+    profit: 'Profit',
   }
 };
 

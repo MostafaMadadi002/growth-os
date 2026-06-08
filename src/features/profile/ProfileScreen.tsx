@@ -114,8 +114,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-surface-base overflow-y-auto pb-44 scrollbar-hide">
-      <div className="p-4 md:p-12 space-y-8 md:space-y-12 max-w-4xl mx-auto w-full">
+    <div className="space-y-8 md:space-y-12 w-full pb-20">
         {/* Profile Header */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 px-2">
           <div className="flex items-center gap-6">
@@ -472,6 +471,5 @@ export default function ProfileScreen() {
           </div>
         </footer>
       </div>
-    </div>
-  );
+    );
 }

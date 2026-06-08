@@ -34,7 +34,7 @@ export default function HabitsScreen() {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="p-4 md:p-12 space-y-8 md:space-y-12 max-w-4xl mx-auto w-full rtl:font-farsi">
+    <div className="space-y-8 md:space-y-12 w-full pb-20">
       <header className="flex justify-between items-center md:items-end">
         <div>
            <div className="flex items-center gap-3 mb-2 md:mb-4">
