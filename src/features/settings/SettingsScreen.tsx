@@ -2,7 +2,8 @@ import React from 'react';
 import { 
   Globe, Moon, Sun, 
   Settings as SettingsIcon, Monitor,
-  Database, Download, Upload
+  Database, Download, Upload,
+  Bell, BellOff
 } from 'lucide-react';
 import { useAppStore } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
@@ -11,9 +12,32 @@ import { motion } from 'motion/react';
 export function SettingsScreen() {
   const { 
     language, setLanguage, theme, setTheme,
+    notificationsEnabled, setNotificationsEnabled,
     studentData, traderData, importData 
   } = useAppStore();
   const { t } = useI18n();
+
+  const handleNotificationToggle = async () => {
+    if (!notificationsEnabled) {
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+        return;
+      }
+
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        setNotificationsEnabled(true);
+        new Notification(t('notifications_enabled'), {
+          body: t('notifications_desc'),
+          icon: '/favicon.ico'
+        });
+      } else {
+        alert(t('notifications_permission_denied'));
+      }
+    } else {
+      setNotificationsEnabled(false);
+    }
+  };
 
   const handleExport = () => {
     const data = {
@@ -140,6 +164,41 @@ export function SettingsScreen() {
                 {t('dark_mode').split(' ')[0]}
               </button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Notifications Section */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-4 px-2">
+           <Bell size={20} className="text-brand-primary" />
+           <h3 className="text-lg font-display font-black uppercase tracking-tight text-text-primary">
+             {t('notifications')}
+           </h3>
+        </div>
+
+        <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${notificationsEnabled ? 'bg-brand-primary/10 text-brand-primary' : 'bg-surface-base text-text-secondary'}`}>
+                {notificationsEnabled ? <Bell size={24} /> : <BellOff size={24} />}
+              </div>
+              <div>
+                <h4 className="text-base font-display font-black text-text-primary uppercase leading-none mb-1">{t('push_notifications')}</h4>
+                <p className="text-[10px] font-mono text-text-secondary leading-relaxed uppercase opacity-60">{t('notifications_desc')}</p>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleNotificationToggle}
+              className={`relative w-20 h-10 rounded-full transition-all duration-500 flex items-center px-1 ${notificationsEnabled ? 'bg-brand-primary shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-surface-base border border-surface-border'}`}
+            >
+              <motion.div 
+                animate={{ x: notificationsEnabled ? (language === 'fa' ? -40 : 40) : 0 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className={`w-8 h-8 rounded-full shadow-md ${notificationsEnabled ? 'bg-slate-950' : 'bg-text-secondary/20'}`}
+              />
+            </button>
           </div>
         </div>
       </section>

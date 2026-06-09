@@ -20,7 +20,53 @@ type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Report
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
   const { dir, t } = useI18n();
-  const { currentRoot, theme } = useAppStore();
+  const { currentRoot, theme, notificationsEnabled, studentData } = useAppStore();
+  const notifiedTasks = React.useRef<Map<string, string>>(new Map());
+
+  // Notification Monitor
+  React.useEffect(() => {
+    if (!notificationsEnabled) return;
+
+    const checkTasks = () => {
+      const now = new Date();
+      const currentHourMinute = now.toLocaleTimeString('en-US', { 
+        hour12: false, 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+      
+      const today = now.toISOString().split('T')[0];
+      
+      // Clear notified tasks at the start of a new day
+      if (notifiedTasks.current.has('LAST_CHECK_DATE') && notifiedTasks.current.get('LAST_CHECK_DATE') !== today) {
+        notifiedTasks.current.clear();
+      }
+      if (!notifiedTasks.current.has('LAST_CHECK_DATE')) {
+        notifiedTasks.current.set('LAST_CHECK_DATE', today);
+      }
+
+      const tasks = studentData.tasks || [];
+      
+      tasks.forEach(task => {
+        if (!task.done && task.time === currentHourMinute && !notifiedTasks.current.has(task.id)) {
+          // If task has a dueDate, check if it's today
+          if (task.dueDate && task.dueDate !== today) return;
+
+          new Notification("GrowthOS Task Reminder", {
+            body: `${task.label} at ${task.time}`,
+            icon: '/favicon.ico'
+          });
+          notifiedTasks.current.set(task.id, 'notified');
+        }
+      });
+
+      // Clear notified tasks for a different time slot if needed
+      // (This is simple: if time changes, we could clear it, but keeping it in a Set is safer for HH:mm precision)
+    };
+
+    const interval = setInterval(checkTasks, 15000); // Check every 15 seconds for precision
+    return () => clearInterval(interval);
+  }, [notificationsEnabled, studentData.tasks]);
 
   React.useEffect(() => {
     if (theme === 'DARK') {

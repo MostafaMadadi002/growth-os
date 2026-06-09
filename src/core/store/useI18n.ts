@@ -391,6 +391,12 @@ const translations = {
     profit: 'سود',
     done: 'انجام شد',
     mark_done: 'ثبت اجرا',
+    notifications: 'اعلان‌ها و هشدارها',
+    push_notifications: 'اعلان‌های مرورگر (Push)',
+    notifications_desc: 'دریافت هشدار برای رده‌بندی عادات و یادآوری اهداف استراتژیک',
+    notifications_enabled: 'اعلان‌ها فعال شد',
+    notifications_disabled: 'اعلان‌ها غیرفعال شد',
+    notifications_permission_denied: 'دسترسی به اعلان‌ها توسط مرورگر مسدود شده است',
   },
   en: {
     dashboard: 'Strategic Dashboard',
@@ -757,6 +763,12 @@ const translations = {
     profit: 'Profit',
     done: 'Done',
     mark_done: 'Log Progress',
+    notifications: 'Notifications & Alerts',
+    push_notifications: 'Browser Push Notifications',
+    notifications_desc: 'Receive alerts for habit checking and strategic goal reminders',
+    notifications_enabled: 'Notifications Enabled',
+    notifications_disabled: 'Notifications Disabled',
+    notifications_permission_denied: 'Notification permission denied by browser',
   }
 };
 

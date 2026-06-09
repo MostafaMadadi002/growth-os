@@ -106,9 +106,12 @@ interface AppState {
     notes: TraderNote[];
   };
   
+  notificationsEnabled: boolean;
+  
   setRoot: (root: UserRole) => void;
   setLanguage: (lang: 'FA' | 'EN') => void;
   setTheme: (theme: 'DARK' | 'LIGHT') => void;
+  setNotificationsEnabled: (enabled: boolean) => void;
   
   // Student Actions
   addGoal: (goal: Goal) => void;
@@ -152,9 +155,12 @@ export const useAppStore = create<AppState>()(
         notes: [],
       },
       
+      notificationsEnabled: false,
+      
       setRoot: (root) => set({ currentRoot: root }),
       setLanguage: (lang) => set({ language: lang }),
       setTheme: (theme) => set({ theme }),
+      setNotificationsEnabled: (enabled) => set({ notificationsEnabled: enabled }),
 
       importData: (data) => set((state) => ({
         ...state,
