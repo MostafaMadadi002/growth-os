@@ -286,12 +286,16 @@ export default function ProfileScreen() {
                     <h4 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('active_nodes')}</h4>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
                         <div className="bg-surface-base p-4 rounded-xl md:rounded-2xl">
-                            <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('positive')}</p>
-                            <p className="text-xl md:text-2xl font-display font-black text-emerald-500">{(studentData.activities || []).filter(a => a.type === 'POSITIVE').length}</p>
+                            <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('habits_good') || t('positive')}</p>
+                            <p className="text-xl md:text-2xl font-display font-black text-emerald-500">
+                              {(studentData.activityLogs || []).filter(l => (l.posCount || 0) > 0).length}
+                            </p>
                         </div>
                         <div className="bg-surface-base p-4 rounded-xl md:rounded-2xl">
-                            <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('negative')}</p>
-                            <p className="text-xl md:text-2xl font-display font-black text-rose-500">{(studentData.activities || []).filter(a => a.type === 'NEGATIVE').length}</p>
+                            <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('habits_bad') || t('negative')}</p>
+                            <p className="text-xl md:text-2xl font-display font-black text-rose-500">
+                              {(studentData.activityLogs || []).filter(l => (l.negCount || 0) > 0).length}
+                            </p>
                         </div>
                     </div>
                 </div>
