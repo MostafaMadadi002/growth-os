@@ -11,11 +11,12 @@ import { motion } from 'motion/react';
 
 export function SettingsScreen() {
   const { 
-    language, setLanguage, theme, setTheme,
+    language: appLanguage, setLanguage: setAppLanguage, 
+    theme, setTheme,
     notificationsEnabled, setNotificationsEnabled,
     studentData, traderData, importData 
   } = useAppStore();
-  const { t } = useI18n();
+  const { t, language: i18nLanguage, setLanguage: setI18nLanguage } = useI18n();
 
   const handleNotificationToggle = async () => {
     if (!notificationsEnabled) {
@@ -37,6 +38,11 @@ export function SettingsScreen() {
     } else {
       setNotificationsEnabled(false);
     }
+  };
+
+  const handleLanguageChange = (lang: 'FA' | 'EN') => {
+    setAppLanguage(lang);
+    setI18nLanguage(lang === 'FA' ? 'fa' : 'en');
   };
 
   const handleExport = () => {
@@ -122,14 +128,14 @@ export function SettingsScreen() {
 
             <div className="grid grid-cols-2 gap-4">
               <button 
-                onClick={() => setLanguage('en')}
-                className={`py-4 rounded-xl font-display font-black uppercase text-xs transition-all ${language === 'en' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
+                onClick={() => handleLanguageChange('EN')}
+                className={`py-4 rounded-xl font-display font-black uppercase text-xs transition-all ${appLanguage === 'EN' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
               >
                 English
               </button>
               <button 
-                onClick={() => setLanguage('fa')}
-                className={`py-4 rounded-xl font-display font-black uppercase text-xs transition-all ${language === 'fa' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
+                onClick={() => handleLanguageChange('FA')}
+                className={`py-4 rounded-xl font-display font-black uppercase text-xs transition-all ${appLanguage === 'FA' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
               >
                 فارسی
               </button>
@@ -140,7 +146,7 @@ export function SettingsScreen() {
           <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm space-y-6">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
-                {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
+                {theme === 'DARK' ? <Moon size={20} /> : <Sun size={20} />}
               </div>
               <div>
                 <h4 className="text-sm font-display font-black uppercase tracking-wider text-text-primary">{t('theme_select')}</h4>
@@ -150,15 +156,15 @@ export function SettingsScreen() {
 
             <div className="grid grid-cols-2 gap-4">
               <button 
-                onClick={() => setTheme('light')}
-                className={`flex flex-col items-center gap-2 py-4 rounded-xl font-display font-black uppercase text-[10px] transition-all ${theme === 'light' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
+                onClick={() => setTheme('LIGHT')}
+                className={`flex flex-col items-center gap-2 py-4 rounded-xl font-display font-black uppercase text-[10px] transition-all ${theme === 'LIGHT' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
               >
                 <Sun size={16} />
                 {t('light_mode').split(' ')[0]}
               </button>
               <button 
-                onClick={() => setTheme('dark')}
-                className={`flex flex-col items-center gap-2 py-4 rounded-xl font-display font-black uppercase text-[10px] transition-all ${theme === 'dark' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
+                onClick={() => setTheme('DARK')}
+                className={`flex flex-col items-center gap-2 py-4 rounded-xl font-display font-black uppercase text-[10px] transition-all ${theme === 'DARK' ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
               >
                 <Moon size={16} />
                 {t('dark_mode').split(' ')[0]}
@@ -194,7 +200,7 @@ export function SettingsScreen() {
               className={`relative w-20 h-10 rounded-full transition-all duration-500 flex items-center px-1 ${notificationsEnabled ? 'bg-brand-primary shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'bg-surface-base border border-surface-border'}`}
             >
               <motion.div 
-                animate={{ x: notificationsEnabled ? (language === 'fa' ? -40 : 40) : 0 }}
+                animate={{ x: notificationsEnabled ? (i18nLanguage === 'fa' ? -40 : 40) : 0 }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 className={`w-8 h-8 rounded-full shadow-md ${notificationsEnabled ? 'bg-slate-950' : 'bg-text-secondary/20'}`}
               />

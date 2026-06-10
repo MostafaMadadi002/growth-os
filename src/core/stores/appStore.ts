@@ -206,13 +206,15 @@ export const useAppStore = create<AppState>()(
       })),
 
       toggleHabit: (habitId) => set((state) => {
+        const logs = [...(state.studentData.activityLogs || [])];
+        let updatedLogs = logs;
+        
         const habits = (state.studentData.habits || []).map(h => {
           if (h.id === habitId) {
             const today = new Date().toISOString().split('T')[0];
             const isCompletedToday = h.lastCheck === today;
             
             // Log as minor activity
-            const logs = [...(state.studentData.activityLogs || [])];
             const existingLogIndex = logs.findIndex(l => l.date === today);
             const scoreChange = h.type === 'POSITIVE' ? (isCompletedToday ? -1 : 1) : (isCompletedToday ? 1 : -1);
             
@@ -230,6 +232,7 @@ export const useAppStore = create<AppState>()(
               const neg = h.type === 'NEGATIVE' ? 1 : 0;
               newLogs.push({ date: today, count: 1, posCount: pos, negCount: neg, score: scoreChange });
             }
+            updatedLogs = newLogs;
 
             return {
               ...h,
@@ -243,7 +246,7 @@ export const useAppStore = create<AppState>()(
           studentData: { 
             ...state.studentData, 
             habits,
-            activityLogs: newLogs
+            activityLogs: updatedLogs
           } 
         };
       }),

@@ -19,9 +19,14 @@ type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Report
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
-  const { dir, t } = useI18n();
-  const { currentRoot, theme, notificationsEnabled, studentData } = useAppStore();
+  const { dir, t, setLanguage: setI18nLanguage } = useI18n();
+  const { currentRoot, theme, notificationsEnabled, studentData, language: appLanguage } = useAppStore();
   const notifiedTasks = React.useRef<Map<string, string>>(new Map());
+
+  // Sync Language
+  React.useEffect(() => {
+    setI18nLanguage(appLanguage === 'FA' ? 'fa' : 'en');
+  }, [appLanguage, setI18nLanguage]);
 
   // Notification Monitor
   React.useEffect(() => {
