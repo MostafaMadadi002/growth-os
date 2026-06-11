@@ -64,8 +64,8 @@ export default function ProfileScreen() {
   const getRowIndex = (jsDay: number) => (jsDay + 1) % 7;
 
   const getDayColor = (day: { intensity: number, score: number, pos: number, neg: number }) => {
-    // If no activity at all
-    if (day.pos === 0 && day.neg === 0) {
+    // If no activity OR perfectly balanced activity (user requested balanced to "register empty")
+    if ((day.pos === 0 && day.neg === 0) || day.score === 0) {
       return 'bg-white/[0.05] border border-white/[0.02]';
     }
     
@@ -77,14 +77,11 @@ export default function ProfileScreen() {
       if (day.score >= 4) return 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.3)]';
       if (day.score >= 2) return 'bg-emerald-500';
       return 'bg-emerald-600/70';
-    } else if (day.score < 0) {
-      // Negative Dominant
+    } else {
+      // Negative Dominant (day.score < 0)
       if (day.score <= -4) return 'bg-rose-400 shadow-[0_0_10px_rgba(248,113,113,0.3)]';
       if (day.score <= -2) return 'bg-rose-500';
       return 'bg-rose-600/70';
-    } else {
-      // Balanced Activity (e.g. 1 pos + 1 neg)
-      return 'bg-amber-500/50 border border-amber-500/20';
     }
   };
 
@@ -288,13 +285,13 @@ export default function ProfileScreen() {
                         <div className="bg-surface-base p-4 rounded-xl md:rounded-2xl">
                             <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('habits_good') || t('positive')}</p>
                             <p className="text-xl md:text-2xl font-display font-black text-emerald-500">
-                              {(studentData.activityLogs || []).filter(l => (l.posCount || 0) > 0).length}
+                              {(studentData.activityLogs || []).filter(l => (l.score || 0) > 0).length}
                             </p>
                         </div>
                         <div className="bg-surface-base p-4 rounded-xl md:rounded-2xl">
                             <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary opacity-60 uppercase mb-1">{t('habits_bad') || t('negative')}</p>
                             <p className="text-xl md:text-2xl font-display font-black text-rose-500">
-                              {(studentData.activityLogs || []).filter(l => (l.negCount || 0) > 0).length}
+                              {(studentData.activityLogs || []).filter(l => (l.score || 0) < 0).length}
                             </p>
                         </div>
                     </div>
