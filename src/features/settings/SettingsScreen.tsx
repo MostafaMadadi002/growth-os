@@ -261,6 +261,63 @@ export function SettingsScreen() {
           </div>
         </div>
       </section>
+      {/* Profile Card Section */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-4 px-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-brand-primary shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+          <h3 className="text-lg font-display font-black uppercase tracking-tight text-text-primary">
+            Lead Developer
+          </h3>
+        </div>
+
+        <div className="p-8 md:p-12 bg-surface-card border border-surface-border rounded-[2.5rem] md:rounded-[3.5rem] shadow-xl relative overflow-hidden group">
+          {/* Subtle Background Accent */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-brand-primary/10 transition-colors duration-700" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row gap-8 md:items-center">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] bg-brand-primary/20 flex items-center justify-center text-brand-primary shadow-inner">
+              <span className="text-3xl md:text-5xl font-display font-black uppercase">MM</span>
+            </div>
+            
+            <div className="space-y-4 flex-1">
+              <div>
+                <h4 className="text-2xl md:text-4xl font-display font-black text-text-primary uppercase tracking-tight leading-none mb-2">
+                  Mostafa Madadi
+                </h4>
+                <p className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] opacity-80 italic">Full-Stack Architect & Strategic Partner</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
+                <div className="flex items-center gap-3 group/link">
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">Github //</span>
+                  <a href="https://github.com/MostafaMadadi002" target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-text-primary hover:text-brand-primary transition-colors" dir="ltr">MostafaMadadi002</a>
+                </div>
+                <div className="flex items-center gap-3 group/link">
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">LinkedIn //</span>
+                  <p className="text-xs font-mono text-text-primary">Mostafa Madadi</p>
+                </div>
+                <div className="flex items-center gap-3 group/link">
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">Email //</span>
+                  <a href="mailto:mostafamadadi.1382@gmail.com" className="text-xs font-mono text-text-primary hover:text-brand-primary transition-colors" dir="ltr">mostafamadadi.1382@gmail.com</a>
+                </div>
+                <div className="flex items-center gap-3 group/link">
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">Comm //</span>
+                  <p className="text-xs font-mono text-text-primary translate-y-[1px]" dir="ltr">+93 78 434 5123</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Production Status Badge */}
+      <footer className="pt-12 px-2 flex flex-col items-center gap-4">
+        <div className="flex items-center gap-3 py-2 px-4 bg-surface-card border border-surface-border rounded-full">
+          <div className="w-2 h-2 rounded-full bg-brand-primary animate-pulse shadow-[0_0_8px_#10b981]" />
+          <span className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest leading-none">CORE_SYSTEM_ONLINE // V1.0.4_STABLE</span>
+        </div>
+        <p className="text-[8px] font-mono text-text-secondary/30 uppercase tracking-[0.4em]">Growth Intelligence Operating System</p>
+      </footer>
     </div>
   );
 }
