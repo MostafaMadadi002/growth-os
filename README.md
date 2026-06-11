@@ -23,17 +23,8 @@ npm run build
 ```
 *This creates a `dist` folder. Capacitor needs this folder to work.*
 
-### Step 2: Initialize Capacitor
-```bash
-# Install core tools
-npm install @capacitor/core @capacitor/cli
-
-# Initialize project settings
-# Note: Use "dist" as the web asset directory when prompted
-npx cap init GrowthOS com.mostafamadadi.growthos --web-dir dist
-```
-
-### Step 3: Add Platforms
+### Step 2: Capacitor Configuration
+I have already created a `capacitor.config.ts` file for you. If you get an error saying it already exists during `npx cap init`, you can simply skip the `init` command and proceed to:
 ```bash
 # Install platform packages
 npm install @capacitor/android
@@ -41,6 +32,13 @@ npm install @capacitor/android
 # Add the Android project
 npx cap add android
 ```
+
+### 🛠 Troubleshooting: "Cannot run init..."
+If you encounter `[error] Cannot run init for a project using a non-JSON configuration file`, it is because a typescript config already exists.
+**Fix:** 
+1. Delete `capacitor.config.ts` (if you want to run `init` manually).
+2. OR better: Just use the one I provided and skip `npx cap init`.
+
 
 ### Step 4: Sync & Open in Android Studio
 Whenever you change your code, run this sequence:
