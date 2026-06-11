@@ -81,11 +81,13 @@ export interface Trade {
   labels?: string[];
 }
 
-export interface TraderNote {
+export interface Note {
   id: string;
   title: string;
   content: string;
   date: string;
+  linkedId?: string; // goalId or tradeId
+  linkedType?: 'GOAL' | 'TRADE';
 }
 
 interface AppState {
@@ -99,11 +101,12 @@ interface AppState {
     tasks: ScheduleTask[];
     activities: StudentActivity[];
     activityLogs: ActivityLog[];
+    notes: Note[];
   };
   
   traderData: {
     trades: Trade[];
-    notes: TraderNote[];
+    notes: Note[];
   };
   
   notificationsEnabled: boolean;
@@ -131,7 +134,12 @@ interface AppState {
   addTrade: (trade: Trade) => void;
   deleteTrade: (tradeId: string) => void;
   updateTrade: (trade: Trade) => void;
-  addTraderNote: (note: TraderNote) => void;
+  
+  // Note Actions
+  addNote: (note: Note, domain: 'STUDENT' | 'TRADER') => void;
+  deleteNote: (noteId: string, domain: 'STUDENT' | 'TRADER') => void;
+  updateNote: (note: Note, domain: 'STUDENT' | 'TRADER') => void;
+  
   importData: (data: Partial<AppState>) => void;
 }
 
@@ -148,6 +156,7 @@ export const useAppStore = create<AppState>()(
         tasks: [],
         activities: [],
         activityLogs: [],
+        notes: [],
       },
       
       traderData: {
@@ -452,9 +461,35 @@ export const useAppStore = create<AppState>()(
         }
       })),
       
-      addTraderNote: (note) => set((state) => ({
-        traderData: { ...state.traderData, notes: [...(state.traderData.notes || []), note] }
-      })),
+      addNote: (note, domain) => set((state) => {
+        const key = domain === 'STUDENT' ? 'studentData' : 'traderData';
+        return {
+          [key]: {
+            ...state[key],
+            notes: [...(state[key].notes || []), note]
+          }
+        };
+      }),
+
+      deleteNote: (id, domain) => set((state) => {
+        const key = domain === 'STUDENT' ? 'studentData' : 'traderData';
+        return {
+          [key]: {
+            ...state[key],
+            notes: (state[key].notes || []).filter((n: Note) => n.id !== id)
+          }
+        };
+      }),
+
+      updateNote: (note, domain) => set((state) => {
+        const key = domain === 'STUDENT' ? 'studentData' : 'traderData';
+        return {
+          [key]: {
+            ...state[key],
+            notes: (state[key].notes || []).map((n: Note) => n.id === note.id ? note : n)
+          }
+        };
+      }),
     }),
     {
       name: 'growth-os-storage',

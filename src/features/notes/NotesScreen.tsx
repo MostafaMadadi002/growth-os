@@ -1,171 +1,254 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Search, ChevronRight, Trash2, Edit3, X } from 'lucide-react';
-import { useNoteStore } from './store/useNoteStore';
-import NoteListItem from './components/NoteListItem';
-import NoteForm from './components/NoteForm';
-import DeleteNoteModal from './components/DeleteNoteModal';
-import { Note } from '../../core/types';
-
-type ViewMode = 'LIST' | 'CREATE' | 'DETAIL' | 'EDIT';
+import React, { useState } from 'react';
+import { 
+  Plus, Search, StickyNote, Trash2, Link as LinkIcon, 
+  ChevronDown, ExternalLink, Calendar, X
+} from 'lucide-react';
+import { useAppStore, Note, UserRole } from '../../core/stores/appStore';
+import { useI18n } from '../../core/store/useI18n';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function NotesScreen() {
-  const { notes, isLoading, error, fetchNotes, addNote, updateNote, deleteNote } = useNoteStore();
-  const [viewMode, setViewMode] = useState<ViewMode>('LIST');
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const { t, language } = useI18n();
+  const { currentRoot, studentData, traderData, addNote, deleteNote } = useAppStore();
+  
+  const [isAdding, setIsAdding] = useState(false);
+  const [search, setSearch] = useState('');
+  
+  const domain = currentRoot === UserRole.STUDENT ? 'STUDENT' : 'TRADER';
+  const data = currentRoot === UserRole.STUDENT ? studentData : traderData;
+  const notes = data.notes || [];
 
-  useEffect(() => {
-    fetchNotes();
-  }, [fetchNotes]);
+  const [newNote, setNewNote] = useState<Partial<Note>>({
+    title: '',
+    content: '',
+    linkedId: '',
+    linkedType: currentRoot === UserRole.STUDENT ? 'GOAL' : 'TRADE'
+  });
 
   const filteredNotes = notes.filter(n => 
-    n.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    n.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    n.title.toLowerCase().includes(search.toLowerCase()) || 
+    n.content.toLowerCase().includes(search.toLowerCase())
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const handleCreate = async (data: { title: string; content: string }) => {
-    await addNote(data);
-    setViewMode('LIST');
+  const handleAddNote = () => {
+    if (!newNote.title || !newNote.content) return;
+
+    const note: Note = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: newNote.title,
+      content: newNote.content,
+      date: new Date().toISOString(),
+      linkedId: newNote.linkedId || undefined,
+      linkedType: newNote.linkedId ? (currentRoot === UserRole.STUDENT ? 'GOAL' : 'TRADE') : undefined
+    };
+
+    addNote(note, domain);
+    setIsAdding(false);
+    setNewNote({ title: '', content: '', linkedId: '', linkedType: currentRoot === UserRole.STUDENT ? 'GOAL' : 'TRADE' });
   };
 
-  const handleEdit = async (data: { title: string; content: string }) => {
-    if (selectedNote) {
-      await updateNote(selectedNote.id, data);
-      setSelectedNote({ ...selectedNote, ...data });
-      setViewMode('DETAIL');
+  const getLinkedTitle = (note: Note) => {
+    if (!note.linkedId) return null;
+    if (note.linkedType === 'GOAL') {
+      return studentData.goals.find(g => g.id === note.linkedId)?.title;
     }
-  };
-
-  const handleDelete = async () => {
-    if (selectedNote) {
-      await deleteNote(selectedNote.id);
-      setIsDeleteModalOpen(false);
-      setSelectedNote(null);
-      setViewMode('LIST');
+    if (note.linkedType === 'TRADE') {
+      const trade = traderData.trades.find(t => t.id === note.linkedId);
+      return trade ? `${trade.symbol} (${trade.result})` : null;
     }
+    return null;
   };
-
-  if (viewMode === 'CREATE') {
-    return (
-      <div className="flex flex-col h-full animate-in slide-in-from-left duration-300">
-        <header className="p-6 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-xl font-bold">یادداشت جدید</h2>
-          <button onClick={() => setViewMode('LIST')} className="p-2 bg-slate-800 rounded-xl"><X size={20}/></button>
-        </header>
-        <NoteForm onSubmit={handleCreate} onCancel={() => setViewMode('LIST')} loading={isLoading} />
-      </div>
-    );
-  }
-
-  if (viewMode === 'EDIT' && selectedNote) {
-    return (
-      <div className="flex flex-col h-full animate-in slide-in-from-left duration-300">
-        <header className="p-6 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-xl font-bold">ویرایش یادداشت</h2>
-          <button onClick={() => setViewMode('DETAIL')} className="p-2 bg-slate-800 rounded-xl"><X size={20}/></button>
-        </header>
-        <NoteForm 
-          initialData={selectedNote} 
-          onSubmit={handleEdit} 
-          onCancel={() => setViewMode('DETAIL')} 
-          loading={isLoading} 
-        />
-      </div>
-    );
-  }
-
-  if (viewMode === 'DETAIL' && selectedNote) {
-    return (
-      <div className="flex flex-col h-full bg-slate-950 animate-in slide-in-from-bottom duration-300">
-        <header className="fixed top-0 left-0 right-0 p-6 bg-slate-950/80 backdrop-blur-md border-b border-slate-800 flex items-center justify-between z-10">
-          <button onClick={() => setViewMode('LIST')} className="flex items-center text-slate-400 gap-1">
-            <ChevronRight size={20} />
-            <span>بازگشت</span>
-          </button>
-          <div className="flex gap-2">
-            <button onClick={() => setViewMode('EDIT')} className="p-3 bg-slate-800 text-emerald-500 rounded-2xl">
-              <Edit3 size={20} />
-            </button>
-            <button onClick={() => setIsDeleteModalOpen(true)} className="p-3 bg-slate-800 text-red-500 rounded-2xl">
-              <Trash2 size={20} />
-            </button>
-          </div>
-        </header>
-
-        <main className="p-6 pt-28 pb-10">
-          <h1 className="text-3xl font-extrabold text-white mb-6 leading-tight">{selectedNote.title}</h1>
-          <p className="text-slate-300 text-lg leading-relaxed whitespace-pre-wrap">{selectedNote.content}</p>
-        </main>
-
-        <DeleteNoteModal 
-          isOpen={isDeleteModalOpen} 
-          onCancel={() => setIsDeleteModalOpen(false)} 
-          onConfirm={handleDelete}
-          loading={isLoading}
-        />
-      </div>
-    );
-  }
 
   return (
-    <div className="flex flex-col h-full p-6">
-      <header className="mb-8">
-        <h1 className="text-4xl font-black text-white mb-6">یادداشت‌ها</h1>
-        <div className="relative">
-          <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
-          <input 
-            type="text"
-            placeholder="جستجو بین یادداشت‌ها..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-800 border border-slate-700 rounded-2xl py-4 pr-12 pl-4 text-white focus:border-emerald-500 outline-none transition-all shadow-lg"
-          />
+    <div className="space-y-8 md:space-y-12 w-full pb-32">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+            <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">
+              {domain}_CENTRAL_ARCHIVE
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1">
+            {t('branch_notes').split(' ')[0]}<span className="text-brand-primary">.</span>
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="relative group w-full md:w-64">
+            <Search className={`absolute ${language === 'fa' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-text-secondary opacity-40 group-focus-within:text-brand-primary transition-colors`} size={16} />
+            <input 
+              type="text"
+              placeholder={t('search_symbol_notes')}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className={`w-full ${language === 'fa' ? 'pr-11 pl-6' : 'pl-11 pr-6'} py-3 bg-surface-card border border-surface-border rounded-xl text-[12px] font-mono focus:outline-none focus:border-brand-primary/50 transition-all`}
+            />
+          </div>
+          <button 
+            onClick={() => setIsAdding(true)}
+            className="p-3 bg-brand-primary text-slate-950 rounded-xl hover:scale-105 transition-all shadow-lg shadow-brand-primary/20 shrink-0"
+          >
+            <Plus size={24} />
+          </button>
         </div>
       </header>
 
-      {error && (
-        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 text-sm">
-          <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <p>خطا: {error}</p>
-        </div>
-      )}
+      {/* Add Note Modal/Form */}
+      <AnimatePresence>
+        {isAdding && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-surface-card border border-surface-border w-full max-w-xl rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative"
+            >
+              <button 
+                onClick={() => setIsAdding(false)}
+                className="absolute top-8 right-8 p-2 text-text-secondary hover:text-text-primary transition-colors"
+              >
+                <X size={24} />
+              </button>
 
-      <main className="flex-1">
-        {isLoading && notes.length === 0 ? (
-          <div className="flex justify-center py-20">
-            <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        ) : filteredNotes.length > 0 ? (
-          <div className="pb-24">
-            {filteredNotes.map(note => (
-              <NoteListItem 
-                key={note.id} 
-                note={note} 
-                onClick={() => {
-                  setSelectedNote(note);
-                  setViewMode('DETAIL');
-                }} 
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-slate-500 opacity-60">
-            <div className="bg-slate-800 p-8 rounded-full mb-6">
-              <Search size={48} />
+              <div className="space-y-2">
+                <h3 className="text-2xl font-display font-black text-text-primary uppercase tracking-tight">
+                  {t('add_note')}
+                </h3>
+                <p className="text-[10px] font-mono text-text-secondary uppercase tracking-widest opacity-60">Archive_Synaptic_Input</p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.2em] px-1">{t('note_title')}</label>
+                  <input 
+                    type="text"
+                    value={newNote.title}
+                    onChange={(e) => setNewNote({...newNote, title: e.target.value})}
+                    placeholder="e.g. Master Strategy v1"
+                    className="w-full p-4 bg-surface-base border border-surface-border rounded-xl text-sm font-mono focus:outline-none focus:border-brand-primary/50 transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.2em] px-1">{t('note_content')}</label>
+                  <textarea 
+                    rows={6}
+                    value={newNote.content}
+                    onChange={(e) => setNewNote({...newNote, content: e.target.value})}
+                    placeholder={t('notes_placeholder')}
+                    className="w-full p-4 bg-surface-base border border-surface-border rounded-xl text-sm font-mono focus:outline-none focus:border-brand-primary/50 transition-all resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.2em] px-1">{t('link_to')}</label>
+                  <select 
+                    value={newNote.linkedId}
+                    onChange={(e) => setNewNote({...newNote, linkedId: e.target.value})}
+                    className="w-full p-4 bg-surface-base border border-surface-border rounded-xl text-sm font-mono focus:outline-none focus:border-brand-primary/50 transition-all cursor-pointer"
+                  >
+                    <option value="">{t('no_linked_item')}</option>
+                    {currentRoot === UserRole.STUDENT ? (
+                      studentData.goals.map(g => (
+                        <option key={g.id} value={g.id}>{g.title}</option>
+                      ))
+                    ) : (
+                      traderData.trades.map(t => (
+                        <option key={t.id} value={t.id}>{t.symbol} - {t.date} ({t.result})</option>
+                      ))
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setIsAdding(false)}
+                  className="flex-1 py-4 bg-surface-base border border-surface-border rounded-2xl text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest hover:bg-surface-card transition-all"
+                >
+                  {t('cancel')}
+                </button>
+                <button 
+                  onClick={handleAddNote}
+                  className="flex-1 py-4 bg-brand-primary text-slate-950 rounded-2xl text-[10px] font-mono font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-brand-primary/20"
+                >
+                  {t('save')}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Notes Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
+        {filteredNotes.map((note) => (
+          <motion.div 
+            key={note.id}
+            layout
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] space-y-6 group hover:border-brand-primary/30 transition-all flex flex-col justify-between shadow-xl"
+          >
+            <div className="space-y-4">
+              <div className="flex justify-between items-start">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary/5 text-brand-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <StickyNote size={20} />
+                </div>
+                <button 
+                  onClick={() => deleteNote(note.id, domain)}
+                  className="p-2 text-text-secondary opacity-20 hover:opacity-100 hover:text-rose-500 transition-all"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="text-lg font-display font-black text-text-primary tracking-tight uppercase line-clamp-1">{note.title}</h4>
+                <div className="flex items-center gap-2 text-[8px] font-mono text-text-secondary uppercase tracking-widest opacity-40">
+                  <Calendar size={10} />
+                  {new Date(note.date).toLocaleDateString(language === 'fa' ? 'fa-IR' : 'en-US')}
+                </div>
+              </div>
+
+              <p className="text-sm font-mono text-text-secondary leading-relaxed line-clamp-4 overflow-hidden">
+                {note.content}
+              </p>
             </div>
-            <p className="text-lg font-medium">یادداشتی پیدا نشد</p>
-            <p className="text-sm mt-2">اولین یادداشت خود را همین حالا بسازید!</p>
+
+            {note.linkedId && (
+              <div className="pt-6 mt-6 border-t border-surface-border/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-lg bg-surface-base border border-surface-border flex items-center justify-center text-brand-primary">
+                    <LinkIcon size={12} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[8px] font-mono font-black text-text-secondary uppercase opacity-40 leading-none mb-1">{t('linked_to')}</p>
+                    <p className="text-[10px] font-mono font-black text-text-primary uppercase leading-none truncate">
+                      {getLinkedTitle(note)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        ))}
+
+        {filteredNotes.length === 0 && (
+          <div className="col-span-full py-20 text-center space-y-4">
+            <div className="w-16 h-16 bg-surface-card border border-surface-border rounded-2xl flex items-center justify-center mx-auto opacity-20 text-text-secondary">
+              <StickyNote size={32} />
+            </div>
+            <p className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-40">Archive_Empty // awaiting_signal</p>
           </div>
         )}
-      </main>
-
-      <button 
-        onClick={() => setViewMode('CREATE')}
-        className="fixed bottom-24 right-6 bg-emerald-500 hover:bg-emerald-600 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl shadow-emerald-500/40 text-white transition-all hover:scale-105 active:scale-95 z-20"
-      >
-        <Plus size={32} strokeWidth={3} />
-      </button>
+      </div>
     </div>
   );
 }

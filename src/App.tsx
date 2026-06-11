@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  Target, Activity, CalendarDays, User, Settings as SettingsIcon
+  Target, Activity, CalendarDays, User, Settings as SettingsIcon,
+  StickyNote
 } from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
 import { useAppStore, UserRole } from './core/stores/appStore';
@@ -14,8 +15,9 @@ import ProfileScreen from './features/profile/ProfileScreen';
 import { SettingsScreen } from './features/settings/SettingsScreen';
 import TradingJournal from './features/trader/TradingJournal';
 import TradingReports from './features/trader/TradingReports';
+import NotesScreen from './features/notes/NotesScreen';
 
-type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Reports' | 'Settings';
+type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Reports' | 'Settings' | 'Notes';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
@@ -90,6 +92,7 @@ export default function App() {
       case 'Settings': return <SettingsScreen />;
       case 'Journal': return <TradingJournal />;
       case 'Reports': return <TradingReports />;
+      case 'Notes': return <NotesScreen />;
       default: return <GoalsScreen />;
     }
   };
@@ -98,6 +101,7 @@ export default function App() {
     { id: 'Goals', label: 'branch_goals', icon: <Target size={20} /> },
     { id: 'Habits', label: 'branch_habits', icon: <Activity size={20} /> },
     { id: 'Schedule', label: 'schedule', icon: <CalendarDays size={20} /> },
+    { id: 'Notes', label: 'branch_notes', icon: <StickyNote size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
     { id: 'Settings', label: 'settings', icon: <SettingsIcon size={20} /> },
   ];
@@ -105,6 +109,7 @@ export default function App() {
   const traderTabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: 'Journal', label: 'trading_journal', icon: <CalendarDays size={20} /> },
     { id: 'Reports', label: 'reports', icon: <Activity size={20} /> },
+    { id: 'Notes', label: 'branch_notes', icon: <StickyNote size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
     { id: 'Settings', label: 'settings', icon: <SettingsIcon size={20} /> },
   ];

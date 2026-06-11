@@ -49,9 +49,9 @@ export default function ProfileScreen() {
       return {
         date: dateStr,
         intensity: log ? Math.min(Math.max(log.count || 0, 0), 4) : 0,
-        score: log ? log.score : 0,
-        pos: log ? (log.posCount || 0) : 0,
-        neg: log ? (log.negCount || 0) : 0,
+        score: log?.score ?? 0,
+        pos: log?.posCount ?? 0,
+        neg: log?.negCount ?? 0,
         dayOfWeek: date.getDay()
       };
     });
@@ -236,7 +236,12 @@ export default function ProfileScreen() {
                     return (
                       <div 
                         key={i} 
-                        title={`${day.date} | Pos: ${day.pos} | Neg: ${day.neg}`}
+                        title={t('heatmap_tooltip')
+                          .replace('{date}', day.date)
+                          .replace('{score}', (day.score ?? 0).toString())
+                          .replace('{pos}', (day.pos ?? 0).toString())
+                          .replace('{neg}', (day.neg ?? 0).toString())
+                        }
                         className={`w-3 h-3 md:w-5 md:h-5 rounded-sm transition-all duration-500 hover:scale-150 relative cursor-pointer
                           ${getDayColor(day)} 
                           ${isToday ? 'ring-2 ring-brand-primary ring-offset-2 ring-offset-surface-card scale-110 z-20 shadow-[0_0_15px_rgba(var(--brand-primary-rgb),0.6)]' : ''}
