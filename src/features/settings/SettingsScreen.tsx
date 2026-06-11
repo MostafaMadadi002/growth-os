@@ -270,39 +270,39 @@ export function SettingsScreen() {
           </h3>
         </div>
 
-        <div className="p-8 md:p-12 bg-surface-card border border-surface-border rounded-[2.5rem] md:rounded-[3.5rem] shadow-xl relative overflow-hidden group">
+        <div className="p-6 md:p-12 bg-surface-card border border-surface-border rounded-[2.5rem] md:rounded-[3.5rem] shadow-xl relative overflow-hidden group">
           {/* Subtle Background Accent */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-brand-primary/10 transition-colors duration-700" />
           
-          <div className="relative z-10 flex flex-col md:flex-row gap-8 md:items-center">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] bg-brand-primary/20 flex items-center justify-center text-brand-primary shadow-inner">
-              <span className="text-3xl md:text-5xl font-display font-black uppercase">MM</span>
+          <div className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-8 md:items-center">
+            <div className="w-20 h-20 md:w-32 md:h-32 rounded-[1.5rem] md:rounded-[2rem] bg-brand-primary/20 flex items-center justify-center text-brand-primary shadow-inner shrink-0">
+              <span className="text-2xl md:text-5xl font-display font-black uppercase">MM</span>
             </div>
             
-            <div className="space-y-4 flex-1">
+            <div className="space-y-4 flex-1 min-w-0">
               <div>
-                <h4 className="text-2xl md:text-4xl font-display font-black text-text-primary uppercase tracking-tight leading-none mb-2">
+                <h4 className="text-xl md:text-4xl font-display font-black text-text-primary uppercase tracking-tight leading-none mb-2 break-words">
                   Mostafa Madadi
                 </h4>
-                <p className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] opacity-80 italic">Full-Stack Architect & Strategic Partner</p>
+                <p className="text-[9px] md:text-[10px] font-mono font-black text-brand-primary uppercase tracking-[0.3em] opacity-80 italic">Full-Stack Architect & Strategic Partner</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
                 <div className="flex items-center gap-3 group/link">
-                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">Github //</span>
-                  <a href="https://github.com/MostafaMadadi002" target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-text-primary hover:text-brand-primary transition-colors" dir="ltr">MostafaMadadi002</a>
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all shrink-0">Github //</span>
+                  <a href="https://github.com/MostafaMadadi002" target="_blank" rel="noopener noreferrer" className="text-[11px] font-mono text-text-primary hover:text-brand-primary transition-colors truncate" dir="ltr">MostafaMadadi002</a>
                 </div>
                 <div className="flex items-center gap-3 group/link">
-                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">LinkedIn //</span>
-                  <p className="text-xs font-mono text-text-primary">Mostafa Madadi</p>
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all shrink-0">LinkedIn //</span>
+                  <p className="text-[11px] font-mono text-text-primary truncate">Mostafa Madadi</p>
                 </div>
                 <div className="flex items-center gap-3 group/link">
-                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">Email //</span>
-                  <a href="mailto:mostafamadadi.1382@gmail.com" className="text-xs font-mono text-text-primary hover:text-brand-primary transition-colors" dir="ltr">mostafamadadi.1382@gmail.com</a>
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all shrink-0">Email //</span>
+                  <a href="mailto:mostafamadadi.1382@gmail.com" className="text-[11px] font-mono text-text-primary hover:text-brand-primary transition-colors break-all" dir="ltr">mostafamadadi.1382@gmail.com</a>
                 </div>
                 <div className="flex items-center gap-3 group/link">
-                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all">Comm //</span>
-                  <p className="text-xs font-mono text-text-primary translate-y-[1px]" dir="ltr">+93 78 434 5123</p>
+                  <span className="text-[8px] font-mono text-text-secondary uppercase opacity-40 group-hover/link:text-brand-primary group-hover/link:opacity-100 transition-all shrink-0">Comm //</span>
+                  <p className="text-[11px] font-mono text-text-primary translate-y-[1px]" dir="ltr">+93 78 434 5123</p>
                 </div>
               </div>
             </div>

@@ -162,24 +162,24 @@ export default function App() {
          </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-0 md:bottom-6 inset-x-0 md:inset-x-6 h-20 md:h-20 bg-surface-card md:rounded-[2.5rem] z-50 px-4 md:px-8 flex items-center justify-between border-t md:border border-surface-border shadow-2xl max-w-lg mx-auto">
+      <nav className="fixed bottom-0 md:bottom-6 inset-x-0 md:inset-x-6 h-20 bg-surface-card md:rounded-[2.5rem] z-50 px-2 md:px-8 flex items-center justify-around md:justify-between border-t md:border border-surface-border shadow-2xl max-w-xl mx-auto backdrop-blur-md bg-surface-card/90">
         {currentTabs.map((tab) => (
           <button 
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`relative flex-1 md:flex-none flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${activeTab === tab.id ? 'text-brand-primary' : 'text-text-secondary hover:text-text-primary'}`}
+            className={`relative flex-1 md:flex-none p-1 flex flex-col items-center justify-center gap-1 transition-all duration-300 min-w-0 ${activeTab === tab.id ? 'text-brand-primary' : 'text-text-secondary hover:text-text-primary'}`}
           >
             <div className={`transition-all duration-300 ${activeTab === tab.id ? 'scale-110 -translate-y-0.5' : 'scale-100 opacity-50'}`}>
-              {tab.icon}
+              {React.cloneElement(tab.icon as React.ReactElement, { size: 18 })}
             </div>
-            <span className={`text-[9px] font-display font-black uppercase tracking-widest transition-all duration-300 ${activeTab === tab.id ? 'opacity-100' : 'opacity-40'}`}>
+            <span className={`text-[8px] md:text-[9px] font-display font-black uppercase tracking-tight md:tracking-widest transition-all duration-300 truncate w-full text-center px-0.5 ${activeTab === tab.id ? 'opacity-100' : 'opacity-40'}`}>
               {t(tab.label)}
             </span>
             
             {activeTab === tab.id && (
               <motion.div 
                 layoutId="nav-indicator"
-                className="absolute -bottom-2 w-1.5 h-1.5 bg-brand-primary rounded-full shadow-[0_0_10px_#10b981]"
+                className="absolute -bottom-1 w-1 h-1 bg-brand-primary rounded-full shadow-[0_0_10px_#10b981]"
               />
             )}
           </button>
