@@ -8,41 +8,53 @@ GrowthOS is a unified **Personal Growth Operating System** designed to help user
 - `src/`: Application source code (React + TypeScript)
 - `assets/`: UI/UX assets and illustrations
 
-## Mobile Deployment Guide (How to get APK)
+## 📱 Mobile Deployment Guide (How to get APK)
 
-To turn this web application into a mobile app (Android or iOS), we use **Capacitor**. Follow these steps on your local machine:
+To turn this web application into a mobile app (Android or iOS), we use **Capacitor**. 
 
-### 1. Prerequisites
-- **Node.js** installed.
-- **Android Studio** (for Android) or **Xcode** (for iOS/macOS).
-- Run `npm run build` once to generate the `dist` folder.
+### ⚠️ CRITICAL: The "Missing Dist" Error
+If you see `[warn] sync could not run--missing dist directory`, it is because you haven't built the web version yet. **Step 1 is mandatory.**
 
-### 2. Setup Capacitor
-Run these commands in your project root:
+### Step 1: Generate the Web Build
+Run this on your local machine terminal:
 ```bash
-# Install Capacitor core
+npm install
+npm run build
+```
+*This creates a `dist` folder. Capacitor needs this folder to work.*
+
+### Step 2: Initialize Capacitor
+```bash
+# Install core tools
 npm install @capacitor/core @capacitor/cli
 
-# Initialize Capacitor
-npx cap init GrowthOS com.mostafamadadi.growthos
-
-# Add Android/iOS platforms
-npm install @capacitor/android @capacitor/ios
-npx cap add android
-npx cap add ios
+# Initialize project settings
+# Note: Use "dist" as the web asset directory when prompted
+npx cap init GrowthOS com.mostafamadadi.growthos --web-dir dist
 ```
 
-### 3. Sync and Open
-Every time you make changes to the Web code:
-1. Run `npm run build`
-2. Run `npx cap copy` (to copy the web files to the mobile project)
-3. Run `npx cap open android` (this opens Android Studio)
+### Step 3: Add Platforms
+```bash
+# Install platform packages
+npm install @capacitor/android
 
-### 4. Build the APK
-In **Android Studio**:
-1. Wait for Gradle to finish syncing.
-2. Go to **Build** -> **Build Bundle(s) / APK(s)** -> **Build APK(s)**.
-3. Once finished, a notification will appear with a "locate" link to find your `.apk` file.
+# Add the Android project
+npx cap add android
+```
+
+### Step 4: Sync & Open in Android Studio
+Whenever you change your code, run this sequence:
+```bash
+npm run build
+npx cap sync
+npx cap open android
+```
+
+### Step 5: Build the final APK (inside Android Studio)
+1. Wait for the project to load and Gradle to finish (1-2 minutes).
+2. Look at the top menu: **Build** > **Build Bundle(s) / APK(s)** > **Build APK(s)**.
+3. A popup will appear at the bottom right when finished. Click **Locate** to get your `.apk` file.
+4. Transfer that APK to your phone and install!
 
 ---
 
