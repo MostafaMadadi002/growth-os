@@ -188,10 +188,10 @@ export default function HabitsScreen() {
            <motion.div 
              initial={{ opacity: 0, y: 10 }}
              animate={{ opacity: 1, y: 0 }}
-             className="col-span-full py-32 text-center border-4 border-dashed border-white/5 rounded-[4rem] bg-white/[0.01]"
+             className="col-span-full py-32 text-center border-4 border-dashed border-surface-border rounded-[4rem] bg-surface-base/50"
            >
-              <Activity size={64} strokeWidth={1} className="mx-auto mb-8 text-slate-800" />
-              <p className="text-[12px] font-mono font-black text-slate-600 uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
+              <Activity size={64} strokeWidth={1} className="mx-auto mb-8 text-text-secondary opacity-20" />
+              <p className="text-[12px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
                  No Behavioral Threads Maped // <br />Initialize Neural Pathway Synthesis
               </p>
            </motion.div>

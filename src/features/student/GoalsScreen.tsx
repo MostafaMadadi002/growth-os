@@ -435,10 +435,10 @@ export default function GoalsScreen() {
            <motion.div 
              initial={{ opacity: 0, y: 10 }}
              animate={{ opacity: 1, y: 0 }}
-             className="py-32 text-center border-4 border-dashed border-white/5 rounded-[4rem] bg-white/[0.01]"
+             className="py-32 text-center border-4 border-dashed border-surface-border rounded-[4rem] bg-surface-base/50"
            >
-              <Target size={64} strokeWidth={1} className="mx-auto mb-8 text-slate-800" />
-              <p className="text-[12px] font-mono font-black text-slate-600 uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
+              <Target size={64} strokeWidth={1} className="mx-auto mb-8 text-text-secondary opacity-20" />
+              <p className="text-[12px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
                  {t('partition_time')} <br /> Establish New Tactical Objective
               </p>
            </motion.div>
