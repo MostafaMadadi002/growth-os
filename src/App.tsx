@@ -21,9 +21,75 @@ type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Report
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
+  const [slideDirection, setSlideDirection] = useState<number>(0);
   const { dir, t, setLanguage: setI18nLanguage } = useI18n();
   const { currentRoot, theme, notificationsEnabled, studentData, language: appLanguage } = useAppStore();
   const notifiedTasks = React.useRef<Map<string, string>>(new Map());
+
+  // Screen transition variants
+  const variants = {
+    initial: (direction: number) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0
+    }),
+    animate: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -100 : 100,
+      opacity: 0
+    })
+  };
+
+  const handleTabChange = (newTabId: TabType) => {
+    const currentIndex = currentTabs.findIndex(t => t.id === activeTab);
+    const nextIndex = currentTabs.findIndex(t => t.id === newTabId);
+    
+    // In RTL, index increase means moving left (direction = 1 in LTR logic)
+    const isRTL = dir === 'rtl';
+    const direction = nextIndex > currentIndex ? (isRTL ? -1 : 1) : (isRTL ? 1 : -1);
+    
+    setSlideDirection(direction);
+    setActiveTab(newTabId);
+  };
+
+  const onDragEnd = (_: any, info: any) => {
+    const threshold = 50;
+    const velocityThreshold = 500;
+    const { offset, velocity } = info;
+    const isRTL = dir === 'rtl';
+
+    const currentIndex = currentTabs.findIndex(t => t.id === activeTab);
+
+    if (Math.abs(offset.x) > threshold || Math.abs(velocity.x) > velocityThreshold) {
+      if (offset.x > 0) {
+        // Dragged to the right -> Previous tab (in LTR)
+        if (isRTL) {
+          // In RTL, dragging right is Next
+          if (currentIndex < currentTabs.length - 1) {
+            handleTabChange(currentTabs[currentIndex + 1].id);
+          }
+        } else {
+          if (currentIndex > 0) {
+            handleTabChange(currentTabs[currentIndex - 1].id);
+          }
+        }
+      } else {
+        // Dragged to the left -> Next tab (in LTR)
+        if (isRTL) {
+          // In RTL, dragging left is Previous
+          if (currentIndex > 0) {
+            handleTabChange(currentTabs[currentIndex - 1].id);
+          }
+        } else {
+          if (currentIndex < currentTabs.length - 1) {
+            handleTabChange(currentTabs[currentIndex + 1].id);
+          }
+        }
+      }
+    }
+  };
 
   // Sync Language
   React.useEffect(() => {
@@ -146,14 +212,23 @@ export default function App() {
       </header>
 
       <main className="flex-1 relative overflow-hidden bg-surface-base">
-         <AnimatePresence mode="wait">
+         <AnimatePresence mode="wait" custom={slideDirection}>
            <motion.div
              key={activeTab}
-             initial={{ opacity: 0, y: 10 }}
-             animate={{ opacity: 1, y: 0 }}
-             exit={{ opacity: 0, y: -10 }}
-             transition={{ duration: 0.3, ease: 'easeOut' }}
-             className="h-full overflow-y-auto pb-44 px-2 md:px-4"
+             custom={slideDirection}
+             variants={variants}
+             initial="initial"
+             animate="animate"
+             exit="exit"
+             drag="x"
+             dragConstraints={{ left: 0, right: 0 }}
+             dragElastic={0.2}
+             onDragEnd={onDragEnd}
+             transition={{ 
+               x: { type: "spring", stiffness: 300, damping: 30 },
+               opacity: { duration: 0.2 }
+             }}
+             className="h-full overflow-y-auto pb-44 px-2 md:px-4 touch-pan-y"
            >
              <div className="max-w-4xl mx-auto">
                {renderScreen()}
@@ -166,7 +241,7 @@ export default function App() {
         {currentTabs.map((tab) => (
           <button 
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             className={`relative flex-1 md:flex-none p-1 flex flex-col items-center justify-center gap-1 transition-all duration-300 min-w-0 ${activeTab === tab.id ? 'text-brand-primary' : 'text-text-secondary hover:text-text-primary'}`}
           >
             <div className={`transition-all duration-300 ${activeTab === tab.id ? 'scale-110 -translate-y-0.5' : 'scale-100 opacity-50'}`}>
