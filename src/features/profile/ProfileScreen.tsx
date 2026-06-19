@@ -12,7 +12,7 @@ export default function ProfileScreen() {
   const { t, language } = useI18n();
   const { currentRoot, setRoot, studentData, traderData, importData } = useAppStore();
 
-  const totalPnL = (traderData?.trades || []).reduce((sum, trade) => sum + (trade.profitAmount || 0), 0);
+  const totalPnL = (traderData?.trades || []).reduce((sum, trade) => sum + Number(trade.profitAmount || 0), 0);
 
   // Generate heatmap data for the last 16 weeks (112 days)
   // To align the grid, we find how many days back we need to go to start on a Saturday
@@ -165,7 +165,7 @@ export default function ProfileScreen() {
                 <h4 className="text-[10px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-[0.4em]">{t('total_pnl')}</h4>
                 <div className="flex items-baseline gap-2 justify-center">
                   <span className={`text-4xl md:text-7xl font-display font-black tracking-tighter ${totalPnL > 0 ? 'text-emerald-400' : totalPnL < 0 ? 'text-rose-400' : 'text-text-secondary'}`}>
-                    {totalPnL > 0 ? '+' : ''}{totalPnL}
+                    {totalPnL > 0 ? '+' : ''}{totalPnL.toFixed(1)}
                   </span>
                   <span className="text-xl md:text-2xl font-mono font-black text-text-secondary uppercase opacity-60">USD</span>
                 </div>

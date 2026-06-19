@@ -52,7 +52,7 @@ export default function TradingReports() {
     let cumulativeProfit = 0;
     
     const equityCurve = sortedForEquity.map(t => {
-      cumulativeProfit += (t.profitAmount || 0) - (t.fee || 0);
+      cumulativeProfit += Number(t.profitAmount || 0) - Number(t.fee || 0);
       return {
         date: t.date,
         profit: Number(cumulativeProfit.toFixed(2))
@@ -74,7 +74,7 @@ export default function TradingReports() {
     const labelProfitMap: Record<string, number> = {};
     filteredTrades.forEach(t => {
       t.labels?.forEach(label => {
-        labelProfitMap[label] = (labelProfitMap[label] || 0) + (t.profitAmount || 0) - (t.fee || 0);
+        labelProfitMap[label] = (labelProfitMap[label] || 0) + Number(t.profitAmount || 0) - Number(t.fee || 0);
       });
     });
 
@@ -126,8 +126,8 @@ export default function TradingReports() {
     const wins = closedTrades.filter(t => t.result === 'WIN').length;
     const losses = closedTrades.filter(t => t.result === 'LOSS').length;
     const winRate = total > 0 ? (wins / total) * 100 : 0;
-    const totalProfit = filteredTrades.reduce((acc, t) => acc + (t.profitAmount || 0), 0);
-    const totalFees = filteredTrades.reduce((acc, t) => acc + (t.fee || 0), 0);
+    const totalProfit = filteredTrades.reduce((acc, t) => acc + Number(t.profitAmount || 0), 0);
+    const totalFees = filteredTrades.reduce((acc, t) => acc + Number(t.fee || 0), 0);
     const netProfit = totalProfit - totalFees;
     
     return {

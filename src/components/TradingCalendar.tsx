@@ -24,14 +24,14 @@ export default function TradingCalendar() {
     const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
     return trades
       .filter(t => t.date === targetDate)
-      .reduce((sum, t) => sum + (t.profitAmount || 0), 0);
+      .reduce((sum, t) => sum + Number(t.profitAmount || 0), 0);
   };
 
   const getDayStatus = (day: number) => {
     const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
     const dayTrades = trades.filter(t => t.date === targetDate);
     if (dayTrades.length === 0) return 'neutral';
-    const pnl = dayTrades.reduce((sum, t) => sum + (t.profitAmount || 0), 0);
+    const pnl = dayTrades.reduce((sum, t) => sum + Number(t.profitAmount || 0), 0);
     if (pnl > 0) return 'profit';
     if (pnl < 0) return 'loss';
     return 'neutral';

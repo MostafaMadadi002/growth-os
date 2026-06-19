@@ -91,7 +91,7 @@ export default function TradingScreen() {
     const losses = finished.filter(t => t.status === TradeStatus.LOSS).length;
     const winRate = finished.length > 0 ? Math.round((wins / finished.length) * 100) : 0;
     
-    const totalPnl = trades.reduce((acc, t) => acc + (t.pnl_amount || 0), 0);
+    const totalPnl = trades.reduce((acc, t) => acc + Number(t.pnl_amount || 0), 0);
     const openPositions = trades.filter(t => t.status === TradeStatus.OPEN).length;
     
     // Advanced Metrics
