@@ -114,7 +114,7 @@ export default function HabitsScreen() {
                    </div>
                 </div>
 
-                <button type="submit" className="w-full py-7 bg-blue-600 text-white rounded-3xl font-display font-black text-xl uppercase shadow-2xl shadow-blue-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <button type="submit" className="w-full py-5 md:py-7 bg-blue-600 text-white rounded-2xl md:rounded-3xl font-display font-black text-lg md:text-xl uppercase shadow-2xl shadow-blue-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
                    {t('map_pathway')}
                 </button>
              </motion.form>

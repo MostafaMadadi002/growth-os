@@ -194,7 +194,7 @@ export default function App() {
       className="flex flex-col h-screen w-full bg-surface-base select-none overflow-hidden text-text-primary transition-colors duration-500"
       dir={dir}
     >
-      <header className="px-6 py-4 flex justify-between items-center bg-surface-card z-40 border-b border-surface-border">
+      <header className="px-6 py-4 mb-2 flex justify-between items-center bg-surface-card z-40 border-b border-surface-border">
         <div className="flex items-center gap-3">
            <div className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20 group cursor-pointer transition-all hover:scale-110">
               <span className="text-slate-950 font-black text-xl">G</span>

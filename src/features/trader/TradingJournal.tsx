@@ -424,7 +424,7 @@ export default function TradingJournal() {
                 />
 
                 <div className="pt-2">
-                  <button type="submit" className="w-full bg-brand-primary text-slate-950 py-4 rounded-2xl font-display font-black uppercase text-xs shadow-lg shadow-brand-primary/20">
+                  <button type="submit" className="w-full bg-brand-primary text-slate-950 py-3 md:py-4 rounded-xl md:rounded-2xl font-display font-black uppercase text-[11px] md:text-xs shadow-lg shadow-brand-primary/20">
                     {t('add_trade')}
                   </button>
                 </div>

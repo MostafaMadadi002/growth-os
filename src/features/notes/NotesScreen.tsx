@@ -170,13 +170,13 @@ export default function NotesScreen() {
               <div className="flex gap-4">
                 <button 
                   onClick={() => setIsAdding(false)}
-                  className="flex-1 py-4 bg-surface-base border border-surface-border rounded-2xl text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest hover:bg-surface-card transition-all"
+                  className="flex-1 py-3 md:py-4 bg-surface-base border border-surface-border rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest hover:bg-surface-card transition-all"
                 >
                   {t('cancel')}
                 </button>
                 <button 
                   onClick={handleAddNote}
-                  className="flex-1 py-4 bg-brand-primary text-slate-950 rounded-2xl text-[10px] font-mono font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-brand-primary/20"
+                  className="flex-1 py-3 md:py-4 bg-brand-primary text-slate-950 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-mono font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-brand-primary/20"
                 >
                   {t('save')}
                 </button>

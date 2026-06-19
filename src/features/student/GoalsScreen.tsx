@@ -281,7 +281,7 @@ export default function GoalsScreen() {
                     </div>
                 </div>
 
-                <button type="submit" className="w-full py-7 bg-brand-primary text-slate-950 rounded-3xl font-display font-black text-xl uppercase shadow-2xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <button type="submit" className="w-full py-5 md:py-7 bg-brand-primary text-slate-950 rounded-2xl md:rounded-3xl font-display font-black text-lg md:text-xl uppercase shadow-2xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
                    {isAdding ? t('establish_objective') : t('save_changes') || 'SAVE CHANGES'}
                 </button>
              </motion.form>
