@@ -26,7 +26,7 @@ export default function ScheduleScreen() {
   const showPrompt = !isAdding && !isRecording && unfinishedTasks.length > 0;
 
   const timelineItems = [
-    ...tasks.map(t => ({ ...t, type: 'TASK' as const })),
+    ...tasks.filter(t => !t.done).map(t => ({ ...t, type: 'TASK' as const })),
     ...todayActivities.map(a => ({
       id: a.id,
       label: a.title,
@@ -371,30 +371,6 @@ export default function ScheduleScreen() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <div className="flex justify-between items-end px-2">
-        <div>
-           <div className="flex items-center gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316]" />
-              <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('today_schedule') || 'TIMELINE'}</span>
-           </div>
-           <h2 className="text-2xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
-             {t('sync_timeline') || 'CHRONOS'}<span className="text-orange-500">.</span>
-           </h2>
-        </div>
-        <button 
-           onClick={() => {
-             // Logic to clear/skip all tasks for today
-             // For now we just filter out non-essential tasks or mark as skipped if we had that.
-             // Using deleteTask for now since it's a "Delete button for this section"
-             studentData.tasks?.forEach(t => !t.done && deleteTask(t.id));
-           }}
-           className="px-4 py-2 bg-rose-500/10 text-rose-500 rounded-xl border border-rose-500/20 text-[10px] font-mono font-black uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all active:scale-95 flex items-center gap-2"
-        >
-          <Trash2 size={12} />
-          {t('cancel_day') || 'ABORT DAY'}
-        </button>
-      </div>
 
       <section className="space-y-4 relative before:absolute before:left-10 md:before:left-14 before:top-4 before:bottom-4 rtl:before:left-auto rtl:before:right-10 md:rtl:before:right-14 before:w-[1px] before:bg-surface-border before:z-0 pb-20">
          {timelineItems.map((item) => {
