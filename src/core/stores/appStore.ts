@@ -44,6 +44,7 @@ export interface StudentActivity {
   sessions: number;
   type: 'POSITIVE' | 'NEGATIVE';
   goalId?: string;
+  taskId?: string;
 }
 
 export interface ActivityLog {
@@ -382,7 +383,8 @@ export const useAppStore = create<AppState>()(
                 duration: 60,
                 sessions: 1,
                 type: 'POSITIVE',
-                goalId: t.goalId
+                goalId: t.goalId,
+                taskId: t.id
               });
 
               // Add to Logs
@@ -401,7 +403,7 @@ export const useAppStore = create<AppState>()(
               }
             } else {
               // Undo Activity
-              updatedActivities = updatedActivities.filter(a => a.title !== t.label || a.date !== today);
+              updatedActivities = updatedActivities.filter(a => a.taskId !== t.id);
               
               // Subtract from Logs
               if (logIndex > -1) {
@@ -464,12 +466,18 @@ export const useAppStore = create<AppState>()(
           goals = goals.map(g => g.id === activity.goalId ? { ...g, completedSessions: Math.max(0, g.completedSessions - activity.sessions) } : g);
         }
 
+        let tasks = [...studentData.tasks];
+        if (activity.taskId) {
+          tasks = tasks.map(t => t.id === activity.taskId ? { ...t, done: false } : t);
+        }
+
         return {
           studentData: {
             ...studentData,
             activities,
             activityLogs: logs,
-            goals
+            goals,
+            tasks
           }
         };
       }),

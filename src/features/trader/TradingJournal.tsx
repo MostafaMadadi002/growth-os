@@ -180,7 +180,7 @@ export default function TradingJournal() {
   };
 
   return (
-    <div className="p-4 md:p-8 space-y-8 pb-32">
+    <div className="p-4 md:p-8 space-y-8 pb-32 max-w-7xl mx-auto px-4 md:px-0">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 px-2">
         <div className="space-y-1">
            <div className="flex items-center gap-3 mb-2">

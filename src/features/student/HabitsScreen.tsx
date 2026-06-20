@@ -34,7 +34,7 @@ export default function HabitsScreen() {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="space-y-8 md:space-y-12 w-full pb-32">
+    <div className="space-y-8 md:space-y-12 w-full max-w-5xl mx-auto pb-32 px-4 md:px-0">
       <header className="flex justify-between items-center md:items-end px-2">
         <div>
            <div className="flex items-center gap-3">
@@ -83,7 +83,7 @@ export default function HabitsScreen() {
                      name="title" 
                      required 
                      placeholder={language === 'fa' ? 'مثلاً: مطالعه عمیق صبحگاهی' : 'e.g. Early Morning Focus'} 
-                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-2xl placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-xl md:text-2xl placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all" 
                    />
                 </div>
 

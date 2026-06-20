@@ -60,7 +60,7 @@ export default function NotesScreen() {
   };
 
   return (
-    <div className="space-y-8 md:space-y-12 w-full pb-32">
+    <div className="space-y-8 md:space-y-12 w-full max-w-7xl mx-auto pb-32 px-4 md:px-0">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
         <div>
           <div className="flex items-center gap-3">

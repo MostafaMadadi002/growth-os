@@ -124,7 +124,8 @@ export default function TradingScreen() {
 
   return (
     <div className="flex flex-col h-full bg-slate-950 p-4 md:p-12 overflow-y-auto pb-40 scrollbar-hide data-grid" dir={dir}>
-      <header className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="w-full max-w-7xl mx-auto">
+        <header className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
@@ -579,6 +580,7 @@ export default function TradingScreen() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </div>
   );
 }
