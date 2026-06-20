@@ -232,13 +232,17 @@ export const useAppStore = create<AppState>()(
             
             const newLogs = [...logs];
             if (existingLogIndex > -1) {
-              newLogs[existingLogIndex].score += scoreChange;
-              if (h.type === 'POSITIVE') {
-                newLogs[existingLogIndex].posCount = Math.max(0, (newLogs[existingLogIndex].posCount || 0) + (isCompletedToday ? -1 : 1));
-              } else {
-                newLogs[existingLogIndex].negCount = Math.max(0, (newLogs[existingLogIndex].negCount || 0) + (isCompletedToday ? -1 : 1));
-              }
-              newLogs[existingLogIndex].count = (newLogs[existingLogIndex].posCount || 0) + (newLogs[existingLogIndex].negCount || 0);
+              const currentLog = newLogs[existingLogIndex];
+              const newPos = h.type === 'POSITIVE' ? Math.max(0, (currentLog.posCount || 0) + (isCompletedToday ? -1 : 1)) : (currentLog.posCount || 0);
+              const newNeg = h.type === 'NEGATIVE' ? Math.max(0, (currentLog.negCount || 0) + (isCompletedToday ? -1 : 1)) : (currentLog.negCount || 0);
+              
+              newLogs[existingLogIndex] = {
+                ...currentLog,
+                score: currentLog.score + scoreChange,
+                posCount: newPos,
+                negCount: newNeg,
+                count: newPos + newNeg
+              };
             } else {
               const pos = h.type === 'POSITIVE' ? 1 : 0;
               const neg = h.type === 'NEGATIVE' ? 1 : 0;
@@ -293,10 +297,17 @@ export const useAppStore = create<AppState>()(
         const scoreChange = type === 'POSITIVE' ? count : -count;
         
         if (existingLogIndex > -1) {
-          logs[existingLogIndex].count += count;
-          logs[existingLogIndex].score += scoreChange;
-          if (type === 'POSITIVE') logs[existingLogIndex].posCount = (logs[existingLogIndex].posCount || 0) + count;
-          else logs[existingLogIndex].negCount = (logs[existingLogIndex].negCount || 0) + count;
+          const currentLog = logs[existingLogIndex];
+          const newPos = type === 'POSITIVE' ? (currentLog.posCount || 0) + count : (currentLog.posCount || 0);
+          const newNeg = type === 'NEGATIVE' ? (currentLog.negCount || 0) + count : (currentLog.negCount || 0);
+          
+          logs[existingLogIndex] = {
+            ...currentLog,
+            count: currentLog.count + count,
+            score: currentLog.score + scoreChange,
+            posCount: newPos,
+            negCount: newNeg
+          };
         } else {
           logs.push({ 
             date, 
@@ -316,10 +327,17 @@ export const useAppStore = create<AppState>()(
         const scoreChange = activity.type === 'POSITIVE' ? activity.sessions : -activity.sessions;
 
         if (existingLogIndex > -1) {
-          logs[existingLogIndex].count += activity.sessions;
-          logs[existingLogIndex].score += scoreChange;
-          if (activity.type === 'POSITIVE') logs[existingLogIndex].posCount = (logs[existingLogIndex].posCount || 0) + activity.sessions;
-          else logs[existingLogIndex].negCount = (logs[existingLogIndex].negCount || 0) + activity.sessions;
+          const currentLog = logs[existingLogIndex];
+          const newPos = activity.type === 'POSITIVE' ? (currentLog.posCount || 0) + activity.sessions : (currentLog.posCount || 0);
+          const newNeg = activity.type === 'NEGATIVE' ? (currentLog.negCount || 0) + activity.sessions : (currentLog.negCount || 0);
+          
+          logs[existingLogIndex] = {
+            ...currentLog,
+            count: currentLog.count + activity.sessions,
+            score: currentLog.score + scoreChange,
+            posCount: newPos,
+            negCount: newNeg
+          };
         } else {
           logs.push({ 
             date: activity.date, 
@@ -426,9 +444,13 @@ export const useAppStore = create<AppState>()(
 
               // Add to Logs
               if (logIndex > -1) {
-                logs[logIndex].count += 1;
-                logs[logIndex].score += 1;
-                logs[logIndex].posCount = (logs[logIndex].posCount || 0) + 1;
+                const currentLog = logs[logIndex];
+                logs[logIndex] = {
+                  ...currentLog,
+                  count: currentLog.count + 1,
+                  score: currentLog.score + 1,
+                  posCount: (currentLog.posCount || 0) + 1
+                };
               } else {
                 logs.push({ date: today, count: 1, posCount: 1, negCount: 0, score: 1 });
               }
@@ -470,9 +492,13 @@ export const useAppStore = create<AppState>()(
               
               // Subtract from Logs
               if (logIndex > -1) {
-                logs[logIndex].count = Math.max(0, logs[logIndex].count - 1);
-                logs[logIndex].score -= 1;
-                logs[logIndex].posCount = Math.max(0, (logs[logIndex].posCount || 0) - 1);
+                const currentLog = logs[logIndex];
+                logs[logIndex] = {
+                  ...currentLog,
+                  count: Math.max(0, currentLog.count - 1),
+                  score: currentLog.score - 1,
+                  posCount: Math.max(0, (currentLog.posCount || 0) - 1)
+                };
               }
 
               if (t.goalId) {
@@ -529,15 +555,30 @@ export const useAppStore = create<AppState>()(
         const scoreChange = activity.type === 'POSITIVE' ? -activity.sessions : activity.sessions;
 
         if (logIndex > -1) {
-          logs[logIndex].count = Math.max(0, logs[logIndex].count - activity.sessions);
-          logs[logIndex].score += scoreChange;
-          if (activity.type === 'POSITIVE') logs[logIndex].posCount = Math.max(0, (logs[logIndex].posCount || 0) - activity.sessions);
-          else logs[logIndex].negCount = Math.max(0, (logs[logIndex].negCount || 0) - activity.sessions);
+          const currentLog = logs[logIndex];
+          const newPos = activity.type === 'POSITIVE' ? Math.max(0, (currentLog.posCount || 0) - activity.sessions) : (currentLog.posCount || 0);
+          const newNeg = activity.type === 'NEGATIVE' ? Math.max(0, (currentLog.negCount || 0) - activity.sessions) : (currentLog.negCount || 0);
+          
+          logs[logIndex] = {
+            ...currentLog,
+            count: Math.max(0, currentLog.count - activity.sessions),
+            score: currentLog.score + scoreChange,
+            posCount: newPos,
+            negCount: newNeg
+          };
         }
 
         let goals = [...(studentData.goals || [])];
+        let habits = [...(studentData.habits || [])];
         if (activity.goalId) {
+          const goal = goals.find(g => g.id === activity.goalId);
           goals = goals.map(g => g.id === activity.goalId ? { ...g, completedSessions: Math.max(0, g.completedSessions - activity.sessions) } : g);
+          
+          if (goal?.habitId) {
+            habits = habits.map(h => 
+              h.id === goal.habitId ? { ...h, streak: Math.max(0, h.streak - 1) } : h
+            );
+          }
         }
 
         let tasks = [...(studentData.tasks || [])];
@@ -551,6 +592,7 @@ export const useAppStore = create<AppState>()(
             activities,
             activityLogs: logs,
             goals,
+            habits,
             tasks
           }
         };
