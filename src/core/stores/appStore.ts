@@ -246,9 +246,26 @@ export const useAppStore = create<AppState>()(
             }
             updatedLogs = newLogs;
 
+            let newStreak = h.streak;
+            if (isCompletedToday) {
+              newStreak = Math.max(0, h.streak - 1);
+            } else {
+              if (!h.lastCheck) {
+                newStreak = 1;
+              } else {
+                const lastDate = new Date(h.lastCheck);
+                const currDate = new Date(today);
+                const diffTime = Math.abs(currDate.getTime() - lastDate.getTime());
+                const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) newStreak += 1;
+                else if (diffDays > 1) newStreak = 1;
+                else if (diffDays === 0) { /* Already 1 or more, don't change */ }
+              }
+            }
+
             return {
               ...h,
-              streak: isCompletedToday ? Math.max(0, h.streak - 1) : h.streak + 1,
+              streak: newStreak,
               lastCheck: isCompletedToday ? undefined : today
             };
           }
@@ -323,17 +340,35 @@ export const useAppStore = create<AppState>()(
           : updatedHabits.find(h => h.title === (goal?.title || activity.title) && h.type === activity.type);
         
         if (existingHabit) {
-          updatedHabits = updatedHabits.map(h => 
-            h.id === existingHabit.id 
-              ? { ...h, streak: h.streak + activity.sessions, lastCheck: activity.date } 
-              : h
-          );
+          updatedHabits = updatedHabits.map(h => {
+            if (h.id === existingHabit.id) {
+              let newStreak = h.streak;
+              if (!h.lastCheck) {
+                newStreak = 1;
+              } else if (h.lastCheck === activity.date) {
+                // Done today already
+              } else {
+                const lastDate = new Date(h.lastCheck);
+                const currDate = new Date(activity.date);
+                const diffTime = Math.abs(currDate.getTime() - lastDate.getTime());
+                const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                  newStreak += 1;
+                } else if (diffDays > 1) {
+                  newStreak = 1;
+                }
+              }
+              return { ...h, streak: newStreak, lastCheck: activity.date };
+            }
+            return h;
+          });
         } else if (goal?.title || activity.title) {
           updatedHabits.push({
             id: Math.random().toString(36).substr(2, 9),
             title: goal?.title || activity.title,
             type: activity.type,
-            streak: activity.sessions,
+            streak: 1,
             lastCheck: activity.date
           });
         }
@@ -407,9 +442,25 @@ export const useAppStore = create<AppState>()(
 
                   // Sync with linked habit
                   if (goal.habitId) {
-                    updatedHabits = updatedHabits.map(h => 
-                      h.id === goal.habitId ? { ...h, streak: h.streak + 1, lastCheck: today } : h
-                    );
+                    updatedHabits = updatedHabits.map(h => {
+                      if (h.id === goal.habitId) {
+                        let newStreak = h.streak;
+                        if (!h.lastCheck) {
+                          newStreak = 1;
+                        } else if (h.lastCheck === today) {
+                          // Already done today
+                        } else {
+                          const lastDate = new Date(h.lastCheck);
+                          const currDate = new Date(today);
+                          const diffTime = Math.abs(currDate.getTime() - lastDate.getTime());
+                          const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                          if (diffDays === 1) newStreak += 1;
+                          else if (diffDays > 1) newStreak = 1;
+                        }
+                        return { ...h, streak: newStreak, lastCheck: today };
+                      }
+                      return h;
+                    });
                   }
                 }
               }
