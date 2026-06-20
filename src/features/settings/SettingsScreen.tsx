@@ -95,20 +95,20 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
   return (
     <div className="space-y-8 md:space-y-12 w-full pb-32">
       <header className="flex justify-between items-center px-2">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 md:gap-6">
           <button 
             onClick={onBack}
             className="w-12 h-12 md:w-16 md:h-16 bg-surface-card border border-surface-border rounded-xl md:rounded-2xl flex items-center justify-center text-text-secondary hover:text-brand-primary hover:border-brand-primary/30 transition-all shadow-sm shrink-0 active:scale-90"
           >
-            <ArrowLeft size={24} md:size={28} />
+            <ArrowLeft size={20} md:size={28} />
           </button>
           
           <div>
-             <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]" />
-                <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('settings')}</span>
+             <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]" />
+                <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('settings')}</span>
              </div>
-             <h1 className="text-3xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1">
+             <h1 className="text-2xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1">
                {t('settings')}<span className="text-indigo-500">.</span>
              </h1>
           </div>

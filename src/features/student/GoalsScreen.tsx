@@ -124,7 +124,7 @@ export default function GoalsScreen() {
               <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_12px_#10b981]" />
               <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('strategic_objectives')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
+           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
              {t('branch_goals').split(' ')[0]}<span className="text-brand-primary">.</span>
            </h1>
         </div>
@@ -378,32 +378,28 @@ export default function GoalsScreen() {
               key={goal.id} 
               className="group"
             >
-              <div className="bg-surface-card border border-surface-border p-8 md:p-10 rounded-[3rem] group-hover:bg-surface-card group-hover:border-brand-primary/20 transition-all duration-500 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-10">
-                <div className="flex-1 space-y-8">
-                    <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 bg-surface-base rounded-2xl flex items-center justify-center text-brand-primary border border-surface-border shadow-inner cursor-pointer transition-transform hover:scale-110 active:scale-95" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>
-                         {goal.category === 'STUDY' ? <BookOpen size={24} /> : goal.category === 'WORK' ? <Briefcase size={24} /> : <Rocket size={24} />}
+              <div className="bg-surface-card border border-surface-border p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] group-hover:bg-surface-card group-hover:border-brand-primary/20 transition-all duration-500 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-10">
+                <div className="flex-1 space-y-6 md:space-y-8">
+                    <div className="flex items-center gap-4 md:gap-5">
+                      <div className="w-12 h-12 md:w-14 md:h-14 bg-surface-base rounded-xl md:rounded-2xl flex items-center justify-center text-brand-primary border border-surface-border shadow-inner cursor-pointer transition-transform hover:scale-110 active:scale-95" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>
+                         {goal.category === 'STUDY' ? <BookOpen size={20} md:size={24} /> : goal.category === 'WORK' ? <Briefcase size={20} md:size={24} /> : <Rocket size={20} md:size={24} />}
                       </div>
                       <div className="flex-1">
-                         <div className="flex items-center gap-3">
-                           <h3 className="text-3xl font-display font-black text-text-primary uppercase tracking-tight leading-none mb-2 group-hover:text-brand-primary transition-colors cursor-pointer" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>{goal.title}</h3>
+                         <div className="flex items-center gap-2 md:gap-3">
+                           <h3 className="text-xl md:text-3xl font-display font-black text-text-primary uppercase tracking-tight leading-tight group-hover:text-brand-primary transition-colors cursor-pointer" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>{goal.title}</h3>
                            <button 
                              onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}
                              className="text-text-secondary hover:text-brand-primary transition-colors"
                            >
-                             {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                             {isExpanded ? <ChevronUp size={16} md:size={20} /> : <ChevronDown size={16} md:size={20} />}
                            </button>
                          </div>
-                         <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest bg-surface-base px-3 py-1 rounded-lg opacity-60">
+                         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+                            <span className="text-[8px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest bg-surface-base px-2 md:px-3 py-1 rounded-lg opacity-60">
                               {goal.selectedDays?.length || goal.frequencyPerWeek} {t('ses_week')}
                             </span>
-                            <span className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest bg-surface-base px-3 py-1 rounded-lg opacity-60">
+                            <span className="text-[8px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest bg-surface-base px-2 md:px-3 py-1 rounded-lg opacity-60">
                               {goal.duration} {t(goal.durationUnit?.toLowerCase() || 'months')}
-                            </span>
-                            <span className="text-[10px] font-mono font-black text-brand-primary uppercase tracking-widest bg-surface-base px-3 py-1 rounded-lg flex items-center gap-2 opacity-80">
-                              <Clock size={10} />
-                              {Math.floor(totalDuration / 60)}h {totalDuration % 60}m
                             </span>
                          </div>
                       </div>

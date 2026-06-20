@@ -93,21 +93,21 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
     <div className="space-y-8 md:space-y-12 w-full pb-20">
         {/* Profile Header */}
         <header className="flex flex-row items-center justify-between gap-8 px-2">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
             <div className="relative">
-               <div className="w-20 h-20 md:w-32 md:h-32 bg-surface-card border border-surface-border rounded-2xl md:rounded-3xl flex items-center justify-center relative shadow-lg shrink-0">
-                 <User size={32} className="text-brand-primary md:w-12 md:h-12" />
-                 <div className={`absolute -bottom-2 -right-2 w-8 h-8 md:w-10 md:h-10 rounded-lg border-4 border-surface-base flex items-center justify-center ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500' : 'bg-emerald-500'}`}>
-                   {currentRoot === UserRole.STUDENT ? <GraduationCap size={14} className="text-white md:w-5 md:h-5" /> : <Terminal size={14} className="text-white md:w-5 md:h-5" />}
+               <div className="w-16 h-16 md:w-32 md:h-32 bg-surface-card border border-surface-border rounded-xl md:rounded-3xl flex items-center justify-center relative shadow-lg shrink-0">
+                 <User size={28} className="text-brand-primary md:w-12 md:h-12" />
+                 <div className={`absolute -bottom-1.5 -right-1.5 md:-bottom-2 md:-right-2 w-6 h-6 md:w-10 md:h-10 rounded-lg border-4 border-surface-base flex items-center justify-center ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500' : 'bg-emerald-500'}`}>
+                   {currentRoot === UserRole.STUDENT ? <GraduationCap size={12} className="text-white md:w-5 md:h-5" /> : <Terminal size={12} className="text-white md:w-5 md:h-5" />}
                  </div>
                </div>
             </div>
             <div>
-               <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
-                  <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{currentRoot}</span>
+               <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-brand-primary" />
+                  <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{currentRoot}</span>
                </div>
-               <h1 className="text-3xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1">
+               <h1 className="text-2xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1 md:mt-2">
                  {language === 'fa' ? 'مهمان' : 'GUEST'}<span className="text-brand-primary">.</span>
                </h1>
             </div>
@@ -115,10 +115,10 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
 
           <button 
             onClick={onSettings}
-            className="flex flex-col items-center justify-center gap-1.5 min-w-[72px] px-3 py-3 rounded-2xl border border-surface-border bg-surface-card shadow-sm transition-all duration-500 group hover:border-brand-primary/40 hover:text-brand-primary hover:shadow-brand-primary/5 active:scale-95"
+            className="flex flex-col items-center justify-center gap-1 min-w-[60px] md:min-w-[72px] px-2 py-2 md:px-3 md:py-3 rounded-xl md:rounded-2xl border border-surface-border bg-surface-card shadow-sm transition-all duration-500 group hover:border-brand-primary/40 hover:text-brand-primary hover:shadow-brand-primary/5 active:scale-95"
           >
-            <SettingsIcon size={24} className="text-text-secondary transition-all duration-700 group-hover:rotate-180 group-hover:text-brand-primary" />
-            <span className="text-[10px] font-mono font-black uppercase tracking-tight leading-none text-text-secondary group-hover:text-brand-primary">{t('settings')}</span>
+            <SettingsIcon size={20} md:size={24} className="text-text-secondary transition-all duration-700 group-hover:rotate-180 group-hover:text-brand-primary" />
+            <span className="text-[8px] md:text-[10px] font-mono font-black uppercase tracking-tight leading-none text-text-secondary group-hover:text-brand-primary">{t('settings')}</span>
           </button>
         </header>
 
@@ -140,8 +140,8 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
                   <GraduationCap size={24} md:size={28} />
                 </div>
                 <div className="text-left">
-                  <p className={`text-lg md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.STUDENT ? 'text-text-primary' : 'text-text-secondary'}`}>{t('student_mode').split(' ')[0]}</p>
-                  <p className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase mt-1 tracking-widest opacity-40">Educational_Core</p>
+                  <p className={`text-base md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.STUDENT ? 'text-text-primary' : 'text-text-secondary'}`}>{t('student_mode').split(' ')[0]}</p>
+                  <p className="text-[8px] md:text-[10px] font-mono font-black text-text-secondary uppercase mt-0.5 md:mt-1 tracking-widest opacity-40">Educational_Core</p>
                 </div>
               </div>
               {currentRoot === UserRole.STUDENT && <div className="absolute right-0 top-0 bottom-0 w-1 bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.8)]" />}
@@ -156,8 +156,8 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
                   <Terminal size={24} />
                 </div>
                 <div className="text-left">
-                  <p className={`text-lg md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.TRADER ? 'text-text-primary' : 'text-text-secondary'}`}>{t('trader_mode').split(' ')[0]}</p>
-                  <p className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase mt-1 tracking-widest opacity-40">Financial_Node</p>
+                  <p className={`text-base md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.TRADER ? 'text-text-primary' : 'text-text-secondary'}`}>{t('trader_mode').split(' ')[0]}</p>
+                  <p className="text-[8px] md:text-[10px] font-mono font-black text-text-secondary uppercase mt-0.5 md:mt-1 tracking-widest opacity-40">Financial_Node</p>
                 </div>
               </div>
               {currentRoot === UserRole.TRADER && <div className="absolute right-0 top-0 bottom-0 w-1 bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]" />}
@@ -175,11 +175,11 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
             >
               <div className="space-y-2">
                 <h4 className="text-[10px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-[0.4em]">{t('total_pnl')}</h4>
-                <div className="flex items-baseline gap-2 justify-center">
-                  <span className={`text-4xl md:text-7xl font-display font-black tracking-tighter ${totalPnL > 0 ? 'text-emerald-400' : totalPnL < 0 ? 'text-rose-400' : 'text-text-secondary'}`}>
+                <div className="flex items-baseline gap-1 md:gap-2 justify-center">
+                  <span className={`text-3xl md:text-7xl font-display font-black tracking-tighter ${totalPnL > 0 ? 'text-emerald-400' : totalPnL < 0 ? 'text-rose-400' : 'text-text-secondary'}`}>
                     {totalPnL > 0 ? '+' : ''}{totalPnL.toFixed(1)}
                   </span>
-                  <span className="text-xl md:text-2xl font-mono font-black text-text-secondary uppercase opacity-60">USD</span>
+                  <span className="text-base md:text-2xl font-mono font-black text-text-secondary uppercase opacity-60">USD</span>
                 </div>
               </div>
               
@@ -287,9 +287,9 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
                     <div className="space-y-3 md:space-y-4">
                         {(studentData.activities || []).slice(-5).reverse().map((act, i) => (
                             <div key={i} className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${act.type === 'POSITIVE' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'}`} />
-                                    <span className="text-[12px] md:text-sm font-black text-text-primary truncate max-w-[150px]">{act.title}</span>
+                <div className="flex items-center gap-3 md:gap-4">
+                                    <div className={`w-1 h-1 md:w-2 md:h-2 rounded-full ${act.type === 'POSITIVE' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'}`} />
+                                    <span className="text-[11px] md:text-sm font-black text-text-primary truncate max-w-[120px] md:max-w-[200px]">{act.title}</span>
                                 </div>
                                 <span className="text-[9px] md:text-[10px] font-mono text-text-secondary opacity-60 shrink-0">{act.duration}m</span>
                             </div>

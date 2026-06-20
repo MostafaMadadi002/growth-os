@@ -41,7 +41,7 @@ export default function HabitsScreen() {
               <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]" />
               <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('habits')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
+           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
              {t('habits').split(' ')[0]}<span className="text-blue-500">.</span>
            </h1>
         </div>
@@ -78,21 +78,21 @@ export default function HabitsScreen() {
                 </button>
                 
                 <div className="space-y-3">
-                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('pathway_identity')}</label>
+                   <label className="text-[10px] md:text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('pathway_identity')}</label>
                    <input 
                      name="title" 
                      required 
                      placeholder={language === 'fa' ? 'مثلاً: مطالعه عمیق صبحگاهی' : 'e.g. Early Morning Focus'} 
-                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-lg md:text-xl placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-4 md:p-6 text-text-primary font-display font-black text-base md:text-xl placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all" 
                    />
                 </div>
 
                 <div className="space-y-3">
-                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('description')}</label>
+                   <label className="text-[10px] md:text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('description')}</label>
                    <textarea 
                      name="description" 
                      placeholder="..." 
-                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-sans text-lg placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all min-h-[100px] resize-none" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-4 md:p-6 text-text-primary font-sans text-base md:text-lg placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all min-h-[100px] resize-none" 
                    />
                 </div>
 
@@ -133,7 +133,7 @@ export default function HabitsScreen() {
               >
                 <div className="flex items-center gap-4 md:gap-6 flex-1 min-w-0">
                     <div className="min-w-0 flex-1">
-                      <h4 className={`text-xl md:text-2xl font-display font-black uppercase tracking-tight truncate transition-colors duration-300 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
+                      <h4 className={`text-lg md:text-2xl font-display font-black uppercase tracking-tight truncate transition-colors duration-300 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
                         {habit.title}
                       </h4>
                       <div className="flex items-center gap-3 mt-1.5">

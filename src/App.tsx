@@ -202,10 +202,10 @@ export default function App() {
               <span className="text-slate-950 font-black text-xl">G</span>
            </div>
             <div>
-              <h1 className="text-xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">GrowthOS</h1>
-              <div className="flex items-center gap-1.5 mt-1 opacity-60">
+              <h1 className="text-lg md:text-xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">GrowthOS</h1>
+              <div className="flex items-center gap-1.5 mt-0.5 md:mt-1 opacity-60">
                 <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
-                <p className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest">
+                <p className="text-[8px] md:text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest">
                    {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'}
                 </p>
               </div>
@@ -230,9 +230,9 @@ export default function App() {
                x: { type: "spring", stiffness: 300, damping: 30 },
                opacity: { duration: 0.2 }
              }}
-             className="h-full overflow-y-auto pb-44 px-2 md:px-4 touch-pan-y"
+             className="h-full overflow-y-auto pb-44 px-3 md:px-6 touch-pan-y"
            >
-             <div className="max-w-4xl mx-auto">
+             <div className="max-w-4xl mx-auto py-4 md:py-8">
                {renderScreen()}
              </div>
            </motion.div>

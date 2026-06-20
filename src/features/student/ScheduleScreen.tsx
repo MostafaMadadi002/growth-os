@@ -125,7 +125,7 @@ export default function ScheduleScreen() {
               <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
               <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('schedule')}</span>
            </div>
-           <h1 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
+           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
            </h1>
         </div>
@@ -391,7 +391,7 @@ export default function ScheduleScreen() {
                   <span className="text-[9px] md:text-[11px] font-mono font-black opacity-60">{item.time.split(':')[1]}</span>
                 </div>
                 <div className="flex-1 space-y-1">
-                  <h4 className={`text-lg md:text-3xl font-display font-black uppercase tracking-tight transition-all ${item.done ? 'text-text-secondary line-through opacity-30' : 'text-text-primary'}`}>
+                  <h4 className={`text-base md:text-3xl font-display font-black uppercase tracking-tight transition-all ${item.done ? 'text-text-secondary line-through opacity-30' : 'text-text-primary'}`}>
                     {item.label}
                   </h4>
                   <div className="flex items-center gap-2 md:gap-4 flex-wrap">
@@ -455,7 +455,7 @@ export default function ScheduleScreen() {
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-orange-500/10 blur-[50px] rounded-full group-hover:bg-orange-500/20 transition-all" />
             <Hash className="text-orange-500 mb-6" size={32} />
             <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
-            <p className="text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
+            <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
          </div>
          <div className="p-10 bg-surface-card border border-surface-border rounded-[3rem] relative overflow-hidden group">
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 blur-[50px] rounded-full group-hover:bg-emerald-500/20 transition-all" />
