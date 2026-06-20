@@ -130,14 +130,14 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
             </div>
             <h3 className="text-[10px] md:text-[11px] font-mono font-black text-text-secondary uppercase tracking-[0.3em]">{t('identity_control')}</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button 
               onClick={() => setRoot(UserRole.STUDENT)}
-              className={`p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base shadow-xl'}`}
+              className={`p-5 md:p-8 rounded-3xl md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 shadow-xl'}`}
             >
-              <div className="flex items-center gap-6 relative z-10">
-                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 text-white shadow-[0_0_25px_rgba(99,102,241,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
-                  <GraduationCap size={24} md:size={28} />
+              <div className="flex items-center gap-4 md:gap-6 relative z-10">
+                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 text-white shadow-[0_0_25px_rgba(99,102,241,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
+                  <GraduationCap size={22} md:size={28} />
                 </div>
                 <div className="text-left">
                   <p className={`text-base md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.STUDENT ? 'text-text-primary' : 'text-text-secondary'}`}>{t('student_mode').split(' ')[0]}</p>
@@ -149,11 +149,11 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
 
             <button 
               onClick={() => setRoot(UserRole.TRADER)}
-              className={`p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 hover:bg-surface-base shadow-xl'}`}
+              className={`p-5 md:p-8 rounded-3xl md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 shadow-xl'}`}
             >
-              <div className="flex items-center gap-6 relative z-10">
-                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.TRADER ? 'bg-emerald-500 text-white shadow-[0_0_25px_rgba(16,185,129,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
-                  <Terminal size={24} />
+              <div className="flex items-center gap-4 md:gap-6 relative z-10">
+                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.TRADER ? 'bg-emerald-500 text-white shadow-[0_0_25px_rgba(16,185,129,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
+                  <Terminal size={22} />
                 </div>
                 <div className="text-left">
                   <p className={`text-base md:text-xl font-display font-black leading-tight uppercase ${currentRoot === UserRole.TRADER ? 'text-text-primary' : 'text-text-secondary'}`}>{t('trader_mode').split(' ')[0]}</p>
@@ -282,7 +282,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
         {/* Activity Summary Section */}
         {currentRoot === UserRole.STUDENT && (
             <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] space-y-4 md:space-y-6 shadow-xl">
+                <div className="p-4 md:p-8 bg-surface-card border border-surface-border rounded-3xl md:rounded-[2.5rem] space-y-4 md:space-y-6 shadow-xl">
                     <h4 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('weekly_summary')}</h4>
                     <div className="space-y-3 md:space-y-4">
                         {(studentData.activities || []).slice(-5).reverse().map((act, i) => (
@@ -296,7 +296,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
                         ))}
                     </div>
                 </div>
-                <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] space-y-4 md:space-y-6 shadow-xl">
+                <div className="p-4 md:p-8 bg-surface-card border border-surface-border rounded-3xl md:rounded-[2.5rem] space-y-4 md:space-y-6 shadow-xl">
                     <h4 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('active_nodes')}</h4>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
                         <div className="bg-surface-base p-4 rounded-xl md:rounded-2xl">

@@ -121,11 +121,11 @@ export default function ScheduleScreen() {
     <div className="space-y-8 md:space-y-12 w-full max-w-5xl mx-auto pb-20 px-4 md:px-0">
       <header className="flex justify-between items-center md:items-end px-2">
         <div>
-           <div className="flex items-center gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-              <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('schedule')}</span>
+           <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-orange-500" />
+              <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('schedule')}</span>
            </div>
-           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
+           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1 md:mt-2">
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
            </h1>
         </div>

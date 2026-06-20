@@ -58,7 +58,14 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    @apply bg-surface-base text-text-primary antialiased selection:bg-brand-primary/30 selection:text-text-primary font-sans;
+    @apply bg-surface-base text-text-primary antialiased subpixel-antialiased selection:bg-brand-primary/30 selection:text-text-primary font-sans;
+    font-size: 14px;
+  }
+
+  @screen md {
+    html, body, #root {
+      font-size: 16px;
+    }
   }
 
   ::-webkit-scrollbar {

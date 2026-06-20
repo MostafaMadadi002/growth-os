@@ -37,11 +37,11 @@ export default function HabitsScreen() {
     <div className="space-y-8 md:space-y-12 w-full max-w-5xl mx-auto pb-32 px-4 md:px-0">
       <header className="flex justify-between items-center md:items-end px-2">
         <div>
-           <div className="flex items-center gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]" />
-              <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('habits')}</span>
+           <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]" />
+              <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('habits')}</span>
            </div>
-           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-2">
+           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1 md:mt-2">
              {t('habits').split(' ')[0]}<span className="text-blue-500">.</span>
            </h1>
         </div>
@@ -129,7 +129,7 @@ export default function HabitsScreen() {
               <motion.div 
                 layout
                 key={habit.id} 
-                className={`p-5 md:p-8 bg-surface-card border rounded-[2rem] md:rounded-[3rem] transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6 group shadow-sm ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
+                className={`p-4 md:p-8 bg-surface-card border rounded-2xl md:rounded-[3rem] transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 group shadow-sm ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
               >
                 <div className="flex items-center gap-4 md:gap-6 flex-1 min-w-0">
                     <div className="min-w-0 flex-1">

@@ -421,19 +421,19 @@ export default function GoalsScreen() {
                    </div>
                 </div>
   
-                <div className="flex md:flex-col gap-4">
+                <div className="flex flex-row md:flex-col gap-4">
                    <button 
                      onClick={() => openEdit(goal)}
-                     className="flex-1 md:flex-none h-16 md:w-48 rounded-[1.5rem] bg-brand-primary shadow-xl shadow-brand-primary/10 flex items-center justify-center gap-4 font-black text-[12px] uppercase tracking-widest text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                     className="flex-1 md:w-44 h-12 md:h-14 rounded-xl md:rounded-2xl bg-brand-primary shadow-xl shadow-brand-primary/10 flex items-center justify-center gap-2 md:gap-4 font-black text-[10px] md:text-[12px] uppercase tracking-widest text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                    >
-                      <Edit3 size={18} strokeWidth={3} />
+                      <Edit3 size={16} md:size={18} strokeWidth={3} />
                       {t('edit_goal') || 'EDIT'}
                    </button>
                    <button 
                     onClick={() => deleteGoal(goal.id)}
-                    className="w-16 h-16 md:w-48 md:h-12 rounded-[1.25rem] bg-surface-base border border-surface-border text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all flex items-center justify-center px-4 gap-2"
+                    className="w-12 h-12 md:w-44 md:h-12 rounded-xl md:rounded-2xl bg-surface-base border border-surface-border text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all flex items-center justify-center px-4 gap-2 shrink-0 md:shrink"
                    >
-                      <X size={18} />
+                      <X size={16} md:size={18} />
                       <span className="hidden md:block text-[10px] uppercase font-black">{language === 'fa' ? 'حذف' : 'DELETE'}</span>
                    </button>
                 </div>
