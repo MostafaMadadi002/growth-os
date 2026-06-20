@@ -20,8 +20,8 @@ import NotesScreen from './features/notes/NotesScreen';
 type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Reports' | 'Settings' | 'Notes';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('Goals');
-  const [previousTab, setPreviousTab] = useState<TabType>('Goals');
+  const [activeTab, setActiveTab] = useState<TabType>('Profile');
+  const [previousTab, setPreviousTab] = useState<TabType>('Profile');
   const [slideDirection, setSlideDirection] = useState<number>(0);
   const { dir, t, setLanguage: setI18nLanguage } = useI18n();
   const { currentRoot, theme, notificationsEnabled, studentData, language: appLanguage } = useAppStore();
@@ -158,8 +158,8 @@ export default function App() {
       case 'Goals': return <GoalsScreen />;
       case 'Habits': return <HabitsScreen />;
       case 'Schedule': return <ScheduleScreen />;
-      case 'Profile': return <ProfileScreen />;
-      case 'Settings': return <SettingsScreen />;
+      case 'Profile': return <ProfileScreen onSettings={() => handleTabChange('Settings')} />;
+      case 'Settings': return <SettingsScreen onBack={() => handleTabChange('Profile')} />;
       case 'Journal': return <TradingJournal />;
       case 'Reports': return <TradingReports />;
       case 'Notes': return <NotesScreen />;
@@ -203,31 +203,13 @@ export default function App() {
            </div>
             <div>
               <h1 className="text-xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">GrowthOS</h1>
-              <div className="flex items-center gap-3 mt-1">
-                <div className="flex items-center gap-1.5 opacity-60">
-                  <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
-                  <p className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest">
-                     {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'}
-                  </p>
-                </div>
-                
-                <button 
-                  onClick={() => handleTabChange(activeTab === 'Settings' ? previousTab : 'Settings')}
-                  className={`flex flex-col items-center justify-center gap-1 min-w-[64px] px-2 py-2.5 rounded-xl border shadow-sm transition-all duration-500 group ${
-                    activeTab === 'Settings' 
-                      ? 'bg-brand-primary/15 border-brand-primary/30 text-brand-primary shadow-brand-primary/10' 
-                      : 'bg-surface-base border-surface-border text-text-secondary hover:border-brand-primary/40 hover:text-text-primary'
-                  }`}
-                >
-                  {activeTab === 'Settings' ? (
-                    <ArrowLeft size={20} className="transition-transform duration-500 group-hover:-translate-x-1" />
-                  ) : (
-                    <SettingsIcon size={20} className="transition-all duration-700 group-hover:rotate-180" />
-                  )}
-                  <span className="text-[10px] font-mono font-black uppercase tracking-tight leading-none">{t('settings')}</span>
-                </button>
+              <div className="flex items-center gap-1.5 mt-1 opacity-60">
+                <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
+                <p className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest">
+                   {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'}
+                </p>
               </div>
-           </div>
+            </div>
         </div>
       </header>
 

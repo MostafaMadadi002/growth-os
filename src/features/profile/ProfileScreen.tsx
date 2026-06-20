@@ -1,14 +1,18 @@
 import React from 'react';
 import { 
   User, GraduationCap, Terminal, 
-  Zap
+  Zap, Settings as SettingsIcon
 } from 'lucide-react';
 import { useI18n } from '../../core/store/useI18n';
 import { useAppStore, UserRole } from '../../core/stores/appStore';
 import { motion } from 'motion/react';
 import TradingCalendar from '../../components/TradingCalendar';
 
-export default function ProfileScreen() {
+interface ProfileScreenProps {
+  onSettings?: () => void;
+}
+
+export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
   const { t, language } = useI18n();
   const { currentRoot, setRoot, studentData, traderData, importData } = useAppStore();
 
@@ -88,7 +92,7 @@ export default function ProfileScreen() {
   return (
     <div className="space-y-8 md:space-y-12 w-full pb-20">
         {/* Profile Header */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-8 px-2">
+        <header className="flex flex-row items-center justify-between gap-8 px-2">
           <div className="flex items-center gap-6">
             <div className="relative">
                <div className="w-20 h-20 md:w-32 md:h-32 bg-surface-card border border-surface-border rounded-2xl md:rounded-3xl flex items-center justify-center relative shadow-lg shrink-0">
@@ -108,6 +112,14 @@ export default function ProfileScreen() {
                </h1>
             </div>
           </div>
+
+          <button 
+            onClick={onSettings}
+            className="flex flex-col items-center justify-center gap-1.5 min-w-[72px] px-3 py-3 rounded-2xl border border-surface-border bg-surface-card shadow-sm transition-all duration-500 group hover:border-brand-primary/40 hover:text-brand-primary hover:shadow-brand-primary/5 active:scale-95"
+          >
+            <SettingsIcon size={24} className="text-text-secondary transition-all duration-700 group-hover:rotate-180 group-hover:text-brand-primary" />
+            <span className="text-[10px] font-mono font-black uppercase tracking-tight leading-none text-text-secondary group-hover:text-brand-primary">{t('settings')}</span>
+          </button>
         </header>
 
         {/* Root Switcher Section */}

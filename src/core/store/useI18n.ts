@@ -388,7 +388,7 @@ const translations = {
     goals: 'Tactical Objectives',
     habits: 'Recurring Patterns',
     profile: 'Operator Profile',
-    settings: 'Core Settings',
+    settings: 'Settings',
     back: 'Back',
     welcome: 'Access Verified',
     growth_score: 'System Growth Score',
