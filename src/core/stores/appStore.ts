@@ -191,12 +191,46 @@ export const useAppStore = create<AppState>()(
         }
       })),
 
-      deleteGoal: (id) => set((state) => ({
-        studentData: { 
-          ...state.studentData, 
-          goals: (state.studentData.goals || []).filter(g => g.id !== id) 
-        }
-      })),
+      deleteGoal: (id) => set((state) => {
+        const studentData = state.studentData;
+        if (!studentData) return state;
+
+        const goals = (studentData.goals || []).filter(g => g.id !== id);
+        
+        // Revert ALL historical progress points associated with this goal to keep heatmap and total score fully synchronized.
+        const goalActivities = (studentData.activities || []).filter(a => a.goalId === id);
+        const remainingActivities = (studentData.activities || []).filter(a => a.goalId !== id);
+        
+        const logs = [...(studentData.activityLogs || [])];
+        
+        goalActivities.forEach(activity => {
+          const logIdx = logs.findIndex(l => l.date === activity.date);
+          if (logIdx > -1) {
+            const currentLog = logs[logIdx];
+            const sessionsCount = Number(activity.sessions) || 0;
+            const scoreChange = activity.type === 'POSITIVE' ? -sessionsCount : sessionsCount;
+            const posChange = activity.type === 'POSITIVE' ? -sessionsCount : 0;
+            const negChange = activity.type === 'NEGATIVE' ? -sessionsCount : 0;
+
+            logs[logIdx] = {
+              ...currentLog,
+              count: Math.max(0, currentLog.count - sessionsCount),
+              score: currentLog.score + scoreChange,
+              posCount: Math.max(0, (currentLog.posCount || 0) + posChange),
+              negCount: Math.max(0, (currentLog.negCount || 0) - negChange)
+            };
+          }
+        });
+
+        return {
+          studentData: {
+            ...studentData,
+            goals,
+            activities: remainingActivities,
+            activityLogs: logs
+          }
+        };
+      }),
 
       toggleSubGoal: (goalId, subGoalId) => set((state) => ({
         studentData: {
@@ -535,12 +569,51 @@ export const useAppStore = create<AppState>()(
         };
       }),
 
-      deleteTask: (id) => set((state) => ({
-        studentData: {
-          ...state.studentData,
-          tasks: (state.studentData.tasks || []).filter(t => t.id !== id)
+      deleteTask: (id) => set((state) => {
+        const studentData = state.studentData;
+        if (!studentData) return state;
+        
+        const task = (studentData.tasks || []).find(t => t.id === id);
+        if (!task) return state;
+
+        const tasks = studentData.tasks.filter(t => t.id !== id);
+        const today = new Date().toISOString().split('T')[0];
+        const logs = [...(studentData.activityLogs || [])];
+        let updatedGoals = [...(studentData.goals || [])];
+        let updatedActivities = [...(studentData.activities || [])];
+
+        if (task.done) {
+          const logIndex = logs.findIndex(l => l.date === today);
+          if (logIndex > -1) {
+            const currentLog = logs[logIndex];
+            logs[logIndex] = {
+              ...currentLog,
+              count: Math.max(0, currentLog.count - 1),
+              score: currentLog.score - 1,
+              posCount: Math.max(0, (currentLog.posCount || 0) - 1)
+            };
+          }
+          
+          if (task.goalId) {
+            updatedGoals = updatedGoals.map(g => 
+              g.id === task.goalId ? { ...g, completedSessions: Math.max(0, g.completedSessions - 1) } : g
+            );
+          }
+          
+          // Remove associated activity from timeline
+          updatedActivities = updatedActivities.filter(a => a.taskId !== task.id);
         }
-      })),
+
+        return {
+          studentData: {
+            ...studentData,
+            tasks,
+            activityLogs: logs,
+            goals: updatedGoals,
+            activities: updatedActivities
+          }
+        };
+      }),
 
       deleteActivity: (id) => set((state) => {
         const studentData = state.studentData;
