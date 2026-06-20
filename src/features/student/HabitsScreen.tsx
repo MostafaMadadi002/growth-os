@@ -83,7 +83,7 @@ export default function HabitsScreen() {
                      name="title" 
                      required 
                      placeholder={language === 'fa' ? 'مثلاً: مطالعه عمیق صبحگاهی' : 'e.g. Early Morning Focus'} 
-                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-xl md:text-2xl placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-lg md:text-xl placeholder:text-text-secondary/30 outline-none focus:border-blue-500/30 transition-all" 
                    />
                 </div>
 
@@ -114,7 +114,7 @@ export default function HabitsScreen() {
                    </div>
                 </div>
 
-                <button type="submit" className="w-full py-5 md:py-7 bg-blue-600 text-white rounded-2xl md:rounded-3xl font-display font-black text-lg md:text-xl uppercase shadow-2xl shadow-blue-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <button type="submit" className="w-full py-5 md:py-7 bg-blue-600 text-white rounded-2xl md:rounded-3xl font-display font-black text-base md:text-lg uppercase shadow-2xl shadow-blue-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
                    {t('map_pathway')}
                 </button>
              </motion.form>

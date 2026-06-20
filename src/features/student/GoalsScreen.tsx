@@ -144,7 +144,7 @@ export default function GoalsScreen() {
                      required 
                      defaultValue={editingGoal?.title || ''}
                      placeholder={language === 'fa' ? 'مثلاً: تسلط بر هوش مصنوعی' : 'e.g. Master AI Fundamentals'} 
-                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-xl md:text-2xl placeholder:text-text-secondary/30 outline-none focus:border-brand-primary/30 transition-all" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-lg md:text-xl placeholder:text-text-secondary/30 outline-none focus:border-brand-primary/30 transition-all" 
                    />
                 </div>
 

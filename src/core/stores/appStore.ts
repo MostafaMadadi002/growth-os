@@ -445,10 +445,11 @@ export const useAppStore = create<AppState>()(
 
       deleteActivity: (id) => set((state) => {
         const studentData = state.studentData;
-        const activity = (studentData.activities || []).find(a => a.id === id);
+        const activitiesList = studentData.activities || [];
+        const activity = activitiesList.find(a => a.id === id);
         if (!activity) return state;
 
-        const activities = (studentData.activities || []).filter(a => a.id !== id);
+        const activities = activitiesList.filter(a => a.id !== id);
         
         const logs = [...(studentData.activityLogs || [])];
         const logIndex = logs.findIndex(l => l.date === activity.date);
@@ -461,12 +462,12 @@ export const useAppStore = create<AppState>()(
           else logs[logIndex].negCount = Math.max(0, (logs[logIndex].negCount || 0) - activity.sessions);
         }
 
-        let goals = [...studentData.goals];
+        let goals = [...(studentData.goals || [])];
         if (activity.goalId) {
           goals = goals.map(g => g.id === activity.goalId ? { ...g, completedSessions: Math.max(0, g.completedSessions - activity.sessions) } : g);
         }
 
-        let tasks = [...studentData.tasks];
+        let tasks = [...(studentData.tasks || [])];
         if (activity.taskId) {
           tasks = tasks.map(t => t.id === activity.taskId ? { ...t, done: false } : t);
         }
