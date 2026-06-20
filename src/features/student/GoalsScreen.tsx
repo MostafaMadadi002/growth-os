@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Plus, Target, X, CheckCircle2, 
   BookOpen, Briefcase, Rocket, Edit3,
-  ChevronDown, ChevronUp, Clock
+  ChevronDown, ChevronUp, Clock, Trash2
 } from 'lucide-react';
 import { useAppStore, Goal } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function GoalsScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addGoal, deleteGoal, updateGoal, toggleSubGoal } = useAppStore();
+  const { studentData, addGoal, deleteGoal, updateGoal, toggleSubGoal, deleteActivity } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [expandedGoalId, setExpandedGoalId] = useState<string | null>(null);
@@ -90,7 +90,7 @@ export default function GoalsScreen() {
   };
 
   return (
-    <div className="space-y-8 md:space-y-12 w-full pb-20">
+    <div className="space-y-8 md:space-y-12 w-full max-w-5xl mx-auto pb-20 px-4 md:px-0">
       <header className="flex justify-between items-center md:items-end">
         <div>
            <div className="flex items-center gap-3 mb-2 md:mb-4">
@@ -144,7 +144,7 @@ export default function GoalsScreen() {
                      required 
                      defaultValue={editingGoal?.title || ''}
                      placeholder={language === 'fa' ? 'مثلاً: تسلط بر هوش مصنوعی' : 'e.g. Master AI Fundamentals'} 
-                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-2xl placeholder:text-text-secondary/30 outline-none focus:border-brand-primary/30 transition-all" 
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-6 text-text-primary font-display font-black text-xl md:text-2xl placeholder:text-text-secondary/30 outline-none focus:border-brand-primary/30 transition-all" 
                    />
                 </div>
 
@@ -412,9 +412,17 @@ export default function GoalsScreen() {
                                 <p className="text-[10px] font-mono text-text-secondary opacity-60">{activity.date} • {activity.time || '00:00'}</p>
                               </div>
                             </div>
-                            <div className="text-right">
-                              <p className="text-[11px] font-mono font-black text-brand-primary">{activity.duration}m</p>
-                              <p className="text-[9px] font-mono text-text-secondary uppercase opacity-40">{activity.sessions} {t('sessions')}</p>
+                            <div className="flex items-center gap-6">
+                              <div className="text-right">
+                                <p className="text-[11px] font-mono font-black text-brand-primary">{activity.duration}m</p>
+                                <p className="text-[9px] font-mono text-text-secondary uppercase opacity-40">{activity.sessions} {t('sessions')}</p>
+                              </div>
+                              <button 
+                                onClick={() => deleteActivity(activity.id)}
+                                className="p-2 text-text-secondary/20 hover:text-rose-500 transition-colors"
+                              >
+                                 <Trash2 size={14} />
+                              </button>
                             </div>
                           </div>
                         )) : (

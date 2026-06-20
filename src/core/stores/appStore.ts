@@ -129,6 +129,7 @@ interface AppState {
   addTask: (task: ScheduleTask) => void;
   toggleTask: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
+  deleteActivity: (activityId: string) => void;
 
   // Trader Actions
   addTrade: (trade: Trade) => void;
@@ -439,6 +440,39 @@ export const useAppStore = create<AppState>()(
           tasks: (state.studentData.tasks || []).filter(t => t.id !== id)
         }
       })),
+
+      deleteActivity: (id) => set((state) => {
+        const studentData = state.studentData;
+        const activity = (studentData.activities || []).find(a => a.id === id);
+        if (!activity) return state;
+
+        const activities = (studentData.activities || []).filter(a => a.id !== id);
+        
+        const logs = [...(studentData.activityLogs || [])];
+        const logIndex = logs.findIndex(l => l.date === activity.date);
+        const scoreChange = activity.type === 'POSITIVE' ? -activity.sessions : activity.sessions;
+
+        if (logIndex > -1) {
+          logs[logIndex].count = Math.max(0, logs[logIndex].count - activity.sessions);
+          logs[logIndex].score += scoreChange;
+          if (activity.type === 'POSITIVE') logs[logIndex].posCount = Math.max(0, (logs[logIndex].posCount || 0) - activity.sessions);
+          else logs[logIndex].negCount = Math.max(0, (logs[logIndex].negCount || 0) - activity.sessions);
+        }
+
+        let goals = [...studentData.goals];
+        if (activity.goalId) {
+          goals = goals.map(g => g.id === activity.goalId ? { ...g, completedSessions: Math.max(0, g.completedSessions - activity.sessions) } : g);
+        }
+
+        return {
+          studentData: {
+            ...studentData,
+            activities,
+            activityLogs: logs,
+            goals
+          }
+        };
+      }),
 
       addTrade: (trade) => set((state) => ({
         traderData: {

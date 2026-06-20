@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function ScheduleScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addTask, toggleTask, deleteTask, recordActivity, addHabit } = useAppStore();
+  const { studentData, addTask, toggleTask, deleteTask, recordActivity, addHabit, deleteActivity } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
 
@@ -118,7 +118,7 @@ export default function ScheduleScreen() {
   };
 
   return (
-    <div className="space-y-8 md:space-y-12 w-full pb-20">
+    <div className="space-y-8 md:space-y-12 w-full max-w-5xl mx-auto pb-20 px-4 md:px-0">
       <header className="flex justify-between items-center md:items-end px-2">
         <div>
            <div className="flex items-center gap-3">
@@ -211,7 +211,7 @@ export default function ScheduleScreen() {
                           name="title" 
                           list="negative-habits"
                           placeholder={t('unplanned_activity')} 
-                          className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-xl outline-none focus:border-brand-primary/30" 
+                          className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg md:text-xl outline-none focus:border-brand-primary/30" 
                         />
                         <datalist id="negative-habits">
                           {(studentData.habits || [])
@@ -249,7 +249,7 @@ export default function ScheduleScreen() {
                             type="time" 
                             required 
                             defaultValue={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                            className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-brand-primary/30" 
+                            className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg md:text-xl outline-none focus:border-brand-primary/30" 
                           />
                         </div>
                     </div>
@@ -257,11 +257,11 @@ export default function ScheduleScreen() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
                         <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('session_duration')}</label>
-                        <input name="duration" type="number" defaultValue={60} required className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                        <input name="duration" type="number" defaultValue={60} required className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg md:text-xl outline-none focus:border-brand-primary/30" />
                         </div>
                         <div className="space-y-3">
                           <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('sessions_done')}</label>
-                          <input name="sessions" type="number" defaultValue={1} required className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-brand-primary/30" />
+                          <input name="sessions" type="number" defaultValue={1} required className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg md:text-xl outline-none focus:border-brand-primary/30" />
                         </div>
                     </div>
 
@@ -326,7 +326,7 @@ export default function ScheduleScreen() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('session_task_label')}</label>
-                    <input name="label" required placeholder="..." className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-xl outline-none focus:border-orange-500/30" />
+                    <input name="label" required placeholder="..." className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg md:text-xl outline-none focus:border-orange-500/30" />
                   </div>
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('local_time')}</label>
@@ -335,7 +335,7 @@ export default function ScheduleScreen() {
                       type="time" 
                       required 
                       defaultValue={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-xl outline-none focus:border-orange-500/30" 
+                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg md:text-xl outline-none focus:border-orange-500/30" 
                     />
                   </div>
                 </div>
@@ -404,20 +404,27 @@ export default function ScheduleScreen() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {isTask && (
+                  {isTask ? (
+                    <>
+                      <button 
+                        onClick={() => toggleTask(item.id)}
+                        className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-[1.8rem] flex items-center justify-center transition-all active:scale-95 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-md' : 'bg-surface-base text-text-secondary border border-surface-border'}`}
+                      >
+                        {item.done ? <CheckCircle2 size={20} md:size={28} strokeWidth={3} /> : <div className="w-5 h-5 border-2 border-current rounded-lg opacity-20" />}
+                      </button>
+                      <button 
+                        onClick={() => deleteTask(item.id)}
+                        className="p-2 text-text-secondary/40 hover:text-rose-500 transition-all"
+                      >
+                        <Trash2 size={16} md:size={20} />
+                      </button>
+                    </>
+                  ) : (
                     <button 
-                      onClick={() => toggleTask(item.id)}
-                      className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-[1.8rem] flex items-center justify-center transition-all active:scale-95 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-md' : 'bg-surface-base text-text-secondary border border-surface-border'}`}
-                    >
-                      {item.done ? <CheckCircle2 size={20} md:size={28} strokeWidth={3} /> : <div className="w-5 h-5 border-2 border-current rounded-lg opacity-20" />}
-                    </button>
-                  )}
-                  {isTask && (
-                    <button 
-                      onClick={() => deleteTask(item.id)}
+                      onClick={() => deleteActivity(item.id)}
                       className="p-2 text-text-secondary/40 hover:text-rose-500 transition-all"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={16} md:size={20} />
                     </button>
                   )}
                 </div>
