@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Target, Activity, CalendarDays, User, Settings as SettingsIcon,
-  StickyNote
+  StickyNote, ArrowLeft
 } from 'lucide-react';
 import { useI18n } from './core/store/useI18n';
 import { useAppStore, UserRole } from './core/stores/appStore';
@@ -21,6 +21,7 @@ type TabType = 'Goals' | 'Habits' | 'Schedule' | 'Profile' | 'Journal' | 'Report
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Goals');
+  const [previousTab, setPreviousTab] = useState<TabType>('Goals');
   const [slideDirection, setSlideDirection] = useState<number>(0);
   const { dir, t, setLanguage: setI18nLanguage } = useI18n();
   const { currentRoot, theme, notificationsEnabled, studentData, language: appLanguage } = useAppStore();
@@ -43,6 +44,9 @@ export default function App() {
   };
 
   const handleTabChange = (newTabId: TabType) => {
+    if (newTabId !== activeTab) {
+      setPreviousTab(activeTab);
+    }
     const currentIndex = currentTabs.findIndex(t => t.id === activeTab);
     const nextIndex = currentTabs.findIndex(t => t.id === newTabId);
     
@@ -208,11 +212,19 @@ export default function App() {
                 </div>
                 
                 <button 
-                  onClick={() => handleTabChange('Settings')}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all duration-300 group ${activeTab === 'Settings' ? 'bg-brand-primary/10 border-brand-primary/20 text-brand-primary' : 'bg-surface-base border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
+                  onClick={() => handleTabChange(activeTab === 'Settings' ? previousTab : 'Settings')}
+                  className={`flex flex-col items-center justify-center gap-1 min-w-[64px] px-2 py-2.5 rounded-xl border shadow-sm transition-all duration-500 group ${
+                    activeTab === 'Settings' 
+                      ? 'bg-brand-primary/15 border-brand-primary/30 text-brand-primary shadow-brand-primary/10' 
+                      : 'bg-surface-base border-surface-border text-text-secondary hover:border-brand-primary/40 hover:text-text-primary'
+                  }`}
                 >
-                  <SettingsIcon size={12} className={`transition-all duration-500 ${activeTab === 'Settings' ? 'rotate-90' : 'group-hover:rotate-45'}`} />
-                  <span className="text-[9px] font-mono font-black uppercase tracking-widest">{t('settings')}</span>
+                  {activeTab === 'Settings' ? (
+                    <ArrowLeft size={20} className="transition-transform duration-500 group-hover:-translate-x-1" />
+                  ) : (
+                    <SettingsIcon size={20} className="transition-all duration-700 group-hover:rotate-180" />
+                  )}
+                  <span className="text-[10px] font-mono font-black uppercase tracking-tight leading-none">{t('settings')}</span>
                 </button>
               </div>
            </div>
