@@ -141,7 +141,7 @@ export default function ScheduleScreen() {
       
       {goals.length > 0 && (
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {goals.filter(g => calculateDailyTarget(g) > 0 || getTodayProgress(g.id) > 0).slice(0, 3).map(goal => {
+          {goals.slice(0, 3).map(goal => {
             const dailyTarget = calculateDailyTarget(goal);
             const todayDone = getTodayProgress(goal.id);
             const progress = dailyTarget > 0 ? Math.min(100, (todayDone / dailyTarget) * 100) : (todayDone > 0 ? 100 : 0);
@@ -156,7 +156,9 @@ export default function ScheduleScreen() {
                 <div className="flex justify-between items-start">
                   <h4 className="text-[10px] font-mono font-black text-text-primary uppercase tracking-widest truncate max-w-[120px]">{goal.title}</h4>
                   <div className="flex items-center gap-1.5 bg-brand-primary/10 px-2 py-0.5 rounded-lg border border-brand-primary/20">
-                    <span className="text-[10px] font-mono font-black text-brand-primary">{todayDone}/{dailyTarget}</span>
+                    <span className="text-[10px] font-mono font-black text-brand-primary">
+                      {todayDone}/{dailyTarget > 0 ? dailyTarget : (t('off_day') || 'OFF')}
+                    </span>
                   </div>
                 </div>
                 <div className="h-1.5 w-full bg-surface-base rounded-full overflow-hidden border border-surface-border/30">
@@ -168,7 +170,9 @@ export default function ScheduleScreen() {
                   />
                 </div>
                 <p className="text-[9px] font-mono font-black text-text-secondary opacity-40 uppercase tracking-widest">
-                  {progress >= 100 && dailyTarget > 0 ? t('target_achieved') || 'NODE SATURATED' : `${t('remaining_sessions') || 'SESSIONS REMAINING'}: ${Math.max(0, dailyTarget - todayDone)}`}
+                  {dailyTarget > 0 
+                    ? (progress >= 100 ? t('target_achieved') || 'NODE SATURATED' : `${t('remaining_sessions') || 'SESSIONS REMAINING'}: ${Math.max(0, Number((dailyTarget - todayDone).toFixed(1)))}`)
+                    : (t('extra_growth') || 'EXTRA SESSIONS CARRIED')}
                 </p>
               </motion.div>
             );
