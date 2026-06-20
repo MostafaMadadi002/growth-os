@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { 
   Plus, Target, X, CheckCircle2, 
   BookOpen, Briefcase, Rocket, Edit3,
-  ChevronDown, ChevronUp, Clock, Trash2
+  ChevronDown, ChevronUp, Clock, Trash2,
+  TrendingUp, TrendingDown
 } from 'lucide-react';
 import { useAppStore, Goal } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
@@ -10,12 +11,13 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function GoalsScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addGoal, deleteGoal, updateGoal, toggleSubGoal, deleteActivity } = useAppStore();
+  const { studentData, addGoal, deleteGoal, updateGoal, toggleSubGoal, deleteActivity, addHabit } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [expandedGoalId, setExpandedGoalId] = useState<string | null>(null);
   const [newSubGoals, setNewSubGoals] = useState<{id: string, title: string, done: boolean}[]>([]);
   const [tempSubGoal, setTempSubGoal] = useState('');
+  const [showNewHabitInput, setShowNewHabitInput] = useState(false);
 
   const handleAddSubGoal = () => {
     if (!tempSubGoal.trim()) return;
@@ -36,10 +38,30 @@ export default function GoalsScreen() {
     };
   };
 
+  const processHabit = (formData: FormData): string | undefined => {
+    const habitChoice = formData.get('habitId') as string;
+    if (habitChoice === 'NEW') {
+      const newHabitTitle = formData.get('newHabitTitle') as string;
+      const newHabitType = formData.get('newHabitType') as any;
+      if (newHabitTitle) {
+        const hId = Math.random().toString(36).substr(2, 9);
+        addHabit({
+          id: hId,
+          title: newHabitTitle,
+          type: newHabitType || 'POSITIVE',
+          streak: 0
+        });
+        return hId;
+      }
+    }
+    return habitChoice || undefined;
+  };
+
   const handleAddGoal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const selectedDays = Array.from(formData.getAll('days')).map(Number);
+    const habitId = processHabit(formData);
     
     const goal: Goal = {
       id: Math.random().toString(36).substr(2, 9),
@@ -52,11 +74,13 @@ export default function GoalsScreen() {
       durationUnit: formData.get('durationUnit') as any,
       startDate: (formData.get('startDate') as string) || new Date().toISOString().split('T')[0],
       selectedDays,
-      subGoals: newSubGoals
+      subGoals: newSubGoals,
+      habitId
     };
     addGoal(goal);
     setIsAdding(false);
     setNewSubGoals([]);
+    setShowNewHabitInput(false);
   };
 
   const handleUpdateGoal = (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,6 +89,7 @@ export default function GoalsScreen() {
     
     const formData = new FormData(e.currentTarget);
     const selectedDays = Array.from(formData.getAll('days')).map(Number);
+    const habitId = processHabit(formData);
     
     const updatedGoal: Goal = {
       ...editingGoal,
@@ -76,12 +101,14 @@ export default function GoalsScreen() {
       durationUnit: formData.get('durationUnit') as any,
       startDate: formData.get('startDate') as string,
       selectedDays,
-      subGoals: newSubGoals
+      subGoals: newSubGoals,
+      habitId: habitId || editingGoal.habitId
     };
     
     updateGoal(updatedGoal);
     setEditingGoal(null);
     setNewSubGoals([]);
+    setShowNewHabitInput(false);
   };
 
   const openEdit = (goal: Goal) => {
@@ -229,6 +256,57 @@ export default function GoalsScreen() {
                      defaultValue={editingGoal?.startDate || new Date().toISOString().split('T')[0]}
                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold outline-none focus:border-brand-primary/20" 
                    />
+                </div>
+
+                <div className="space-y-4">
+                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{language === 'fa' ? 'دسته بندی عادت مربوطه' : 'Linked Habit Category'}</label>
+                   <select 
+                     name="habitId"
+                     defaultValue={editingGoal?.habitId || ''}
+                     onChange={(e) => setShowNewHabitInput(e.target.value === 'NEW')}
+                     className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold outline-none focus:border-brand-primary/20 appearance-none transition-all"
+                   >
+                      <option value="">{t('none') || 'NONE'}</option>
+                      {(studentData.habits || []).map(h => (
+                        <option key={h.id} value={h.id}>{h.title} ({h.type === 'POSITIVE' ? '+' : '-'})</option>
+                      ))}
+                      <option value="NEW" className="text-brand-primary font-bold">+ {t('add_new_category') || 'NEW CATEGORY'}</option>
+                   </select>
+
+                   <AnimatePresence>
+                     {showNewHabitInput && (
+                       <motion.div 
+                         initial={{ height: 0, opacity: 0 }}
+                         animate={{ height: 'auto', opacity: 1 }}
+                         exit={{ height: 0, opacity: 0 }}
+                         className="space-y-4 overflow-hidden pt-2"
+                       >
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-mono font-bold text-brand-primary uppercase tracking-widest">{t('pathway_identity')}</label>
+                             <input 
+                               name="newHabitTitle"
+                               placeholder={language === 'fa' ? 'مثلاً: توسعه فردی' : 'e.g. Self Development'}
+                               className="w-full bg-surface-base border border-brand-primary/30 rounded-xl p-4 text-text-primary font-display font-bold outline-none"
+                             />
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                             {[
+                               { val: 'POSITIVE', label: t('habits_good'), icon: <TrendingUp size={16} />, color: 'text-emerald-500' },
+                               { val: 'NEGATIVE', label: t('habits_bad'), icon: <TrendingDown size={16} />, color: 'text-rose-500' }
+                             ].map(type => (
+                               <label key={type.val} className="flex items-center gap-3 p-4 rounded-xl border border-surface-border bg-surface-base cursor-pointer has-[:checked]:border-brand-primary has-[:checked]:bg-brand-primary/10 transition-all">
+                                  <input type="radio" name="newHabitType" value={type.val} className="hidden" defaultChecked={type.val === 'POSITIVE'} />
+                                  <div className={type.color}>
+                                     {type.icon}
+                                  </div>
+                                  <span className="text-[10px] font-black uppercase text-text-secondary">{type.label}</span>
+                               </label>
+                             ))}
+                          </div>
+                       </motion.div>
+                     )}
+                   </AnimatePresence>
                 </div>
 
                 <div className="space-y-4">

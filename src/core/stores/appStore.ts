@@ -24,6 +24,7 @@ export interface Goal {
   startDate: string;
   selectedDays?: number[]; // 0-6 (Sun-Sat)
   subGoals?: SubGoal[];
+  habitId?: string;
 }
 
 export interface Habit {
@@ -314,11 +315,12 @@ export const useAppStore = create<AppState>()(
 
         // Auto-sync with Habits
         let updatedHabits = [...(studentData.habits || [])];
-        const habitTitle = activity.goalId 
-          ? (studentData.goals.find(g => g.id === activity.goalId)?.title || activity.title)
-          : activity.title;
+        const goal = activity.goalId ? studentData.goals.find(g => g.id === activity.goalId) : null;
+        const targetHabitId = goal?.habitId;
         
-        const existingHabit = updatedHabits.find(h => h.title === habitTitle && h.type === activity.type);
+        const existingHabit = targetHabitId 
+          ? updatedHabits.find(h => h.id === targetHabitId)
+          : updatedHabits.find(h => h.title === (goal?.title || activity.title) && h.type === activity.type);
         
         if (existingHabit) {
           updatedHabits = updatedHabits.map(h => 
@@ -326,10 +328,10 @@ export const useAppStore = create<AppState>()(
               ? { ...h, streak: h.streak + activity.sessions, lastCheck: activity.date } 
               : h
           );
-        } else {
+        } else if (goal?.title || activity.title) {
           updatedHabits.push({
             id: Math.random().toString(36).substr(2, 9),
-            title: habitTitle,
+            title: goal?.title || activity.title,
             type: activity.type,
             streak: activity.sessions,
             lastCheck: activity.date
@@ -397,9 +399,19 @@ export const useAppStore = create<AppState>()(
               }
 
               if (t.goalId) {
-                updatedGoals = updatedGoals.map(g => 
-                  g.id === t.goalId ? { ...g, completedSessions: Math.min(g.completedSessions + 1, g.totalSessions) } : g
-                );
+                const goal = updatedGoals.find(g => g.id === t.goalId);
+                if (goal) {
+                  updatedGoals = updatedGoals.map(g => 
+                    g.id === t.goalId ? { ...g, completedSessions: Math.min(g.completedSessions + 1, g.totalSessions) } : g
+                  );
+
+                  // Sync with linked habit
+                  if (goal.habitId) {
+                    updatedHabits = updatedHabits.map(h => 
+                      h.id === goal.habitId ? { ...h, streak: h.streak + 1, lastCheck: today } : h
+                    );
+                  }
+                }
               }
             } else {
               // Undo Activity
@@ -413,9 +425,19 @@ export const useAppStore = create<AppState>()(
               }
 
               if (t.goalId) {
-                updatedGoals = updatedGoals.map(g => 
-                  g.id === t.goalId ? { ...g, completedSessions: Math.max(g.completedSessions - 1, 0) } : g
-                );
+                const goal = updatedGoals.find(g => g.id === t.goalId);
+                if (goal) {
+                  updatedGoals = updatedGoals.map(g => 
+                    g.id === t.goalId ? { ...g, completedSessions: Math.max(g.completedSessions - 1, 0) } : g
+                  );
+
+                  // Revert linked habit
+                  if (goal.habitId) {
+                    updatedHabits = updatedHabits.map(h => 
+                      h.id === goal.habitId ? { ...h, streak: Math.max(0, h.streak - 1) } : h
+                    );
+                  }
+                }
               }
             }
 
