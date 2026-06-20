@@ -169,7 +169,6 @@ export default function App() {
     { id: 'Schedule', label: 'schedule', icon: <CalendarDays size={20} /> },
     { id: 'Notes', label: 'branch_notes', icon: <StickyNote size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
-    { id: 'Settings', label: 'settings', icon: <SettingsIcon size={20} /> },
   ];
 
   const traderTabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
@@ -177,7 +176,6 @@ export default function App() {
     { id: 'Reports', label: 'reports', icon: <Activity size={20} /> },
     { id: 'Notes', label: 'branch_notes', icon: <StickyNote size={20} /> },
     { id: 'Profile', label: 'profile', icon: <User size={20} /> },
-    { id: 'Settings', label: 'settings', icon: <SettingsIcon size={20} /> },
   ];
 
   const currentTabs = currentRoot === UserRole.STUDENT ? studentTabs : traderTabs;
@@ -199,13 +197,23 @@ export default function App() {
            <div className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20 group cursor-pointer transition-all hover:scale-110">
               <span className="text-slate-950 font-black text-xl">G</span>
            </div>
-           <div>
+            <div>
               <h1 className="text-xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">GrowthOS</h1>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
-                <p className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">
-                  {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'} // ACTIVE
-                </p>
+              <div className="flex items-center gap-3 mt-1">
+                <div className="flex items-center gap-1.5 opacity-60">
+                  <div className="w-1 h-1 rounded-full animate-pulse bg-brand-primary" />
+                  <p className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest">
+                     {currentRoot === UserRole.STUDENT ? 'STUDENT_CORE' : 'TRADER_NODE'}
+                  </p>
+                </div>
+                
+                <button 
+                  onClick={() => handleTabChange('Settings')}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-all duration-300 group ${activeTab === 'Settings' ? 'bg-brand-primary/10 border-brand-primary/20 text-brand-primary' : 'bg-surface-base border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
+                >
+                  <SettingsIcon size={12} className={`transition-all duration-500 ${activeTab === 'Settings' ? 'rotate-90' : 'group-hover:rotate-45'}`} />
+                  <span className="text-[9px] font-mono font-black uppercase tracking-widest">{t('settings')}</span>
+                </button>
               </div>
            </div>
         </div>

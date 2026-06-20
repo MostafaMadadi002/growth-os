@@ -209,15 +209,16 @@ export const useAppStore = create<AppState>()(
             const currentLog = logs[logIdx];
             const sessionsCount = Number(activity.sessions) || 0;
             const scoreChange = activity.type === 'POSITIVE' ? -sessionsCount : sessionsCount;
-            const posChange = activity.type === 'POSITIVE' ? -sessionsCount : 0;
-            const negChange = activity.type === 'NEGATIVE' ? -sessionsCount : 0;
+            
+            const newPos = activity.type === 'POSITIVE' ? Math.max(0, (currentLog.posCount || 0) - sessionsCount) : (currentLog.posCount || 0);
+            const newNeg = activity.type === 'NEGATIVE' ? Math.max(0, (currentLog.negCount || 0) - sessionsCount) : (currentLog.negCount || 0);
 
             logs[logIdx] = {
               ...currentLog,
               count: Math.max(0, currentLog.count - sessionsCount),
               score: currentLog.score + scoreChange,
-              posCount: Math.max(0, (currentLog.posCount || 0) + posChange),
-              negCount: Math.max(0, (currentLog.negCount || 0) - negChange)
+              posCount: newPos,
+              negCount: newNeg
             };
           }
         });
