@@ -17,6 +17,7 @@ export default function TradingScreen() {
   const [showAdd, setShowAdd] = useState(false);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [editTrade, setEditTrade] = useState<Partial<Trade>>({});
   const [reportRange, setReportRange] = useState<'DAILY' | 'WEEKLY' | 'MONTHLY'>('WEEKLY');
   
@@ -258,15 +259,38 @@ export default function TradingScreen() {
                    <span className="text-base md:text-lg font-mono font-black text-white">{trade.leverage || '1'}x // {trade.lot_size || '0'}</span>
                 </div>
                 <div className="hidden md:block w-px h-10 bg-white/5" />
-                <div className={`flex-1 md:flex-none md:w-32 py-2 md:py-3 rounded-xl border flex items-center justify-center text-[8px] md:text-[10px] font-mono font-black uppercase tracking-[0.2em] shadow-lg ${getStatusColor(trade.status)}`}>
-                   {trade.status}
-                </div>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); removeTrade(trade.id); }} 
-                  className="w-10 h-10 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-600 hover:text-rose-500 transition-all opacity-100 lg:opacity-0 group-hover:opacity-100"
-                >
-                  <Trash2 size={16} />
-                </button>
+                 {confirmDeleteId === trade.id ? (
+                   <div className="flex items-center gap-2">
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          removeTrade(trade.id); 
+                          setConfirmDeleteId(null);
+                        }}
+                        className="bg-rose-600 text-white px-4 py-2 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest shadow-xl shadow-rose-600/20 active:scale-95"
+                      >
+                         CONFIRM
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(null); }}
+                        className="p-2 text-slate-500 hover:text-white"
+                      >
+                         <X size={16} />
+                      </button>
+                   </div>
+                 ) : (
+                   <>
+                    <div className={`flex-1 md:flex-none md:w-32 py-2 md:py-3 rounded-xl border flex items-center justify-center text-[8px] md:text-[10px] font-mono font-black uppercase tracking-[0.2em] shadow-lg ${getStatusColor(trade.status)}`}>
+                       {trade.status}
+                    </div>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(trade.id); }} 
+                      className="w-10 h-10 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-600 hover:text-rose-500 transition-all opacity-100 lg:opacity-0 group-hover:opacity-100"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                   </>
+                 )}
              </div>
           </motion.div>
         ))}

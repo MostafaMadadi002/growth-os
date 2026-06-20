@@ -11,6 +11,7 @@ export default function HabitsScreen() {
   const { t, dir, language } = useI18n();
   const { studentData, addHabit, toggleHabit, deleteHabit, logActivity } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const handleToggleHabit = (id: string, type: 'POSITIVE' | 'NEGATIVE') => {
     toggleHabit(id);
@@ -173,12 +174,32 @@ export default function HabitsScreen() {
                       )}
                     </button>
                     
-                    <button 
-                      onClick={() => deleteHabit(habit.id)} 
-                      className="p-4 text-text-secondary/20 hover:text-rose-500 transition-colors"
-                    >
-                       <Trash2 size={18} />
-                    </button>
+                    {confirmDeleteId === habit.id ? (
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => {
+                            deleteHabit(habit.id);
+                            setConfirmDeleteId(null);
+                          }}
+                          className="bg-rose-500 text-white px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95"
+                        >
+                          {language === 'fa' ? 'تایید' : 'CONFIRM'}
+                        </button>
+                        <button 
+                          onClick={() => setConfirmDeleteId(null)}
+                          className="p-2 text-text-secondary hover:text-text-primary transition-colors"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={() => setConfirmDeleteId(habit.id)} 
+                        className="p-4 text-text-secondary/20 hover:text-rose-500 transition-colors"
+                      >
+                         <Trash2 size={18} />
+                      </button>
+                    )}
                 </div>
               </motion.div>
             );

@@ -12,6 +12,7 @@ export default function ScheduleScreen() {
   const { studentData, addTask, toggleTask, deleteTask, recordActivity, addHabit, deleteActivity } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const tasks = studentData.tasks || [];
   const goals = studentData.goals || [];
@@ -416,20 +417,63 @@ export default function ScheduleScreen() {
                       >
                         {item.done ? <CheckCircle2 size={20} md:size={28} strokeWidth={3} /> : <div className="w-5 h-5 border-2 border-current rounded-lg opacity-20" />}
                       </button>
-                      <button 
-                        onClick={() => deleteTask(item.id)}
-                        className="p-2 text-text-secondary/40 hover:text-rose-500 transition-all"
-                      >
-                        <Trash2 size={16} md:size={20} />
-                      </button>
+                      
+                      {confirmDeleteId === item.id ? (
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => {
+                              deleteTask(item.id);
+                              setConfirmDeleteId(null);
+                            }}
+                            className="bg-rose-500 text-white px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shadow-lg shadow-rose-500/20"
+                          >
+                            {language === 'fa' ? 'تایید' : 'CONFIRM'}
+                          </button>
+                          <button 
+                            onClick={() => setConfirmDeleteId(null)}
+                            className="p-2 text-text-secondary"
+                          >
+                             <X size={16} />
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => setConfirmDeleteId(item.id)}
+                          className="p-2 text-text-secondary/40 hover:text-rose-500 transition-all"
+                        >
+                          <Trash2 size={16} md:size={20} />
+                        </button>
+                      )}
                     </>
                   ) : (
-                    <button 
-                      onClick={() => deleteActivity(item.id)}
-                      className="p-2 text-text-secondary/40 hover:text-rose-500 transition-all"
-                    >
-                      <Trash2 size={16} md:size={20} />
-                    </button>
+                    <>
+                      {confirmDeleteId === item.id ? (
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => {
+                              deleteActivity(item.id);
+                              setConfirmDeleteId(null);
+                            }}
+                            className="bg-rose-500 text-white px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shadow-lg shadow-rose-500/20"
+                          >
+                            {language === 'fa' ? 'تایید' : 'CONFIRM'}
+                          </button>
+                          <button 
+                            onClick={() => setConfirmDeleteId(null)}
+                            className="p-2 text-text-secondary"
+                          >
+                             <X size={16} />
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => setConfirmDeleteId(item.id)}
+                          className="p-2 text-text-secondary/40 hover:text-rose-500 transition-all"
+                        >
+                          <Trash2 size={16} md:size={20} />
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
             </motion.div>

@@ -14,6 +14,7 @@ export default function GoalsScreen() {
   const { studentData, addGoal, deleteGoal, updateGoal, toggleSubGoal, deleteActivity, addHabit } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [expandedGoalId, setExpandedGoalId] = useState<string | null>(null);
   const [newSubGoals, setNewSubGoals] = useState<{id: string, title: string, done: boolean}[]>([]);
   const [tempSubGoal, setTempSubGoal] = useState('');
@@ -429,13 +430,33 @@ export default function GoalsScreen() {
                       <Edit3 size={16} md:size={18} strokeWidth={3} />
                       {t('edit_goal') || 'EDIT'}
                    </button>
-                   <button 
-                    onClick={() => deleteGoal(goal.id)}
-                    className="w-12 h-12 md:w-44 md:h-12 rounded-xl md:rounded-2xl bg-surface-base border border-surface-border text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all flex items-center justify-center px-4 gap-2 shrink-0 md:shrink"
-                   >
-                      <X size={16} md:size={18} />
-                      <span className="hidden md:block text-[10px] uppercase font-black">{language === 'fa' ? 'حذف' : 'DELETE'}</span>
-                   </button>
+                   {confirmDeleteId === goal.id ? (
+                     <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => {
+                            deleteGoal(goal.id);
+                            setConfirmDeleteId(null);
+                          }}
+                          className="flex-1 md:w-32 h-12 rounded-xl md:rounded-2xl bg-rose-500 text-white font-black text-[10px] uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95"
+                        >
+                           {language === 'fa' ? 'تایید حذف' : 'CONFIRM'}
+                        </button>
+                        <button 
+                          onClick={() => setConfirmDeleteId(null)}
+                          className="w-12 h-12 rounded-xl border border-surface-border bg-surface-base text-text-secondary flex items-center justify-center active:scale-95"
+                        >
+                           <ArrowLeft size={16} />
+                        </button>
+                     </div>
+                   ) : (
+                     <button 
+                      onClick={() => setConfirmDeleteId(goal.id)}
+                      className="w-12 h-12 md:w-44 md:h-12 rounded-xl md:rounded-2xl bg-surface-base border border-surface-border text-text-secondary hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/20 transition-all flex items-center justify-center px-4 gap-2 shrink-0 md:shrink"
+                     >
+                        <X size={16} md:size={18} />
+                        <span className="hidden md:block text-[10px] uppercase font-black">{language === 'fa' ? 'حذف' : 'DELETE'}</span>
+                     </button>
+                   )}
                 </div>
               </div>
 

@@ -13,6 +13,7 @@ export default function NotesScreen() {
   
   const [isAdding, setIsAdding] = useState(false);
   const [search, setSearch] = useState('');
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   
   const domain = currentRoot === UserRole.STUDENT ? 'STUDENT' : 'TRADER';
   const data = currentRoot === UserRole.STUDENT ? studentData : traderData;
@@ -201,12 +202,32 @@ export default function NotesScreen() {
                 <div className="w-10 h-10 rounded-xl bg-brand-primary/5 text-brand-primary flex items-center justify-center group-hover:scale-110 transition-transform">
                   <StickyNote size={20} />
                 </div>
-                <button 
-                  onClick={() => deleteNote(note.id, domain)}
-                  className="p-2 text-text-secondary opacity-20 hover:opacity-100 hover:text-rose-500 transition-all"
-                >
-                  <Trash2 size={16} />
-                </button>
+                {confirmDeleteId === note.id ? (
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => {
+                        deleteNote(note.id, domain);
+                        setConfirmDeleteId(null);
+                      }}
+                      className="bg-rose-500 text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95 shadow-lg shadow-rose-500/20"
+                    >
+                      {language === 'fa' ? 'تایید' : 'CONFIRM'}
+                    </button>
+                    <button 
+                      onClick={() => setConfirmDeleteId(null)}
+                      className="p-1.5 text-text-secondary hover:text-text-primary transition-colors"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => setConfirmDeleteId(note.id)}
+                    className="p-2 text-text-secondary opacity-20 hover:opacity-100 hover:text-rose-500 transition-all"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
               </div>
 
               <div className="space-y-2">
