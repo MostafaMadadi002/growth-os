@@ -178,7 +178,7 @@ export default function TradingReports() {
             label={t('net_profit') || 'Net Profit'} 
             value={`${stats.netProfit} USD`} 
             subValue={`${t('avg_per_trade') || 'Avg:'} ${stats.avgProfit}`}
-            icon={<div className={`p-3 rounded-2xl border ${Number(stats.netProfit) >= 0 ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/10 border-rose-500/20 text-rose-400'}`}>{Number(stats.netProfit) >= 0 ? <TrendingUp size={24} /> : <TrendingDown size={24} />}</div>} 
+            icon={<div className={`p-3 rounded-2xl border ${Number(stats.netProfit) > 0 ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : Number(stats.netProfit) < 0 ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' : 'bg-amber-500/10 border-amber-500/20 text-amber-400'}`}>{Number(stats.netProfit) >= 0 ? <TrendingUp size={24} /> : <TrendingDown size={24} />}</div>} 
           />
           <StatCard 
             label={t('total_trades') || 'Total Trades'} 

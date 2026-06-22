@@ -34,7 +34,7 @@ export default function TradingCalendar() {
     const pnl = dayTrades.reduce((sum, t) => sum + Number(t.profitAmount || 0), 0);
     if (pnl > 0) return 'profit';
     if (pnl < 0) return 'loss';
-    return 'neutral';
+    return 'breakeven';
   };
 
   const monthNames = language === 'fa' 
@@ -85,6 +85,7 @@ export default function TradingCalendar() {
               className={`aspect-square rounded-2xl md:rounded-3xl flex flex-col items-center justify-center relative overflow-hidden border transition-colors ${
                 status === 'profit' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
                 status === 'loss' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' :
+                status === 'breakeven' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' :
                 'bg-surface-base border-surface-border text-text-secondary opacity-40'
               }`}
             >

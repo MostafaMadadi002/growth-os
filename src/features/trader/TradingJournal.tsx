@@ -164,7 +164,7 @@ export default function TradingJournal() {
     switch (result) {
       case 'WIN': return 'text-emerald-400';
       case 'LOSS': return 'text-rose-400';
-      case 'BE': return 'text-blue-400';
+      case 'BE': return 'text-amber-400';
       default: return 'text-slate-400';
     }
   };
@@ -717,8 +717,8 @@ export default function TradingJournal() {
                         </div>
                       )}
                     </td>
-                    <td className={`px-4 py-4 text-center font-black ${trade.profitAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                      {trade.profitAmount === 0 ? '-' : trade.profitAmount}
+                    <td className={`px-4 py-4 text-center font-black ${trade.profitAmount > 0 ? 'text-emerald-400' : trade.profitAmount < 0 ? 'text-rose-400' : 'text-amber-400'}`}>
+                      {trade.profitAmount === 0 ? '0.00' : trade.profitAmount}
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-2">
@@ -794,7 +794,7 @@ export default function TradingJournal() {
               </div>
               <div className="bg-surface-base rounded-2xl p-4">
                 <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest mb-1">{t('profit_loss')}</p>
-                <p className={`text-sm font-display font-black ${trade.profitAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                <p className={`text-sm font-display font-black ${trade.profitAmount > 0 ? 'text-emerald-400' : trade.profitAmount < 0 ? 'text-rose-400' : 'text-amber-400'}`}>
                   {trade.profitAmount > 0 ? '+' : ''}{trade.profitAmount} USD
                 </p>
               </div>

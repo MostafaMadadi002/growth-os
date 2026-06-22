@@ -68,9 +68,14 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
   const getRowIndex = (jsDay: number) => (jsDay + 1) % 7;
 
   const getDayColor = (day: { intensity: number, score: number, pos: number, neg: number }) => {
-    // If no activity OR perfectly balanced activity (user requested balanced to "register empty")
-    if ((day.pos === 0 && day.neg === 0) || day.score === 0) {
+    // If no activity at all
+    if (day.pos === 0 && day.neg === 0) {
       return 'bg-text-secondary/10 border border-surface-border/50';
+    }
+    
+    // If activity exists but they are balanced (Equal)
+    if (day.score === 0) {
+      return 'bg-amber-500/40 border border-amber-500/20';
     }
     
     // Calculate color based on dominant activity
@@ -268,11 +273,12 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
             <div className="flex flex-row justify-between items-center gap-2 md:gap-4 text-[7px] md:text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest px-1">
                <span className="text-rose-500 shrink-0">{t('bad_habits')}</span>
                <div className="flex gap-1 md:gap-1.5 px-2 py-1.5 md:px-4 md:py-2 bg-surface-base rounded-xl border border-surface-border shrink-0">
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-500 rounded-sm" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-orange-500 rounded-sm" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-text-secondary/10 border border-surface-border/50 rounded-sm" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-teal-500 rounded-sm" />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-500 rounded-sm" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-500 rounded-sm" title={t('habits_bad')} />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-600/70 rounded-sm" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-text-secondary/10 border border-surface-border/50 rounded-sm" title={t('empty') || 'EMPTY'} />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-amber-500/40 border border-amber-500/20 rounded-sm" title={language === 'fa' ? 'مساوی' : 'EQUAL'} />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-600/70 rounded-sm" />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-500 rounded-sm" title={t('habits_good')} />
                </div>
                <span className="text-emerald-500 shrink-0">{t('good_habits')}</span>
             </div>
