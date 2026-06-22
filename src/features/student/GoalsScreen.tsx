@@ -3,7 +3,7 @@ import {
   Plus, Target, X, CheckCircle2, 
   BookOpen, Briefcase, Rocket, Edit3,
   ChevronDown, ChevronUp, Clock, Trash2,
-  TrendingUp, TrendingDown
+  TrendingUp, TrendingDown, ArrowLeft
 } from 'lucide-react';
 import { useAppStore, Goal } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
@@ -70,7 +70,7 @@ export default function GoalsScreen() {
       totalSessions: Number(formData.get('totalSessions')),
       completedSessions: 0,
       frequencyPerWeek: Number(formData.get('frequencyPerWeek')) || selectedDays.length,
-      category: formData.get('category') as any,
+      category: (formData.get('category') as any) || 'STUDY',
       duration: Number(formData.get('duration')),
       durationUnit: formData.get('durationUnit') as any,
       startDate: (formData.get('startDate') as string) || new Date().toISOString().split('T')[0],
@@ -97,7 +97,7 @@ export default function GoalsScreen() {
       title: formData.get('title') as string,
       totalSessions: Number(formData.get('totalSessions')),
       frequencyPerWeek: Number(formData.get('frequencyPerWeek')) || selectedDays.length,
-      category: formData.get('category') as any,
+      category: (formData.get('category') as any) || (editingGoal?.category || 'STUDY'),
       duration: Number(formData.get('duration')),
       durationUnit: formData.get('durationUnit') as any,
       startDate: formData.get('startDate') as string,
@@ -310,24 +310,6 @@ export default function GoalsScreen() {
                    </AnimatePresence>
                 </div>
 
-                <div className="space-y-4">
-                   <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('core_domain')}</label>
-                   <div className="grid grid-cols-3 gap-4">
-                      {[
-                        { id: 'STUDY', icon: <BookOpen size={22} />, label: t('education') },
-                        { id: 'WORK', icon: <Briefcase size={22} />, label: t('trading_cat') },
-                        { id: 'PROJECT', icon: <Rocket size={22} />, label: t('project') }
-                      ].map(cat => (
-                        <label key={cat.id} className="flex flex-col items-center gap-4 p-5 rounded-3xl border border-surface-border bg-surface-base cursor-pointer has-[:checked]:border-brand-primary has-[:checked]:bg-brand-primary/10 group transition-all duration-300">
-                           <input type="radio" name="category" value={cat.id} className="hidden" defaultChecked={editingGoal ? editingGoal.category === cat.id : cat.id === 'STUDY'} />
-                           <div className="text-text-secondary group-has-[:checked]:text-brand-primary group-has-[:checked]:scale-110 transition-all">
-                              {cat.icon}
-                           </div>
-                           <span className="text-[10px] font-black uppercase text-text-secondary group-has-[:checked]:text-brand-primary opacity-60 group-has-[:checked]:opacity-100">{cat.label}</span>
-                        </label>
-                      ))}
-                   </div>
-                </div>
 
                 <div className="space-y-4">
                     <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('checklist') || 'CHECKLIST'}</label>

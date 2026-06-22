@@ -3,7 +3,7 @@ import {
   CalendarDays, Clock, CheckCircle2, 
   Plus, Timer, Hash, X, Trash2
 } from 'lucide-react';
-import { useAppStore } from '../../core/stores/appStore';
+import { useAppStore, StudentActivity } from '../../core/stores/appStore';
 import { useI18n } from '../../core/store/useI18n';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -13,6 +13,11 @@ export default function ScheduleScreen() {
   const [isAdding, setIsAdding] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [selectedGoalIdAdd, setSelectedGoalIdAdd] = useState<string>('');
+  const [selectedSubGoalsAdd, setSelectedSubGoalsAdd] = useState<string[]>([]);
+  const [selectedGoalIdRecord, setSelectedGoalIdRecord] = useState<string>('');
+  const [selectedSubGoalsRecord, setSelectedSubGoalsRecord] = useState<string[]>([]);
+  const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'DONE'>('ALL');
 
   const tasks = studentData.tasks || [];
   const goals = studentData.goals || [];
@@ -37,7 +42,13 @@ export default function ScheduleScreen() {
       type: 'ACTIVITY' as const,
       activityType: a.type
     }))
-  ].sort((a, b) => a.time.localeCompare(b.time));
+  ]
+  .filter(item => {
+    if (filter === 'ACTIVE') return !item.done;
+    if (filter === 'DONE') return item.done;
+    return true;
+  })
+  .sort((a, b) => a.time.localeCompare(b.time));
 
   const handleAddTask = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,17 +58,20 @@ export default function ScheduleScreen() {
       time: formData.get('time') as string,
       label: formData.get('label') as string,
       dueDate: (formData.get('dueDate') as string) || undefined,
-      goalId: (formData.get('goalId') as string) || undefined,
+      goalId: selectedGoalIdAdd || undefined,
+      subGoalIds: selectedSubGoalsAdd,
       done: false
     };
     addTask(newTask);
     setIsAdding(false);
+    setSelectedGoalIdAdd('');
+    setSelectedSubGoalsAdd([]);
   };
 
   const handleRecordActivity = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const selection = formData.get('goalId') as string;
+    const selection = selectedGoalIdRecord;
     const isHabit = selection.startsWith('habit:');
     const todayStr = new Date().toISOString().split('T')[0];
 
@@ -75,7 +89,7 @@ export default function ScheduleScreen() {
 
     const type = goalId ? 'POSITIVE' : 'NEGATIVE';
 
-    const activity = {
+    const activity: StudentActivity = {
       id: Math.random().toString(36).substr(2, 9),
       title,
       duration: Number(formData.get('duration')),
@@ -83,11 +97,19 @@ export default function ScheduleScreen() {
       date: todayStr,
       time: formData.get('time') as string,
       type: type as 'POSITIVE' | 'NEGATIVE',
-      goalId
+      goalId,
+      subGoalIds: selectedSubGoalsRecord
     };
 
     recordActivity(activity);
+    
+    // If goal had subgoals, we might want to toggle them done in the store if they were checked here.
+    // However, store actions might need update to support this.
+    // For now, we fulfill the UI requirement of showing and collecting them.
+    
     setIsRecording(false);
+    setSelectedGoalIdRecord('');
+    setSelectedSubGoalsRecord([]);
   };
 
   const calculateDailyTarget = (goal: any) => {
@@ -230,7 +252,15 @@ export default function ScheduleScreen() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
                         <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('linked_objective')}</label>
-                        <select name="goalId" className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-sans font-black text-lg outline-none focus:border-brand-primary/30 appearance-none">
+                        <select 
+                          name="goalId" 
+                          value={selectedGoalIdRecord}
+                          onChange={(e) => {
+                            setSelectedGoalIdRecord(e.target.value);
+                            setSelectedSubGoalsRecord([]);
+                          }}
+                          className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-sans font-black text-lg outline-none focus:border-brand-primary/30 appearance-none"
+                        >
                             <option value="">{t('unplanned_activity')}</option>
                             <optgroup label={t('active_goals')} className="bg-surface-card border-none">
                                 {goals.map(goal => (
@@ -247,6 +277,31 @@ export default function ScheduleScreen() {
                             </optgroup>
                         </select>
                         </div>
+                        
+                        {/* Record Sub-goals checklist */}
+                        {selectedGoalIdRecord && !selectedGoalIdRecord.startsWith('habit:') && goals.find(g => g.id === selectedGoalIdRecord)?.subGoals?.length! > 0 && (
+                          <div className="md:col-span-2 space-y-4 bg-surface-base/50 p-6 rounded-3xl border border-surface-border">
+                            <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-[0.3em]">{t('checklist') || 'CHECKLIST'}</label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                               {goals.find(g => g.id === selectedGoalIdRecord)?.subGoals?.map(sg => (
+                                 <label key={sg.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-base cursor-pointer group transition-all">
+                                   <input 
+                                     type="checkbox" 
+                                     checked={selectedSubGoalsRecord.includes(sg.id)}
+                                     onChange={(e) => {
+                                       if (e.target.checked) setSelectedSubGoalsRecord(prev => [...prev, sg.id]);
+                                       else setSelectedSubGoalsRecord(prev => prev.filter(id => id !== sg.id));
+                                     }}
+                                     className="w-5 h-5 rounded-md border-2 border-surface-border text-brand-primary focus:ring-brand-primary bg-transparent"
+                                   />
+                                   <span className={`text-sm font-black uppercase transition-all ${selectedSubGoalsRecord.includes(sg.id) ? 'text-brand-primary' : 'text-text-secondary opacity-60'}`}>
+                                     {sg.title}
+                                   </span>
+                                 </label>
+                               ))}
+                            </div>
+                          </div>
+                        )}
                         <div className="space-y-3">
                           <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('local_time')}</label>
                           <input 
@@ -348,13 +403,46 @@ export default function ScheduleScreen() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('linked_objective')}</label>
-                    <select name="goalId" className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg outline-none focus:border-orange-500/30 appearance-none">
+                    <select 
+                      name="goalId" 
+                      value={selectedGoalIdAdd}
+                      onChange={(e) => {
+                        setSelectedGoalIdAdd(e.target.value);
+                        setSelectedSubGoalsAdd([]);
+                      }}
+                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg outline-none focus:border-orange-500/30 appearance-none"
+                    >
                       <option value="">{language === 'fa' ? 'بدون هدف' : 'No Goal'}</option>
                       {goals.map(goal => (
                         <option key={goal.id} value={goal.id} className="text-text-primary bg-surface-card">{goal.title}</option>
                       ))}
                     </select>
                   </div>
+
+                  {/* Task Sub-goals checklist */}
+                  {selectedGoalIdAdd && goals.find(g => g.id === selectedGoalIdAdd)?.subGoals?.length! > 0 && (
+                    <div className="md:col-span-2 space-y-4 bg-surface-base/50 p-6 rounded-3xl border border-surface-border">
+                      <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-[0.3em]">{t('target_subflows') || 'TARGET SUB-FLOWS'}</label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                         {goals.find(g => g.id === selectedGoalIdAdd)?.subGoals?.map(sg => (
+                           <label key={sg.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-base cursor-pointer group transition-all">
+                             <input 
+                               type="checkbox" 
+                               checked={selectedSubGoalsAdd.includes(sg.id)}
+                               onChange={(e) => {
+                                 if (e.target.checked) setSelectedSubGoalsAdd(prev => [...prev, sg.id]);
+                                 else setSelectedSubGoalsAdd(prev => prev.filter(id => id !== sg.id));
+                               }}
+                               className="w-5 h-5 rounded-md border-2 border-surface-border text-orange-500 focus:ring-orange-500 bg-transparent"
+                             />
+                             <span className={`text-sm font-black uppercase transition-all ${selectedSubGoalsAdd.includes(sg.id) ? 'text-orange-500' : 'text-text-secondary opacity-60'}`}>
+                               {sg.title}
+                             </span>
+                           </label>
+                         ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('target_date')}</label>
                     <input 
@@ -495,18 +583,30 @@ export default function ScheduleScreen() {
       </section>
 
       <footer className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         <div className="p-10 bg-surface-card border border-surface-border rounded-[3rem] relative overflow-hidden group">
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-orange-500/10 blur-[50px] rounded-full group-hover:bg-orange-500/20 transition-all" />
-            <Hash className="text-orange-500 mb-6" size={32} />
-            <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
-            <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
-         </div>
-         <div className="p-10 bg-surface-card border border-surface-border rounded-[3rem] relative overflow-hidden group">
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 blur-[50px] rounded-full group-hover:bg-emerald-500/20 transition-all" />
-            <Timer className="text-emerald-500 mb-6" size={32} />
-            <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('completion_load')}</h5>
-            <p className="text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-sm font-mono text-text-secondary opacity-60">PULSES</span></p>
-         </div>
+         <button 
+           onClick={() => setFilter(filter === 'ACTIVE' ? 'ALL' : 'ACTIVE')}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all text-left rtl:text-right active:scale-[0.98] ${filter === 'ACTIVE' ? 'bg-orange-500/10 border-orange-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
+         >
+            <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'ACTIVE' ? 'bg-orange-500/40' : 'bg-orange-500/10 group-hover:bg-orange-500/20'}`} />
+            <Hash className={`${filter === 'ACTIVE' ? 'text-orange-500' : 'text-orange-500/40'} mb-6 group-hover:scale-110 transition-transform`} size={32} />
+            <div className="relative z-10">
+              <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
+              <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
+              {filter === 'ACTIVE' && <span className="absolute top-0 right-0 bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
+            </div>
+         </button>
+         <button 
+           onClick={() => setFilter(filter === 'DONE' ? 'ALL' : 'DONE')}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all text-left rtl:text-right active:scale-[0.98] ${filter === 'DONE' ? 'bg-emerald-500/10 border-emerald-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
+         >
+            <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'DONE' ? 'bg-emerald-500/40' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'}`} />
+            <Timer className={`${filter === 'DONE' ? 'text-emerald-500' : 'text-emerald-500/40'} mb-6 group-hover:scale-110 transition-transform`} size={32} />
+            <div className="relative z-10">
+              <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('completion_load')}</h5>
+              <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">PULSES</span></p>
+              {filter === 'DONE' && <span className="absolute top-0 right-0 bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
+            </div>
+         </button>
       </footer>
     </div>
   );

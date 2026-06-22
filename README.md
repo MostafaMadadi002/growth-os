@@ -8,51 +8,69 @@ GrowthOS is a unified **Personal Growth Operating System** designed to help user
 - `src/`: Application source code (React + TypeScript)
 - `assets/`: UI/UX assets and illustrations
 
-## 📱 Mobile Deployment Guide (How to get APK)
+## 📱 راهنمای تبدیل به اپلیکیشن موبایل (Mobile Deployment)
 
-To turn this web application into a mobile app (Android or iOS), we use **Capacitor**. 
+برای تبدیل این برنامه وب به اپلیکیشن اندروید (APK) یا iOS، از **Capacitor** استفاده می‌کنیم. در اینجا تمامی دستورات لازم آورده شده است:
 
-### ⚠️ CRITICAL: The "Missing Dist" Error
-If you see `[warn] sync could not run--missing dist directory`, it is because you haven't built the web version yet. **Step 1 is mandatory.**
-
-### Step 1: Generate the Web Build
-Run this on your local machine terminal:
+### مرحله ۱: خروجی گرفتن از نسخه وب
+ابتدا باید فایل‌های نهایی وب را تولید کنید:
 ```bash
 npm install
 npm run build
 ```
-*This creates a `dist` folder. Capacitor needs this folder to work.*
+*این دستور پوشه `dist` را ایجاد می‌کند که برای موبایل ضروری است.*
 
-### Step 2: Capacitor Configuration
-I have already created a `capacitor.config.ts` file for you. If you get an error saying it already exists during `npx cap init`, you can simply skip the `init` command and proceed to:
+### مرحله ۲: نصب ابزارهای موبایل
 ```bash
-# Install platform packages
+# نصب پکیج اندروید
 npm install @capacitor/android
 
-# Add the Android project
+# اضافه کردن پروژه اندروید به برنامه
 npx cap add android
 ```
 
-### 🛠 Troubleshooting: "Cannot run init..."
-If you encounter `[error] Cannot run init for a project using a non-JSON configuration file`, it is because a typescript config already exists.
-**Fix:** 
-1. Delete `capacitor.config.ts` (if you want to run `init` manually).
-2. OR better: Just use the one I provided and skip `npx cap init`.
+### مرحله ۳: همگام‌سازی و باز کردن در Android Studio
+هر زمان که کدی را تغییر دادید، این مراحل را تکرار کنید:
+```bash
+# ۱. ساخت نسخه جدید وب
+npm run build
 
+# ۲. انتقال تغییرات به پوشه اندروید
+npx cap sync
 
-### Step 4: Sync & Open in Android Studio
-Whenever you change your code, run this sequence:
+# ۳. باز کردن پروژه در اندروید استودیو
+npx cap open android
+```
+
+### مرحله ۴: خروجی گرفتن APK (در Android Studio)
+1. منتظر بمانید تا پروژه لود شود (Gradle finish).
+2. از منوی بالا: **Build** > **Build Bundle(s) / APK(s)** > **Build APK(s)** را بزنید.
+3. پس از اتمام، روی **Locate** کلیک کنید تا فایل `.apk` را بردارید و روی گوشی نصب کنید.
+
+---
+
+## 🚀 English: Mobile Deployment Guide
+
+To turn this web application into a mobile app, follow these refined steps:
+
+### Step 1: Web Build
+```bash
+npm install
+npm run build
+```
+
+### Step 2: Add Platform
+```bash
+npm install @capacitor/android
+npx cap add android
+```
+
+### Step 3: Fast Iteration (Update App)
 ```bash
 npm run build
 npx cap sync
 npx cap open android
 ```
-
-### Step 5: Build the final APK (inside Android Studio)
-1. Wait for the project to load and Gradle to finish (1-2 minutes).
-2. Look at the top menu: **Build** > **Build Bundle(s) / APK(s)** > **Build APK(s)**.
-3. A popup will appear at the bottom right when finished. Click **Locate** to get your `.apk` file.
-4. Transfer that APK to your phone and install!
 
 ---
 

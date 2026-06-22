@@ -46,6 +46,7 @@ export interface StudentActivity {
   type: 'POSITIVE' | 'NEGATIVE';
   goalId?: string;
   taskId?: string;
+  subGoalIds?: string[];
 }
 
 export interface ActivityLog {
@@ -62,6 +63,7 @@ export interface ScheduleTask {
   time: string;
   dueDate?: string;
   goalId?: string;
+  subGoalIds?: string[];
   done: boolean;
 }
 
