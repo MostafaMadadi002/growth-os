@@ -125,7 +125,7 @@ export default function GoalsScreen() {
               <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_12px_#10b981]" />
               <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('strategic_objectives')}</span>
            </div>
-           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
+            <h1 className={`text-2xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase`}>
              {t('branch_goals').split(' ')[0]}<span className="text-brand-primary">.</span>
            </h1>
         </div>
@@ -427,7 +427,7 @@ export default function GoalsScreen() {
                           onClick={() => setConfirmDeleteId(null)}
                           className="w-12 h-12 rounded-xl border border-surface-border bg-surface-base text-text-secondary flex items-center justify-center active:scale-95"
                         >
-                           <ArrowLeft size={16} />
+                           <ArrowLeft size={16} className={language === 'fa' ? 'rotate-180' : ''} />
                         </button>
                      </div>
                    ) : (

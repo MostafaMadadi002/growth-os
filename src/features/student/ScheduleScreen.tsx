@@ -148,7 +148,7 @@ export default function ScheduleScreen() {
               <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-orange-500" />
               <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('schedule')}</span>
            </div>
-           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1 md:mt-2">
+           <h1 className={`text-2xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1 md:mt-2`}>
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
            </h1>
         </div>
@@ -592,7 +592,7 @@ export default function ScheduleScreen() {
             <div className="relative z-10">
               <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
-              {filter === 'ACTIVE' && <span className="absolute top-0 right-0 bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
+              {filter === 'ACTIVE' && <span className="absolute top-0 right-0 rtl:left-0 rtl:right-auto bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
             </div>
          </button>
          <button 
@@ -604,7 +604,7 @@ export default function ScheduleScreen() {
             <div className="relative z-10">
               <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('completion_load')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">PULSES</span></p>
-              {filter === 'DONE' && <span className="absolute top-0 right-0 bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
+              {filter === 'DONE' && <span className="absolute top-0 right-0 rtl:left-0 rtl:right-auto bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
             </div>
          </button>
       </footer>

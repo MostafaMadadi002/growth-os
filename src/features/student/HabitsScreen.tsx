@@ -42,7 +42,7 @@ export default function HabitsScreen() {
               <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]" />
               <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('habits')}</span>
            </div>
-           <h1 className="text-2xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1 md:mt-2">
+           <h1 className={`text-2xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1 md:mt-2`}>
              {t('habits').split(' ')[0]}<span className="text-blue-500">.</span>
            </h1>
         </div>
@@ -134,7 +134,7 @@ export default function HabitsScreen() {
               >
                 <div className="flex items-center gap-4 md:gap-6 flex-1 min-w-0">
                     <div className="min-w-0 flex-1">
-                      <h4 className={`text-lg md:text-2xl font-display font-black uppercase tracking-tight truncate transition-colors duration-300 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
+                      <h4 className={`text-lg md:text-2xl font-display font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-tight'} truncate transition-colors duration-300 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
                         {habit.title}
                       </h4>
                       <div className="flex items-center gap-3 mt-1.5">

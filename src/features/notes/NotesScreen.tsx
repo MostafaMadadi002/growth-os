@@ -70,7 +70,7 @@ export default function NotesScreen() {
               {domain}_CENTRAL_ARCHIVE
             </span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1">
+          <h1 className={`text-3xl md:text-5xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1`}>
             {t('branch_notes').split(' ')[0]}<span className="text-brand-primary">.</span>
           </h1>
         </div>

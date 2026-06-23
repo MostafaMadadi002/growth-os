@@ -249,7 +249,7 @@ export default function App() {
             <div className={`transition-all duration-300 ${activeTab === tab.id ? 'scale-110 -translate-y-0.5' : 'scale-100 opacity-50'}`}>
               {React.cloneElement(tab.icon as React.ReactElement, { size: 18 })}
             </div>
-            <span className={`text-[8px] md:text-[9px] font-display font-black uppercase tracking-tight md:tracking-widest transition-all duration-300 truncate w-full text-center px-0.5 ${activeTab === tab.id ? 'opacity-100' : 'opacity-40'}`}>
+            <span className={`text-[8px] md:text-[9px] font-display font-black uppercase ${dir === 'rtl' ? 'tracking-normal' : 'tracking-tight'} md:tracking-widest transition-all duration-300 truncate w-full text-center px-0.5 ${activeTab === tab.id ? 'opacity-100' : 'opacity-40'}`}>
               {t(tab.label)}
             </span>
             

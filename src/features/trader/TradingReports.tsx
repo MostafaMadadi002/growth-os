@@ -163,7 +163,7 @@ export default function TradingReports() {
            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
            <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('performance_analytics') || 'ANALYTICS'}</span>
         </div>
-        <h2 className="text-3xl md:text-6xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
+        <h2 className={`text-3xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase`}>
           {t('performance_analytics') || 'Performance Analytics'}<span className="text-brand-primary">.</span>
         </h2>
 

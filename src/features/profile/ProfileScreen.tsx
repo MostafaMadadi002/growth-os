@@ -112,7 +112,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
                   <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-brand-primary" />
                   <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{currentRoot}</span>
                </div>
-               <h1 className="text-2xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1 md:mt-2">
+               <h1 className={`text-2xl md:text-5xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1 md:mt-2`}>
                  {language === 'fa' ? 'مهمان' : 'GUEST'}<span className="text-brand-primary">.</span>
                </h1>
             </div>

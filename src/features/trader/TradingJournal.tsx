@@ -187,7 +187,7 @@ export default function TradingJournal() {
               <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
               <span className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.2em]">{t('trading_journal')}</span>
            </div>
-          <h2 className="text-3xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none">
+          <h2 className={`text-3xl md:text-5xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase`}>
             {t('trading_journal').split(' ')[0]}<span className="text-brand-primary">.</span>
           </h2>
           <p className="text-[10px] font-mono font-bold text-text-secondary uppercase tracking-widest mt-1 opacity-60">

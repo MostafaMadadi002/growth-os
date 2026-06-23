@@ -108,7 +108,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
                 <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]" />
                 <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('settings')}</span>
              </div>
-             <h1 className="text-2xl md:text-5xl font-display font-black text-text-primary tracking-tighter uppercase leading-none mt-1">
+             <h1 className={`text-2xl md:text-5xl font-display font-black text-text-primary ${i18nLanguage === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1`}>
                {t('settings')}<span className="text-indigo-500">.</span>
              </h1>
           </div>
