@@ -123,7 +123,7 @@ export default function GoalsScreen() {
         <div>
            <div className="flex items-center gap-3 mb-2 md:mb-4">
               <div className="w-2 h-2 rounded-full bg-brand-primary shadow-[0_0_12px_#10b981]" />
-              <span className="text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">{t('strategic_objectives')}</span>
+              <span className={`text-[9px] md:text-[10px] font-mono font-black text-slate-500 uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.2em] md:tracking-[0.4em]'}`}>{t('strategic_objectives')}</span>
            </div>
             <h1 className={`text-2xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase`}>
              {t('branch_goals').split(' ')[0]}<span className="text-brand-primary">.</span>
@@ -407,7 +407,7 @@ export default function GoalsScreen() {
                 <div className="flex flex-row md:flex-col gap-4">
                    <button 
                      onClick={() => openEdit(goal)}
-                     className="flex-1 md:w-44 h-12 md:h-14 rounded-xl md:rounded-2xl bg-brand-primary shadow-xl shadow-brand-primary/10 flex items-center justify-center gap-2 md:gap-4 font-black text-[10px] md:text-[12px] uppercase tracking-widest text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                     className={`flex-1 md:w-44 h-12 md:h-14 rounded-xl md:rounded-2xl bg-brand-primary shadow-xl shadow-brand-primary/10 flex items-center justify-center gap-2 md:gap-4 font-black text-[10px] md:text-[12px] uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'} text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300`}
                    >
                       <Edit3 size={16} md:size={18} strokeWidth={3} />
                       {t('edit_goal') || 'EDIT'}
@@ -419,9 +419,9 @@ export default function GoalsScreen() {
                             deleteGoal(goal.id);
                             setConfirmDeleteId(null);
                           }}
-                          className="flex-1 md:w-32 h-12 rounded-xl md:rounded-2xl bg-rose-500 text-white font-black text-[10px] uppercase tracking-widest hover:bg-rose-600 transition-all active:scale-95"
+                          className={`flex-1 md:w-32 h-12 rounded-xl md:rounded-2xl bg-rose-500 text-white font-black text-[10px] uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'} hover:bg-rose-600 transition-all active:scale-95`}
                         >
-                           {language === 'fa' ? 'تایید حذف' : 'CONFIRM'}
+                          {language === 'fa' ? 'تایید حذف' : 'CONFIRM'}
                         </button>
                         <button 
                           onClick={() => setConfirmDeleteId(null)}

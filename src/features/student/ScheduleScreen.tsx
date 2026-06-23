@@ -146,7 +146,7 @@ export default function ScheduleScreen() {
         <div>
            <div className="flex items-center gap-2 md:gap-3">
               <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-orange-500" />
-              <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('schedule')}</span>
+              <span className={`text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.1em] md:tracking-[0.2em]'}`}>{t('schedule')}</span>
            </div>
            <h1 className={`text-2xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1 md:mt-2`}>
              {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
@@ -480,7 +480,7 @@ export default function ScheduleScreen() {
                   <span className="text-[9px] md:text-[11px] font-mono font-black opacity-60">{item.time.split(':')[1]}</span>
                 </div>
                 <div className="flex-1 space-y-1">
-                  <h4 className={`text-base md:text-3xl font-display font-black uppercase tracking-tight transition-all ${item.done ? 'text-text-secondary line-through opacity-30' : 'text-text-primary'}`}>
+                  <h4 className={`text-base md:text-3xl font-display font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-tight'} transition-all ${item.done ? 'text-text-secondary line-through opacity-30' : 'text-text-primary'}`}>
                     {item.label}
                   </h4>
                   <div className="flex items-center gap-2 md:gap-4 flex-wrap">
@@ -590,9 +590,9 @@ export default function ScheduleScreen() {
             <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'ACTIVE' ? 'bg-orange-500/40' : 'bg-orange-500/10 group-hover:bg-orange-500/20'}`} />
             <Hash className={`${filter === 'ACTIVE' ? 'text-orange-500' : 'text-orange-500/40'} mb-6 group-hover:scale-110 transition-transform`} size={32} />
             <div className="relative z-10">
-              <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('active_segments')}</h5>
+              <h5 className={`text-[10px] font-mono font-black text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.3em]'} mb-2`}>{t('active_segments')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
-              {filter === 'ACTIVE' && <span className="absolute top-0 right-0 rtl:left-0 rtl:right-auto bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
+              {filter === 'ACTIVE' && <span className={`absolute -top-8 right-0 rtl:left-0 rtl:right-auto bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>{t('filtered') || 'FILTERED'}</span>}
             </div>
          </button>
          <button 
@@ -602,9 +602,9 @@ export default function ScheduleScreen() {
             <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'DONE' ? 'bg-emerald-500/40' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'}`} />
             <Timer className={`${filter === 'DONE' ? 'text-emerald-500' : 'text-emerald-500/40'} mb-6 group-hover:scale-110 transition-transform`} size={32} />
             <div className="relative z-10">
-              <h5 className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-[0.3em] mb-2">{t('completion_load')}</h5>
+              <h5 className={`text-[10px] font-mono font-black text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.3em]'} mb-2`}>{t('completion_load')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">PULSES</span></p>
-              {filter === 'DONE' && <span className="absolute top-0 right-0 rtl:left-0 rtl:right-auto bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest">{t('filtered') || 'FILTERED'}</span>}
+              {filter === 'DONE' && <span className={`absolute -top-8 right-0 rtl:left-0 rtl:right-auto bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>{t('filtered') || 'FILTERED'}</span>}
             </div>
          </button>
       </footer>

@@ -40,7 +40,7 @@ export default function HabitsScreen() {
         <div>
            <div className="flex items-center gap-2 md:gap-3">
               <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]" />
-              <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-[0.1em] md:tracking-[0.2em]">{t('habits')}</span>
+              <span className={`text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.1em] md:tracking-[0.2em]'}`}>{t('habits')}</span>
            </div>
            <h1 className={`text-2xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1 md:mt-2`}>
              {t('habits').split(' ')[0]}<span className="text-blue-500">.</span>
@@ -142,7 +142,7 @@ export default function HabitsScreen() {
                             <span className="text-xs font-mono font-black text-brand-primary tabular-nums">
                               {habit.streak}
                             </span>
-                            <span className="text-[9px] font-mono font-bold text-text-secondary uppercase opacity-60 tracking-wider">
+                            <span className={`text-[9px] font-mono font-bold text-text-secondary uppercase opacity-60 ${language === 'fa' ? 'tracking-normal' : 'tracking-wider'}`}>
                               {t('days')} {t('streak')}
                             </span>
                          </div>
@@ -164,12 +164,12 @@ export default function HabitsScreen() {
                       {isDone ? (
                         <>
                           <Check size={20} md:size={24} strokeWidth={3} />
-                          <span className="text-[11px] md:text-sm font-display font-black uppercase tracking-wider">{t('done')}</span>
+                          <span className={`text-[11px] md:text-sm font-display font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-wider'}`}>{t('done')}</span>
                         </>
                       ) : (
                         <>
                           <Zap size={18} md:size={20} className="opacity-30" />
-                          <span className="text-[11px] md:text-sm font-mono font-black uppercase tracking-wider opacity-60">{t('mark_done')}</span>
+                          <span className={`text-[11px] md:text-sm font-mono font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-wider'} opacity-60`}>{t('mark_done')}</span>
                         </>
                       )}
                     </button>
