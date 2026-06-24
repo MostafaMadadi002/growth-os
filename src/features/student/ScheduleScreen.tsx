@@ -585,26 +585,34 @@ export default function ScheduleScreen() {
       <footer className="grid grid-cols-1 md:grid-cols-2 gap-6">
          <button 
            onClick={() => setFilter(filter === 'ACTIVE' ? 'ALL' : 'ACTIVE')}
-           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all text-left rtl:text-right active:scale-[0.98] ${filter === 'ACTIVE' ? 'bg-orange-500/10 border-orange-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'ACTIVE' ? 'bg-orange-500/10 border-orange-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
          >
             <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'ACTIVE' ? 'bg-orange-500/40' : 'bg-orange-500/10 group-hover:bg-orange-500/20'}`} />
-            <Hash className={`${filter === 'ACTIVE' ? 'text-orange-500' : 'text-orange-500/40'} mb-6 group-hover:scale-110 transition-transform`} size={32} />
-            <div className="relative z-10">
+            <Hash className={`${filter === 'ACTIVE' ? 'text-orange-500' : 'text-orange-500/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
+            <div className="relative z-10 w-full text-left rtl:text-right">
               <h5 className={`text-[10px] font-mono font-black text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.3em]'} mb-2`}>{t('active_segments')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
-              {filter === 'ACTIVE' && <span className={`absolute -top-8 right-0 rtl:left-0 rtl:right-auto bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>{t('filtered') || 'FILTERED'}</span>}
+              {filter === 'ACTIVE' && (
+                 <span className={`absolute -top-12 ${language === 'fa' ? 'left-0' : 'right-0'} bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>
+                   {t('filtered') || 'FILTERED'}
+                 </span>
+               )}
             </div>
          </button>
          <button 
            onClick={() => setFilter(filter === 'DONE' ? 'ALL' : 'DONE')}
-           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all text-left rtl:text-right active:scale-[0.98] ${filter === 'DONE' ? 'bg-emerald-500/10 border-emerald-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'DONE' ? 'bg-emerald-500/10 border-emerald-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
          >
             <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'DONE' ? 'bg-emerald-500/40' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'}`} />
-            <Timer className={`${filter === 'DONE' ? 'text-emerald-500' : 'text-emerald-500/40'} mb-6 group-hover:scale-110 transition-transform`} size={32} />
-            <div className="relative z-10">
+            <Timer className={`${filter === 'DONE' ? 'text-emerald-500' : 'text-emerald-500/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
+            <div className="relative z-10 w-full text-left rtl:text-right">
               <h5 className={`text-[10px] font-mono font-black text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.3em]'} mb-2`}>{t('completion_load')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">PULSES</span></p>
-              {filter === 'DONE' && <span className={`absolute -top-8 right-0 rtl:left-0 rtl:right-auto bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>{t('filtered') || 'FILTERED'}</span>}
+              {filter === 'DONE' && (
+                 <span className={`absolute -top-12 ${language === 'fa' ? 'left-0' : 'right-0'} bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>
+                   {t('filtered') || 'FILTERED'}
+                 </span>
+               )}
             </div>
          </button>
       </footer>
