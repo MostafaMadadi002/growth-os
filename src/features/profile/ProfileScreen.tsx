@@ -75,7 +75,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
     
     // If activity exists but they are balanced (Equal)
     if (day.score === 0) {
-      return 'bg-amber-500/40 border border-amber-500/20';
+      return 'bg-purple-500/40 border border-purple-500/20';
     }
     
     // Calculate color based on dominant activity
@@ -276,7 +276,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-500 rounded-sm" title={t('habits_bad')} />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-rose-600/70 rounded-sm" />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-text-secondary/10 border border-surface-border/50 rounded-sm" title={t('empty') || 'EMPTY'} />
-                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-amber-500/40 border border-amber-500/20 rounded-sm" title={language === 'fa' ? 'مساوی' : 'EQUAL'} />
+                  <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-purple-500/40 border border-purple-500/20 rounded-sm" title={language === 'fa' ? 'مساوی' : 'EQUAL'} />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-600/70 rounded-sm" />
                   <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-emerald-500 rounded-sm" title={t('habits_good')} />
                </div>

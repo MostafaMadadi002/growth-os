@@ -81,7 +81,7 @@ export default function TradingScreen() {
     switch (status) {
       case TradeStatus.WIN: return 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20';
       case TradeStatus.LOSS: return 'text-rose-500 bg-rose-500/10 border-rose-500/20';
-      case TradeStatus.RISK_FREE: return 'text-amber-500 bg-amber-500/10 border-amber-500/20';
+      case TradeStatus.RISK_FREE: return 'text-purple-500 bg-purple-500/10 border-purple-500/20';
       default: return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
     }
   };

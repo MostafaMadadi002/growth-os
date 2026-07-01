@@ -85,7 +85,7 @@ export default function TradingCalendar() {
               className={`aspect-square rounded-2xl md:rounded-3xl flex flex-col items-center justify-center relative overflow-hidden border transition-colors ${
                 status === 'profit' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
                 status === 'loss' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' :
-                status === 'breakeven' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' :
+                status === 'breakeven' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' :
                 'bg-surface-base border-surface-border text-text-secondary opacity-40'
               }`}
             >
