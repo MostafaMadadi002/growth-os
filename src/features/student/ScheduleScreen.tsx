@@ -572,7 +572,7 @@ export default function ScheduleScreen() {
            <motion.div 
              initial={{ opacity: 0 }}
              animate={{ opacity: 1 }}
-             className="py-32 text-center border-4 border-dashed border-surface-border rounded-[4rem] bg-surface-card/40"
+             className="py-32 text-center border-4 border-dashed border-surface-border rounded-[4rem] bg-surface-card/20 backdrop-blur-md"
            >
               <CalendarDays size={64} strokeWidth={1} className="mx-auto mb-8 text-text-secondary opacity-40" />
               <p className="text-[12px] font-mono font-black text-text-secondary opacity-60 uppercase tracking-[0.3em] leading-loose max-w-xs mx-auto">
@@ -585,7 +585,7 @@ export default function ScheduleScreen() {
       <footer className="grid grid-cols-1 md:grid-cols-2 gap-6">
          <button 
            onClick={() => setFilter(filter === 'ACTIVE' ? 'ALL' : 'ACTIVE')}
-           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'ACTIVE' ? 'bg-orange-500/10 border-orange-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'ACTIVE' ? 'bg-orange-500/10 border-orange-500 shadow-xl' : 'bg-surface-card backdrop-blur-xl border-surface-border'}`}
          >
             <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'ACTIVE' ? 'bg-orange-500/40' : 'bg-orange-500/10 group-hover:bg-orange-500/20'}`} />
             <Hash className={`${filter === 'ACTIVE' ? 'text-orange-500' : 'text-orange-500/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
@@ -601,7 +601,7 @@ export default function ScheduleScreen() {
          </button>
          <button 
            onClick={() => setFilter(filter === 'DONE' ? 'ALL' : 'DONE')}
-           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'DONE' ? 'bg-emerald-500/10 border-emerald-500 shadow-xl' : 'bg-surface-card border-surface-border'}`}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'DONE' ? 'bg-emerald-500/10 border-emerald-500 shadow-xl' : 'bg-surface-card backdrop-blur-xl border-surface-border'}`}
          >
             <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'DONE' ? 'bg-emerald-500/40' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'}`} />
             <Timer className={`${filter === 'DONE' ? 'text-emerald-500' : 'text-emerald-500/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
