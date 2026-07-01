@@ -130,7 +130,7 @@ export default function HabitsScreen() {
               <motion.div 
                 layout
                 key={habit.id} 
-                className={`p-4 md:p-8 bg-surface-card border rounded-2xl md:rounded-[3rem] transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 group shadow-sm ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
+                className={`p-4 md:p-8 bg-surface-card backdrop-blur-xl border rounded-2xl md:rounded-[3rem] transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 group shadow-sm ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
               >
                 <div className="flex items-center gap-4 md:gap-6 flex-1 min-w-0">
                     <div className="min-w-0 flex-1">

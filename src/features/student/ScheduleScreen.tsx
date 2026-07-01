@@ -174,7 +174,7 @@ export default function ScheduleScreen() {
                 key={goal.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-6 bg-surface-card border border-surface-border rounded-[2.5rem] space-y-4 shadow-xl hover:border-brand-primary/20 transition-all duration-500"
+                className="p-6 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] space-y-4 shadow-xl hover:border-brand-primary/20 transition-all duration-500"
               >
                 <div className="flex justify-between items-start">
                   <h4 className="text-[10px] font-mono font-black text-text-primary uppercase tracking-widest truncate max-w-[120px]">{goal.title}</h4>
@@ -473,7 +473,7 @@ export default function ScheduleScreen() {
             <motion.div 
               layout
               key={item.id} 
-              className="relative z-10 flex gap-4 md:gap-8 items-center bg-surface-card p-4 md:p-6 rounded-[2rem] md:rounded-[3.5rem] border border-surface-border hover:border-brand-primary/20 transition-all shadow-sm group"
+              className="relative z-10 flex gap-4 md:gap-8 items-center bg-surface-card backdrop-blur-xl p-4 md:p-6 rounded-[2rem] md:rounded-[3.5rem] border border-surface-border hover:border-brand-primary/20 transition-all shadow-sm group"
             >
                 <div className={`w-14 h-14 md:w-24 md:h-24 rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center border shadow-lg transition-all duration-300 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950' : 'bg-emerald-500 text-slate-950') : 'bg-surface-base border-surface-border text-text-secondary'} shrink-0`}>
                   <span className="text-lg md:text-2xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>

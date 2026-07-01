@@ -100,7 +100,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
         <header className="flex flex-row items-center justify-between gap-8 px-2">
           <div className="flex items-center gap-4 md:gap-6">
             <div className="relative">
-               <div className="w-16 h-16 md:w-32 md:h-32 bg-surface-card border border-surface-border rounded-xl md:rounded-3xl flex items-center justify-center relative shadow-lg shrink-0">
+               <div className="w-16 h-16 md:w-32 md:h-32 bg-surface-card backdrop-blur-xl border border-surface-border rounded-xl md:rounded-3xl flex items-center justify-center relative shadow-lg shrink-0">
                  <User size={28} className="text-brand-primary md:w-12 md:h-12" />
                  <div className={`absolute -bottom-1.5 -right-1.5 md:-bottom-2 md:-right-2 w-6 h-6 md:w-10 md:h-10 rounded-lg border-4 border-surface-base flex items-center justify-center ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500' : 'bg-emerald-500'}`}>
                    {currentRoot === UserRole.STUDENT ? <GraduationCap size={12} className="text-white md:w-5 md:h-5" /> : <Terminal size={12} className="text-white md:w-5 md:h-5" />}
@@ -120,7 +120,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
 
           <button 
             onClick={onSettings}
-            className="flex flex-col items-center justify-center gap-1 min-w-[60px] md:min-w-[72px] px-2 py-2 md:px-3 md:py-3 rounded-xl md:rounded-2xl border border-surface-border bg-surface-card shadow-sm transition-all duration-500 group hover:border-brand-primary/40 hover:text-brand-primary hover:shadow-brand-primary/5 active:scale-95"
+            className="flex flex-col items-center justify-center gap-1 min-w-[60px] md:min-w-[72px] px-2 py-2 md:px-3 md:py-3 rounded-xl md:rounded-2xl border border-surface-border bg-surface-card backdrop-blur-xl shadow-sm transition-all duration-500 group hover:border-brand-primary/40 hover:text-brand-primary hover:shadow-brand-primary/5 active:scale-95"
           >
             <SettingsIcon size={20} md:size={24} className="text-text-secondary transition-all duration-700 group-hover:rotate-180 group-hover:text-brand-primary" />
             <span className="text-[8px] md:text-[10px] font-mono font-black uppercase tracking-tight leading-none text-text-secondary group-hover:text-brand-primary">{t('settings')}</span>
@@ -138,7 +138,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button 
               onClick={() => setRoot(UserRole.STUDENT)}
-              className={`p-5 md:p-8 rounded-3xl md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 shadow-xl'}`}
+              className={`p-5 md:p-8 rounded-3xl md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500/10 border-indigo-500/30 backdrop-blur-md' : 'bg-surface-card backdrop-blur-xl border-surface-border opacity-50 hover:opacity-100 shadow-xl'}`}
             >
               <div className="flex items-center gap-4 md:gap-6 relative z-10">
                 <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.STUDENT ? 'bg-indigo-500 text-white shadow-[0_0_25px_rgba(99,102,241,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
@@ -154,7 +154,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
 
             <button 
               onClick={() => setRoot(UserRole.TRADER)}
-              className={`p-5 md:p-8 rounded-3xl md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-surface-card border-surface-border opacity-50 hover:opacity-100 shadow-xl'}`}
+              className={`p-5 md:p-8 rounded-3xl md:rounded-[3rem] border transition-all duration-500 flex items-center justify-between group relative overflow-hidden ${currentRoot === UserRole.TRADER ? 'bg-emerald-500/10 border-emerald-500/30 backdrop-blur-md' : 'bg-surface-card backdrop-blur-xl border-surface-border opacity-50 hover:opacity-100 shadow-xl'}`}
             >
               <div className="flex items-center gap-4 md:gap-6 relative z-10">
                 <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-3xl flex items-center justify-center transition-all duration-500 ${currentRoot === UserRole.TRADER ? 'bg-emerald-500 text-white shadow-[0_0_25px_rgba(16,185,129,0.4)] scale-110' : 'bg-surface-base text-text-secondary'}`}>
@@ -176,7 +176,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-8 md:p-12 bg-surface-card border border-surface-border rounded-[2.5rem] space-y-8 flex flex-col items-center justify-center text-center shadow-xl"
+              className="p-8 md:p-12 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] space-y-8 flex flex-col items-center justify-center text-center shadow-xl"
             >
               <div className="space-y-2">
                 <h4 className="text-[10px] md:text-xs font-mono font-black text-text-secondary uppercase tracking-[0.4em]">{t('total_pnl')}</h4>
@@ -219,7 +219,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
           <motion.section 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 space-y-6 md:space-y-8 shadow-xl"
+            className="bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 space-y-6 md:space-y-8 shadow-xl"
           >
             <div className="flex justify-between items-center px-1">
               <div>
@@ -324,7 +324,7 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
 
         {/* Strategic Goal Summary */}
         {currentRoot === UserRole.STUDENT && studentData.goals?.length > 0 && (
-          <section className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[2.5rem] space-y-6 shadow-xl">
+          <section className="p-6 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] md:rounded-[2.5rem] space-y-6 shadow-xl">
             <div className="flex items-center justify-between px-1">
               <h4 className="text-[9px] md:text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('goal_distribution') || 'STRATEGIC_DISTRIBUTION'}</h4>
               <Zap size={14} className="text-brand-primary" />

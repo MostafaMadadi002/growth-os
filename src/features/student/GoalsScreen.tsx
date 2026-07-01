@@ -361,7 +361,7 @@ export default function GoalsScreen() {
               key={goal.id} 
               className="group"
             >
-              <div className="bg-surface-card border border-surface-border p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] group-hover:bg-surface-card group-hover:border-brand-primary/20 transition-all duration-500 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-10">
+              <div className="bg-surface-card backdrop-blur-xl border border-surface-border p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] group-hover:bg-surface-card group-hover:border-brand-primary/20 transition-all duration-500 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-10">
                 <div className="flex-1 space-y-6 md:space-y-8">
                     <div className="flex items-center gap-4 md:gap-5">
                       <div className="w-12 h-12 md:w-14 md:h-14 bg-surface-base rounded-xl md:rounded-2xl flex items-center justify-center text-brand-primary border border-surface-border shadow-inner cursor-pointer transition-transform hover:scale-110 active:scale-95" onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}>

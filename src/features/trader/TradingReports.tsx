@@ -198,7 +198,7 @@ export default function TradingReports() {
       {/* Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Equity Curve */}
-        <div className="bg-surface-card border border-surface-border rounded-3xl p-6 md:p-10 space-y-8 shadow-sm">
+        <div className="bg-surface-card backdrop-blur-xl border border-surface-border rounded-3xl p-6 md:p-10 space-y-8 shadow-sm">
           <div className="flex justify-between items-center">
             <div>
               <h4 className="text-sm font-mono font-black text-text-primary uppercase tracking-[0.1em]">{t('equity_curve') || 'Equity Curve'}</h4>
@@ -250,7 +250,7 @@ export default function TradingReports() {
         {/* Win/Loss & Label Analytics */}
         <div className="grid grid-cols-1 gap-6">
           {/* Win/Loss Pie */}
-          <div className="bg-surface-card border border-surface-border rounded-[2.5rem] p-8 flex flex-col md:flex-row gap-8">
+          <div className="bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] p-8 flex flex-col md:flex-row gap-8">
             <div className="flex-1 space-y-6">
               <div>
                 <h4 className="text-sm font-mono font-black text-text-primary uppercase tracking-widest">{t('win_loss_distribution') || 'Outcome Matrix'}</h4>
@@ -291,7 +291,7 @@ export default function TradingReports() {
           </div>
 
           {/* Profit by Label Bar Chart */}
-          <div className="bg-surface-card border border-surface-border rounded-[2.5rem] p-8 space-y-6">
+          <div className="bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] p-8 space-y-6">
              <div className="flex justify-between items-center">
               <div>
                 <h4 className="text-sm font-mono font-black text-text-primary uppercase tracking-widest">{t('profit_by_labels') || 'Strategic Labels'}</h4>
@@ -338,7 +338,7 @@ export default function TradingReports() {
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-surface-card border border-surface-border rounded-[2rem] p-6 space-y-6">
+      <div className="bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] p-6 space-y-6">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-96">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary" size={18} />
@@ -463,7 +463,7 @@ export default function TradingReports() {
               key={trade.id}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-surface-card border border-surface-border rounded-[2rem] p-6 hover:border-brand-primary/20 transition-all group"
+              className="bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] p-6 hover:border-brand-primary/20 transition-all group"
             >
               <div className="flex flex-col md:flex-row gap-6">
                 {/* Left Side: Metadata */}
@@ -537,7 +537,7 @@ export default function TradingReports() {
 
 function StatCard({ label, value, subValue, icon }: { label: string, value: string, subValue?: string, icon: React.ReactNode }) {
   return (
-    <div className="bg-surface-card border border-surface-border p-6 rounded-[2rem] space-y-4">
+    <div className="bg-surface-card backdrop-blur-xl border border-surface-border p-6 rounded-[2rem] space-y-4">
       <div className="flex justify-between items-start">
         <span className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest">{label}</span>
         {icon}

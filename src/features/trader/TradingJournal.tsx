@@ -198,7 +198,7 @@ export default function TradingJournal() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => { setShowAddRow(!showAddRow); if(showAddRow) resetForm(); }}
-          className={`${showAddRow ? 'bg-surface-card border border-surface-border text-text-secondary' : 'bg-brand-primary text-slate-950'} px-8 py-4 rounded-2xl font-display font-black uppercase text-xs flex items-center gap-3 shadow-xl transition-all`}
+          className={`${showAddRow ? 'bg-surface-card backdrop-blur-xl border border-surface-border text-text-secondary' : 'bg-brand-primary text-slate-950'} px-8 py-4 rounded-2xl font-display font-black uppercase text-xs flex items-center gap-3 shadow-xl transition-all`}
         >
           {showAddRow ? <X size={18} /> : <Plus size={18} strokeWidth={3} />}
           {showAddRow ? t('cancel') : t('add_trade')}
@@ -214,7 +214,7 @@ export default function TradingJournal() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-surface-card border border-brand-primary/20 rounded-[2.5rem] p-6 mb-6 space-y-4 shadow-xl"
+              className="bg-surface-card backdrop-blur-xl border border-brand-primary/20 rounded-[2.5rem] p-6 mb-6 space-y-4 shadow-xl"
               dir={language === 'fa' ? 'rtl' : 'ltr'}
             >
                 <div className="grid grid-cols-2 gap-4">
@@ -433,7 +433,7 @@ export default function TradingJournal() {
           </AnimatePresence>
         </div>
 
-        <div className="bg-surface-card rounded-3xl border border-surface-border overflow-hidden hidden md:block shadow-sm">
+        <div className="bg-surface-card backdrop-blur-xl rounded-3xl border border-surface-border overflow-hidden hidden md:block shadow-sm">
           <form onSubmit={handleAddTrade} className="overflow-x-auto">
             <table className="w-full text-left font-mono text-[11px]" dir={language === 'fa' ? 'rtl' : 'ltr'}>
               <thead>

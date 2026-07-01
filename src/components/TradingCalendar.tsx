@@ -46,7 +46,7 @@ export default function TradingCalendar() {
     : ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   return (
-    <div className="bg-surface-card border border-surface-border rounded-[2.5rem] p-6 md:p-10 space-y-8 shadow-xl">
+    <div className="bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] p-6 md:p-10 space-y-8 shadow-xl">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-display font-black text-text-primary uppercase tracking-tighter">
           {t('trading_calendar')}

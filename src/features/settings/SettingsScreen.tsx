@@ -98,7 +98,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
         <div className="flex items-center gap-4 md:gap-6">
           <button 
             onClick={onBack}
-            className="w-12 h-12 md:w-16 md:h-16 bg-surface-card border border-surface-border rounded-xl md:rounded-2xl flex items-center justify-center text-text-secondary hover:text-brand-primary hover:border-brand-primary/30 transition-all shadow-sm shrink-0 active:scale-90"
+            className="w-12 h-12 md:w-16 md:h-16 bg-surface-card backdrop-blur-xl border border-surface-border rounded-xl md:rounded-2xl flex items-center justify-center text-text-secondary hover:text-brand-primary hover:border-brand-primary/30 transition-all shadow-sm shrink-0 active:scale-90"
           >
             <ArrowLeft size={20} md:size={28} />
           </button>
@@ -129,7 +129,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Language Selector */}
-          <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm space-y-6">
+          <div className="p-6 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm space-y-6">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
                 <Globe size={20} />
@@ -157,7 +157,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
           </div>
 
           {/* Theme Selector */}
-          <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm space-y-6">
+          <div className="p-6 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm space-y-6">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
                 {theme === 'DARK' ? <Moon size={20} /> : <Sun size={20} />}
@@ -197,7 +197,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
            </h3>
         </div>
 
-        <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm">
+        <div className="p-6 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] md:rounded-[3rem] shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-5">
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${notificationsEnabled ? 'bg-brand-primary/10 text-brand-primary' : 'bg-surface-base text-text-secondary'}`}>
@@ -233,7 +233,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[3rem] space-y-6 group hover:border-brand-primary/20 transition-all shadow-sm">
+          <div className="p-6 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] md:rounded-[3rem] space-y-6 group hover:border-brand-primary/20 transition-all shadow-sm">
             <div className="flex items-center gap-5">
               <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                 <Download size={24} />
@@ -251,7 +251,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
             </button>
           </div>
 
-          <div className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] md:rounded-[3rem] space-y-6 group hover:border-rose-500/20 transition-all shadow-sm">
+          <div className="p-6 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] md:rounded-[3rem] space-y-6 group hover:border-rose-500/20 transition-all shadow-sm">
             <div className="flex items-center gap-5">
               <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                 <Upload size={24} />
@@ -284,7 +284,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
           </h3>
         </div>
 
-        <div className="p-6 md:p-12 bg-surface-card border border-surface-border rounded-[2.5rem] md:rounded-[3.5rem] shadow-xl relative overflow-hidden group">
+        <div className="p-6 md:p-12 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] md:rounded-[3.5rem] shadow-xl relative overflow-hidden group">
           {/* Subtle Background Accent */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-brand-primary/10 transition-colors duration-700" />
           
@@ -326,7 +326,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
 
       {/* Production Status Badge */}
       <footer className="pt-12 px-2 flex flex-col items-center gap-4">
-        <div className="flex items-center gap-3 py-2 px-4 bg-surface-card border border-surface-border rounded-full">
+        <div className="flex items-center gap-3 py-2 px-4 bg-surface-card backdrop-blur-xl border border-surface-border rounded-full">
           <div className="w-2 h-2 rounded-full bg-brand-primary animate-pulse shadow-[0_0_8px_#10b981]" />
           <span className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest leading-none">CORE_SYSTEM_ONLINE // V1.0.4_STABLE</span>
         </div>

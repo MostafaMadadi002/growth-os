@@ -83,7 +83,7 @@ export default function NotesScreen() {
               placeholder={t('search_symbol_notes')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className={`w-full ${language === 'fa' ? 'pr-11 pl-6' : 'pl-11 pr-6'} py-3 bg-surface-card border border-surface-border rounded-xl text-[12px] font-mono focus:outline-none focus:border-brand-primary/50 transition-all`}
+              className={`w-full ${language === 'fa' ? 'pr-11 pl-6' : 'pl-11 pr-6'} py-3 bg-surface-card backdrop-blur-xl border border-surface-border rounded-xl text-[12px] font-mono focus:outline-none focus:border-brand-primary/50 transition-all`}
             />
           </div>
           <button 
@@ -108,7 +108,7 @@ export default function NotesScreen() {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="bg-surface-card border border-surface-border w-full max-w-xl rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative"
+              className="bg-surface-card backdrop-blur-xl border border-surface-border w-full max-w-xl rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative"
             >
               <button 
                 onClick={() => setIsAdding(false)}
@@ -195,7 +195,7 @@ export default function NotesScreen() {
             layout
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="p-6 md:p-8 bg-surface-card border border-surface-border rounded-[2rem] space-y-6 group hover:border-brand-primary/30 transition-all flex flex-col justify-between shadow-xl"
+            className="p-6 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2rem] space-y-6 group hover:border-brand-primary/30 transition-all flex flex-col justify-between shadow-xl"
           >
             <div className="space-y-4">
               <div className="flex justify-between items-start">
@@ -263,7 +263,7 @@ export default function NotesScreen() {
 
         {filteredNotes.length === 0 && (
           <div className="col-span-full py-20 text-center space-y-4">
-            <div className="w-16 h-16 bg-surface-card border border-surface-border rounded-2xl flex items-center justify-center mx-auto opacity-20 text-text-secondary">
+            <div className="w-16 h-16 bg-surface-card backdrop-blur-xl border border-surface-border rounded-2xl flex items-center justify-center mx-auto opacity-20 text-text-secondary">
               <StickyNote size={32} />
             </div>
             <p className="text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-40">Archive_Empty // awaiting_signal</p>
