@@ -200,7 +200,7 @@ export default function App() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-primary/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brand-secondary/5 blur-[120px] pointer-events-none" />
       
-      <header className="px-4 md:px-6 py-3 md:py-4 mb-2 flex justify-between items-center bg-surface-card/60 backdrop-blur-xl z-40 border-b border-surface-border transition-colors">
+      <header className="px-4 md:px-6 py-3 md:py-4 mb-2 flex justify-between items-center bg-surface-card/90 dark:bg-surface-card/60 backdrop-blur-xl z-40 border-b border-surface-border transition-colors">
         <div className="flex items-center gap-2 md:gap-3">
            <div className="w-8 h-8 md:w-10 md:h-10 bg-brand-primary rounded-lg md:rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20 group cursor-pointer transition-all hover:scale-110">
               <span className="text-slate-950 font-black text-lg md:text-xl">G</span>
@@ -243,7 +243,7 @@ export default function App() {
          </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-0 md:bottom-6 inset-x-0 md:inset-x-6 h-16 md:h-20 bg-surface-card/60 backdrop-blur-xl md:rounded-[2.5rem] z-50 px-2 md:px-8 flex items-center justify-around md:justify-between border-t md:border border-surface-border shadow-2xl max-w-xl mx-auto transition-colors">
+      <nav className="fixed bottom-0 md:bottom-6 inset-x-0 md:inset-x-6 h-16 md:h-20 bg-surface-card/90 dark:bg-surface-card/60 backdrop-blur-xl md:rounded-[2.5rem] z-50 px-2 md:px-8 flex items-center justify-around md:justify-between border-t md:border border-surface-border shadow-2xl max-w-xl mx-auto transition-colors">
         {currentTabs.map((tab) => (
           <button 
             key={tab.id}

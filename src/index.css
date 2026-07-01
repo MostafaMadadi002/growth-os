@@ -18,12 +18,12 @@
 }
 
 :root {
-  --background: #d1d5db;
-  --card: rgba(255, 255, 255, 0.8);
-  --border: rgba(15, 23, 42, 0.1);
-  --foreground: #0f172a;
-  --muted: #475569;
-  --grid-line: rgba(0, 0, 0, 0.04);
+  --background: #f0f2f5;
+  --card: #ffffff;
+  --border: rgba(0, 0, 0, 0.05);
+  --foreground: #111827;
+  --muted: #6b7280;
+  --grid-line: rgba(0, 0, 0, 0.02);
 }
 
 .dark {
@@ -88,15 +88,16 @@
 }
 
 .command-card {
-  @apply bg-surface-card backdrop-blur-xl border border-surface-border rounded-3xl p-8 transition-all duration-500 hover:border-brand-primary/20 shadow-2xl;
+  @apply bg-surface-card border border-surface-border rounded-3xl p-8 transition-all duration-500 hover:border-brand-primary/20 shadow-xl;
 }
 
 .glass-card {
-  @apply bg-surface-card backdrop-blur-2xl border border-surface-border shadow-xl;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  @apply bg-surface-card border border-surface-border shadow-lg;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
 
 .dark .glass-card {
+  @apply backdrop-blur-2xl;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
