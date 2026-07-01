@@ -197,8 +197,8 @@ export default function App() {
       dir={dir}
     >
       {/* Glassy Background Decor */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-primary/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brand-secondary/10 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-primary/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-brand-secondary/5 blur-[120px] pointer-events-none" />
       
       <header className="px-4 md:px-6 py-3 md:py-4 mb-2 flex justify-between items-center bg-surface-card/60 backdrop-blur-xl z-40 border-b border-surface-border transition-colors">
         <div className="flex items-center gap-2 md:gap-3">
