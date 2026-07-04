@@ -146,11 +146,11 @@ export default function ScheduleScreen() {
       <header className="flex justify-between items-center md:items-end px-2">
         <div>
            <div className="flex items-center gap-2 md:gap-3">
-              <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-orange-500" />
+              <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-brand-primary" />
               <span className={`text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.1em] md:tracking-[0.2em]'}`}>{t('schedule')}</span>
            </div>
            <h1 className={`text-2xl md:text-6xl font-display font-black text-text-primary ${language === 'fa' ? 'tracking-normal leading-tight' : 'tracking-tighter leading-none'} uppercase mt-1 md:mt-2`}>
-             {t('schedule').split(' ')[0]}<span className="text-orange-500">.</span>
+             {t('schedule').split(' ')[0]}<span className="text-brand-primary">.</span>
            </h1>
         </div>
          <div className="flex gap-2">
@@ -374,7 +374,7 @@ export default function ScheduleScreen() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="bg-surface-card border border-surface-border p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] w-full max-w-xl max-h-[90vh] overflow-y-auto scrollbar-hide shadow-2xl space-y-8 md:space-y-10 relative"
             >
-               <div className="absolute -top-24 -left-24 w-48 h-48 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none" />
+               <div className="absolute -top-24 -left-24 w-48 h-48 bg-brand-primary/10 blur-[100px] rounded-full pointer-events-none" />
                <button 
                  type="button" 
                  onClick={() => setIsAdding(false)} 
@@ -387,7 +387,7 @@ export default function ScheduleScreen() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('session_task_label')}</label>
-                    <input name="label" required placeholder="..." className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg md:text-xl outline-none focus:border-orange-500/30" />
+                    <input name="label" required placeholder="..." className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg md:text-xl outline-none focus:border-brand-primary/30" />
                   </div>
                   <div className="space-y-3">
                     <label className="text-[11px] font-mono font-black text-text-secondary uppercase tracking-widest">{t('local_time')}</label>
@@ -396,7 +396,7 @@ export default function ScheduleScreen() {
                       type="time" 
                       required 
                       defaultValue={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg md:text-xl outline-none focus:border-orange-500/30" 
+                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg md:text-xl outline-none focus:border-brand-primary/30" 
                     />
                   </div>
                 </div>
@@ -411,7 +411,7 @@ export default function ScheduleScreen() {
                         setSelectedGoalIdAdd(e.target.value);
                         setSelectedSubGoalsAdd([]);
                       }}
-                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg outline-none focus:border-orange-500/30 appearance-none"
+                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-display font-black text-lg outline-none focus:border-brand-primary/30 appearance-none"
                     >
                       <option value="">{language === 'fa' ? 'بدون هدف' : 'No Goal'}</option>
                       {goals.map(goal => (
@@ -434,9 +434,9 @@ export default function ScheduleScreen() {
                                  if (e.target.checked) setSelectedSubGoalsAdd(prev => [...prev, sg.id]);
                                  else setSelectedSubGoalsAdd(prev => prev.filter(id => id !== sg.id));
                                }}
-                               className="w-5 h-5 rounded-md border-2 border-surface-border text-orange-500 focus:ring-orange-500 bg-transparent"
+                               className="w-5 h-5 rounded-md border-2 border-surface-border text-brand-primary focus:ring-brand-primary bg-transparent"
                              />
-                             <span className={`text-sm font-black uppercase transition-all ${selectedSubGoalsAdd.includes(sg.id) ? 'text-orange-500' : 'text-text-secondary opacity-60'}`}>
+                             <span className={`text-sm font-black uppercase transition-all ${selectedSubGoalsAdd.includes(sg.id) ? 'text-brand-primary' : 'text-text-secondary opacity-60'}`}>
                                {sg.title}
                              </span>
                            </label>
@@ -450,13 +450,13 @@ export default function ScheduleScreen() {
                       name="dueDate" 
                       type="date" 
                       defaultValue={new Date().toISOString().split('T')[0]}
-                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg outline-none focus:border-orange-500/30" 
+                      className="w-full bg-surface-base border border-surface-border rounded-2xl p-5 text-text-primary font-mono font-bold text-lg outline-none focus:border-brand-primary/30" 
                     />
                   </div>
                 </div>
 
                 <div className="pt-4">
-                   <button type="submit" className="w-full h-20 bg-orange-600 text-white rounded-3xl font-display font-black text-lg uppercase tracking-widest shadow-2xl shadow-orange-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                   <button type="submit" className="w-full h-20 bg-brand-primary text-slate-950 rounded-3xl font-display font-black text-lg uppercase tracking-widest shadow-2xl shadow-brand-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
                      {t('add_task')}
                    </button>
                 </div>
@@ -476,7 +476,7 @@ export default function ScheduleScreen() {
               key={item.id} 
               className="relative z-10 flex gap-4 md:gap-8 items-center bg-surface-card backdrop-blur-xl p-4 md:p-6 rounded-[2rem] md:rounded-[3.5rem] border border-surface-border hover:border-brand-primary/20 transition-all shadow-sm group"
             >
-                <div className={`w-14 h-14 md:w-24 md:h-24 rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center border shadow-lg transition-all duration-300 ${item.done ? (isTask ? 'bg-orange-500 text-slate-950' : 'bg-emerald-500 text-slate-950') : 'bg-surface-base border-surface-border text-text-secondary'} shrink-0`}>
+                <div className={`w-14 h-14 md:w-24 md:h-24 rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center border shadow-lg transition-all duration-300 ${item.done ? 'bg-brand-primary text-slate-950' : 'bg-surface-base border-surface-border text-text-secondary'} shrink-0`}>
                   <span className="text-lg md:text-2xl font-mono font-black leading-none">{item.time.split(':')[0]}</span>
                   <span className="text-[9px] md:text-[11px] font-mono font-black opacity-60">{item.time.split(':')[1]}</span>
                 </div>
@@ -486,7 +486,7 @@ export default function ScheduleScreen() {
                   </h4>
                   <div className="flex items-center gap-2 md:gap-4 flex-wrap">
                       <div className="flex items-center gap-1.5">
-                        {isTask ? <Clock size={10} className="text-orange-500" /> : <CheckCircle2 size={10} className="text-emerald-500" />}
+                        {isTask ? <Clock size={10} className="text-brand-primary" /> : <CheckCircle2 size={10} className="text-emerald-500" />}
                         <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-widest opacity-60">{isTask ? t('status_active') : t('status_completed')}</span>
                       </div>
                       {linkedGoal && (
@@ -586,15 +586,15 @@ export default function ScheduleScreen() {
       <footer className="grid grid-cols-1 md:grid-cols-2 gap-6">
          <button 
            onClick={() => setFilter(filter === 'ACTIVE' ? 'ALL' : 'ACTIVE')}
-           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'ACTIVE' ? 'bg-orange-500/10 border-orange-500 shadow-xl' : 'bg-surface-card backdrop-blur-xl border-surface-border'}`}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'ACTIVE' ? 'bg-brand-primary/10 border-brand-primary shadow-xl' : 'bg-surface-card backdrop-blur-xl border-surface-border'}`}
          >
-            <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'ACTIVE' ? 'bg-orange-500/40' : 'bg-orange-500/10 group-hover:bg-orange-500/20'}`} />
-            <Hash className={`${filter === 'ACTIVE' ? 'text-orange-500' : 'text-orange-500/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
+            <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'ACTIVE' ? 'bg-brand-primary/40' : 'bg-brand-primary/10 group-hover:bg-brand-primary/20'}`} />
+            <Hash className={`${filter === 'ACTIVE' ? 'text-brand-primary' : 'text-brand-primary/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
             <div className="relative z-10 w-full text-left rtl:text-right">
               <h5 className={`text-[10px] font-mono font-black text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.3em]'} mb-2`}>{t('active_segments')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">NODES</span></p>
               {filter === 'ACTIVE' && (
-                 <span className={`absolute -top-12 ${language === 'fa' ? 'left-0' : 'right-0'} bg-orange-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>
+                 <span className={`absolute -top-12 ${language === 'fa' ? 'left-0' : 'right-0'} bg-brand-primary text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>
                    {t('filtered') || 'FILTERED'}
                  </span>
                )}

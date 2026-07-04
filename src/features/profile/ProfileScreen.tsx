@@ -201,11 +201,11 @@ export default function ProfileScreen({ onSettings }: ProfileScreenProps) {
                 </div>
                 <div className="space-y-1">
                   <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">CRYPTO_NODES</p>
-                  <p className="text-xl font-display font-black text-blue-400">{(traderData?.trades || []).filter(t => t.marketType === 'CRYPTO').length}</p>
+                  <p className="text-xl font-display font-black text-brand-primary">{(traderData?.trades || []).filter(t => t.marketType === 'CRYPTO').length}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest opacity-60">FOREX_NODES</p>
-                  <p className="text-xl font-display font-black text-amber-400">{(traderData?.trades || []).filter(t => t.marketType === 'FOREX').length}</p>
+                  <p className="text-xl font-display font-black text-brand-secondary">{(traderData?.trades || []).filter(t => t.marketType === 'FOREX').length}</p>
                 </div>
               </div>
             </motion.section>
