@@ -20,7 +20,8 @@ export default function ScheduleScreen() {
   const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'DONE'>('ALL');
 
   const tasks = studentData.tasks || [];
-  const goals = studentData.goals || [];
+  const allGoals = studentData.goals || [];
+  const goals = allGoals.filter(g => g.completedSessions < g.totalSessions);
   const activities = (studentData.activities || []);
   const todayActivities = activities.filter(a => a.date === new Date().toISOString().split('T')[0]);
 

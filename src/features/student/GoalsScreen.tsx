@@ -117,6 +117,10 @@ export default function GoalsScreen() {
     setNewSubGoals(goal.subGoals || []);
   };
 
+  const allGoals = studentData.goals || [];
+  const activeGoals = allGoals.filter(g => g.completedSessions < g.totalSessions);
+  const accomplishedGoals = allGoals.filter(g => g.completedSessions >= g.totalSessions);
+
   return (
     <div className="space-y-8 md:space-y-12 w-full max-w-5xl mx-auto pb-20 px-4 md:px-0">
       <header className="flex justify-between items-center md:items-end">
@@ -351,7 +355,7 @@ export default function GoalsScreen() {
       </AnimatePresence>
 
       <section className="grid grid-cols-1 gap-8">
-         {(studentData.goals || []).map((goal) => {
+         {activeGoals.map((goal) => {
            const { activities, totalDuration } = getGoalStats(goal.id);
            const isExpanded = expandedGoalId === goal.id;
 
@@ -516,7 +520,7 @@ export default function GoalsScreen() {
            );
          })}
 
-         {(studentData.goals || []).length === 0 && (
+         {activeGoals.length === 0 && (
            <motion.div 
              initial={{ opacity: 0, y: 10 }}
              animate={{ opacity: 1, y: 0 }}
@@ -529,6 +533,86 @@ export default function GoalsScreen() {
            </motion.div>
          )}
       </section>
+
+      {accomplishedGoals.length > 0 && (
+        <section className="space-y-8 pt-8 border-t border-surface-border">
+          <div className="flex items-center gap-3">
+             <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+             <h2 className="text-xl font-display font-black text-text-primary uppercase tracking-tight">
+               {language === 'fa' ? 'اهداف محقق شده' : 'ACCOMPLISHED GOALS'}
+             </h2>
+             <span className="bg-brand-primary/10 text-brand-primary px-3 py-1 rounded-full text-[10px] font-mono font-black border border-brand-primary/20">
+               {accomplishedGoals.length}
+             </span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 opacity-80">
+            {accomplishedGoals.map((goal) => {
+              const { totalDuration } = getGoalStats(goal.id);
+              const isExpanded = expandedGoalId === goal.id;
+
+              return (
+                <motion.div 
+                  layout
+                  key={goal.id} 
+                  className="bg-surface-card/40 backdrop-blur-xl border border-surface-border p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] transition-all"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-brand-primary/20 rounded-xl flex items-center justify-center text-brand-primary">
+                        <CheckCircle2 size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-lg md:text-xl font-display font-black text-text-primary uppercase tracking-tight line-through opacity-60">{goal.title}</h3>
+                        <p className="text-[9px] font-mono font-black text-brand-primary uppercase tracking-widest">{t('target_achieved') || 'GOAL ACHIEVED'}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <p className="text-[10px] font-mono font-black text-text-secondary opacity-60 uppercase">{t('total_duration') || 'TOTAL'}</p>
+                        <p className="text-sm font-mono font-bold text-text-primary">{Math.floor(totalDuration / 60)}h {totalDuration % 60}m</p>
+                      </div>
+                      <button 
+                        onClick={() => setExpandedGoalId(isExpanded ? null : goal.id)}
+                        className="p-3 bg-surface-base rounded-xl text-text-secondary hover:text-brand-primary transition-colors border border-surface-border"
+                      >
+                         {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                      </button>
+                      <button 
+                        onClick={() => deleteGoal(goal.id)}
+                        className="p-3 bg-rose-500/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all border border-rose-500/20"
+                      >
+                         <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden mt-6 pt-6 border-t border-surface-border/30"
+                      >
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {goal.subGoals?.map(sg => (
+                              <div key={sg.id} className="flex items-center gap-3 p-3 bg-surface-base/30 rounded-xl border border-surface-border/50">
+                                <CheckCircle2 size={14} className="text-brand-primary" />
+                                <span className="text-xs font-sans font-medium text-text-secondary opacity-70">{sg.title}</span>
+                              </div>
+                            ))}
+                         </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
