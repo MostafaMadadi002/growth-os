@@ -9,14 +9,9 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function HabitsScreen() {
   const { t, dir, language } = useI18n();
-  const { studentData, addHabit, toggleHabit, deleteHabit, logActivity } = useAppStore();
+  const { studentData, addHabit, deleteHabit } = useAppStore();
   const [isAdding, setIsAdding] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-
-  const handleToggleHabit = (id: string, type: 'POSITIVE' | 'NEGATIVE') => {
-    toggleHabit(id);
-    logActivity(today, type, 1);
-  };
 
   const handleAddHabit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +26,6 @@ export default function HabitsScreen() {
     addHabit(habit);
     setIsAdding(false);
   };
-
-  const today = new Date().toISOString().split('T')[0];
 
   return (
     <div className="space-y-8 md:space-y-12 w-full max-w-5xl mx-auto pb-32 px-4 md:px-0">
@@ -125,16 +118,15 @@ export default function HabitsScreen() {
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 px-1">
          {(studentData.habits || []).map((habit) => {
-            const isDone = habit.lastCheck === today;
             return (
               <motion.div 
                 layout
                 key={habit.id} 
-                className={`p-4 md:p-8 bg-surface-card backdrop-blur-xl border rounded-2xl md:rounded-[3rem] transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 group shadow-sm ${isDone ? 'border-brand-primary/40 bg-brand-primary/[0.03]' : 'border-surface-border'}`}
+                className="p-4 md:p-8 bg-surface-card backdrop-blur-xl border border-surface-border rounded-2xl md:rounded-[3rem] transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 group shadow-sm"
               >
                 <div className="flex items-center gap-4 md:gap-6 flex-1 min-w-0">
                     <div className="min-w-0 flex-1">
-                      <h4 className={`text-lg md:text-2xl font-display font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-tight'} truncate transition-colors duration-300 ${isDone ? 'text-brand-primary' : 'text-text-primary'}`}>
+                      <h4 className={`text-lg md:text-2xl font-display font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-tight'} truncate text-text-primary`}>
                         {habit.title}
                       </h4>
                       <div className="flex items-center gap-3 mt-1.5">
@@ -156,24 +148,7 @@ export default function HabitsScreen() {
                    </div>
                 </div>
 
-                <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
-                    <button 
-                      onClick={() => handleToggleHabit(habit.id, habit.type)}
-                      className={`flex-1 md:flex-none px-6 h-14 md:h-16 rounded-2xl md:rounded-[1.8rem] flex items-center justify-center transition-all duration-300 active:scale-95 gap-3 ${isDone ? 'bg-brand-primary text-slate-950 shadow-lg shadow-brand-primary/20' : 'bg-surface-base border border-surface-border text-text-secondary hover:border-brand-primary/30'}`}
-                    >
-                      {isDone ? (
-                        <>
-                          <Check size={20} md:size={24} strokeWidth={3} />
-                          <span className={`text-[11px] md:text-sm font-display font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-wider'}`}>{t('done')}</span>
-                        </>
-                      ) : (
-                        <>
-                          <Zap size={18} md:size={20} className="opacity-30" />
-                          <span className={`text-[11px] md:text-sm font-mono font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-wider'} opacity-60`}>{t('mark_done')}</span>
-                        </>
-                      )}
-                    </button>
-                    
+                <div className="flex items-center justify-end gap-3 w-full md:w-auto">
                     {confirmDeleteId === habit.id ? (
                       <div className="flex items-center gap-2">
                         <button 
