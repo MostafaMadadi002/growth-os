@@ -162,7 +162,7 @@ export default function TradingJournal() {
 
   const getResultColor = (result: string) => {
     switch (result) {
-      case 'WIN': return 'text-emerald-400';
+      case 'WIN': return 'text-brand-primary';
       case 'LOSS': return 'text-rose-400';
       case 'BE': return 'text-purple-400';
       default: return 'text-slate-400';
@@ -278,8 +278,8 @@ export default function TradingJournal() {
                     <input name="sl" type="number" step="any" value={newTradeData.sl} onChange={handleInputChange} placeholder="SL" className="w-full bg-rose-500/5 border border-rose-500/10 rounded-xl p-3 text-rose-400 font-mono text-[11px] outline-none" />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest text-emerald-400">{t('tp')}</label>
-                    <input name="tp" type="number" step="any" value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-full bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3 text-emerald-400 font-mono text-[11px] outline-none" />
+                    <label className="text-[9px] font-mono font-black text-text-secondary uppercase tracking-widest text-brand-primary">{t('tp')}</label>
+                    <input name="tp" type="number" step="any" value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-full bg-brand-primary/5 border border-brand-primary/10 rounded-xl p-3 text-brand-primary font-mono text-[11px] outline-none" />
                   </div>
                 </div>
 
@@ -498,7 +498,7 @@ export default function TradingJournal() {
                           onChange={handleInputChange}
                           className="w-full bg-surface-base border border-surface-border rounded-lg p-2 text-text-primary font-mono text-[10px] outline-none focus:border-brand-primary/40 cursor-pointer font-black"
                         >
-                          <option value="BUY" className="text-emerald-400">BUY</option>
+                          <option value="BUY" className="text-brand-primary">BUY</option>
                           <option value="SELL" className="text-rose-400">SELL</option>
                         </select>
                       </td>
@@ -508,7 +508,7 @@ export default function TradingJournal() {
                       <td className="p-1 px-2">
                         <div className="flex gap-1">
                           <input name="sl" type="number" step="any" value={newTradeData.sl} onChange={handleInputChange} placeholder="SL" className="w-1/2 bg-rose-500/5 border border-rose-500/10 rounded-lg p-2 text-rose-400 font-mono text-[10px] outline-none focus:border-rose-500/40 text-center" />
-                          <input name="tp" type="number" step="any" value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-1/2 bg-emerald-500/5 border border-emerald-500/10 rounded-lg p-2 text-emerald-400 font-mono text-[10px] outline-none focus:border-emerald-500/40 text-center" />
+                          <input name="tp" type="number" step="any" value={newTradeData.tp} onChange={handleInputChange} placeholder="TP" className="w-1/2 bg-brand-primary/5 border border-brand-primary/10 rounded-lg p-2 text-brand-primary font-mono text-[10px] outline-none focus:border-brand-primary/40 text-center" />
                         </div>
                       </td>
                       <td className="p-1 px-2">
@@ -576,7 +576,7 @@ export default function TradingJournal() {
                              <button 
                                type="button" 
                                onClick={() => setShowLabelInput(!showLabelInput)}
-                               className={`p-2 rounded-lg transition-colors ${tempLabels.length > 0 ? 'bg-indigo-500/20 text-indigo-400' : 'bg-surface-base text-text-secondary'}`}
+                               className={`p-2 rounded-lg transition-colors ${tempLabels.length > 0 ? 'bg-brand-secondary/20 text-brand-secondary' : 'bg-surface-base text-text-secondary'}`}
                              >
                                <Tag size={14} />
                              </button>
@@ -690,7 +690,7 @@ export default function TradingJournal() {
                     <td className="px-4 py-4 text-text-secondary opacity-60">{trade.marketType ? t(trade.marketType.toLowerCase()) : t('forex')}</td>
                     <td className="px-4 py-4 text-center">
                       <span className={`px-2 py-1 rounded-md text-[9px] font-black uppercase ${
-                        trade.positionType === 'BUY' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
+                        trade.positionType === 'BUY' ? 'bg-brand-primary/10 text-brand-primary' : 'bg-rose-500/10 text-rose-400'
                       }`}>
                         {t(trade.positionType === 'BUY' ? 'buy' : 'sell')}
                       </span>
@@ -699,7 +699,7 @@ export default function TradingJournal() {
                     <td className="px-4 py-4 whitespace-nowrap">
                        <span className="text-rose-400/60">{trade.stopLoss}</span>
                        <span className="mx-2 text-text-secondary opacity-30">/</span>
-                       <span className="text-emerald-400/60">{trade.target}</span>
+                       <span className="text-brand-primary/60">{trade.target}</span>
                     </td>
                     <td className="px-4 py-4 text-text-secondary">{trade.size}</td>
                     <td className="px-4 py-4 text-text-secondary opacity-60">{trade.fee || 0}</td>
@@ -717,7 +717,7 @@ export default function TradingJournal() {
                         </div>
                       )}
                     </td>
-                    <td className={`px-4 py-4 text-center font-black ${trade.profitAmount > 0 ? 'text-emerald-400' : trade.profitAmount < 0 ? 'text-rose-400' : 'text-purple-400'}`}>
+                    <td className={`px-4 py-4 text-center font-black ${trade.profitAmount > 0 ? 'text-brand-primary' : trade.profitAmount < 0 ? 'text-rose-400' : 'text-purple-400'}`}>
                       {trade.profitAmount === 0 ? '0.00' : trade.profitAmount}
                     </td>
                     <td className="px-4 py-4">
@@ -774,7 +774,7 @@ export default function TradingJournal() {
               </div>
               <div className="flex items-center gap-2">
                 <span className={`px-3 py-1.5 rounded-xl font-display font-black text-[10px] uppercase shadow-lg ${
-                  trade.positionType === 'BUY' ? 'bg-emerald-500/10 text-emerald-400 shadow-emerald-500/5' : 'bg-rose-500/10 text-rose-400 shadow-rose-500/5'
+                  trade.positionType === 'BUY' ? 'bg-brand-primary/10 text-brand-primary shadow-brand-primary/5' : 'bg-rose-500/10 text-rose-400 shadow-rose-500/5'
                 }`}>
                   {t(trade.positionType === 'BUY' ? 'buy' : 'sell')}
                 </span>
@@ -794,7 +794,7 @@ export default function TradingJournal() {
               </div>
               <div className="bg-surface-base rounded-2xl p-4">
                 <p className="text-[8px] font-mono font-black text-text-secondary uppercase tracking-widest mb-1">{t('profit_loss')}</p>
-                <p className={`text-sm font-display font-black ${trade.profitAmount > 0 ? 'text-emerald-400' : trade.profitAmount < 0 ? 'text-rose-400' : 'text-purple-400'}`}>
+                <p className={`text-sm font-display font-black ${trade.profitAmount > 0 ? 'text-brand-primary' : trade.profitAmount < 0 ? 'text-rose-400' : 'text-purple-400'}`}>
                   {trade.profitAmount > 0 ? '+' : ''}{trade.profitAmount} USD
                 </p>
               </div>
@@ -803,7 +803,7 @@ export default function TradingJournal() {
             <div className="flex justify-between items-center text-[10px] font-mono font-black text-text-secondary uppercase tracking-widest px-1">
               <div className="flex gap-3">
                  <span>SL: <span className="text-rose-400">{trade.stopLoss}</span></span>
-                 <span>TP: <span className="text-emerald-400">{trade.target}</span></span>
+                 <span>TP: <span className="text-brand-primary">{trade.target}</span></span>
               </div>
               <div className="flex items-center gap-2">
                 <span className={`font-black ${getResultColor(trade.result)}`}>{getResultLabel(trade.result)}</span>
@@ -915,8 +915,8 @@ export default function TradingJournal() {
                       <input name="sl" type="number" step="any" defaultValue={editingTrade.stopLoss ?? 0} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-rose-400 font-mono font-bold" />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest text-emerald-400">{t('tp')}</label>
-                      <input name="tp" type="number" step="any" defaultValue={editingTrade.target ?? 0} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-emerald-400 font-mono font-bold" />
+                      <label className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest text-brand-primary">{t('tp')}</label>
+                      <input name="tp" type="number" step="any" defaultValue={editingTrade.target ?? 0} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-brand-primary font-mono font-bold" />
                     </div>
                   </div>
   
@@ -1081,7 +1081,7 @@ export default function TradingJournal() {
               </div>
               <div className="mt-6 flex justify-between items-center text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">
                 <span>{selectedTradeNotes.symbol} // {selectedTradeNotes.date}</span>
-                <span className={selectedTradeNotes.profitAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
+                <span className={selectedTradeNotes.profitAmount >= 0 ? 'text-brand-primary' : 'text-rose-400'}>
                   {selectedTradeNotes.profitAmount} USD
                 </span>
               </div>

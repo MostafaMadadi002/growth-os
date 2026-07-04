@@ -297,7 +297,7 @@ export default function GoalsScreen() {
                           
                           <div className="grid grid-cols-2 gap-4">
                              {[
-                               { val: 'POSITIVE', label: t('habits_good'), icon: <TrendingUp size={16} />, color: 'text-emerald-500' },
+                               { val: 'POSITIVE', label: t('habits_good'), icon: <TrendingUp size={16} />, color: 'text-brand-primary' },
                                { val: 'NEGATIVE', label: t('habits_bad'), icon: <TrendingDown size={16} />, color: 'text-rose-500' }
                              ].map(type => (
                                <label key={type.val} className="flex items-center gap-3 p-4 rounded-xl border border-surface-border bg-surface-base cursor-pointer has-[:checked]:border-brand-primary has-[:checked]:bg-brand-primary/10 transition-all">

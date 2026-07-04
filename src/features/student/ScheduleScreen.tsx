@@ -486,7 +486,7 @@ export default function ScheduleScreen() {
                   </h4>
                   <div className="flex items-center gap-2 md:gap-4 flex-wrap">
                       <div className="flex items-center gap-1.5">
-                        {isTask ? <Clock size={10} className="text-brand-primary" /> : <CheckCircle2 size={10} className="text-emerald-500" />}
+                        {isTask ? <Clock size={10} className="text-brand-primary" /> : <CheckCircle2 size={10} className="text-brand-secondary" />}
                         <span className="text-[8px] md:text-[10px] font-mono font-bold text-text-secondary uppercase tracking-widest opacity-60">{isTask ? t('status_active') : t('status_completed')}</span>
                       </div>
                       {linkedGoal && (
@@ -502,7 +502,7 @@ export default function ScheduleScreen() {
                     <>
                       <button 
                         onClick={() => toggleTask(item.id)}
-                        className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-[1.8rem] flex items-center justify-center transition-all active:scale-95 ${item.done ? 'bg-emerald-500 text-slate-950 shadow-md' : 'bg-surface-base text-text-secondary border border-surface-border'}`}
+                        className={`w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-[1.8rem] flex items-center justify-center transition-all active:scale-95 ${item.done ? 'bg-brand-secondary text-slate-950 shadow-md' : 'bg-surface-base text-text-secondary border border-surface-border'}`}
                       >
                         {item.done ? <CheckCircle2 size={20} md:size={28} strokeWidth={3} /> : <div className="w-5 h-5 border-2 border-current rounded-lg opacity-20" />}
                       </button>
@@ -602,15 +602,15 @@ export default function ScheduleScreen() {
          </button>
          <button 
            onClick={() => setFilter(filter === 'DONE' ? 'ALL' : 'DONE')}
-           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'DONE' ? 'bg-emerald-500/10 border-emerald-500 shadow-xl' : 'bg-surface-card backdrop-blur-xl border-surface-border'}`}
+           className={`p-10 border rounded-[3rem] relative overflow-hidden group transition-all flex flex-col items-start active:scale-[0.98] ${filter === 'DONE' ? 'bg-brand-secondary/10 border-brand-secondary shadow-xl' : 'bg-surface-card backdrop-blur-xl border-surface-border'}`}
          >
-            <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'DONE' ? 'bg-emerald-500/40' : 'bg-emerald-500/10 group-hover:bg-emerald-500/20'}`} />
-            <Timer className={`${filter === 'DONE' ? 'text-emerald-500' : 'text-emerald-500/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
+            <div className={`absolute -bottom-10 -right-10 w-32 h-32 blur-[50px] rounded-full transition-all ${filter === 'DONE' ? 'bg-brand-secondary/40' : 'bg-brand-secondary/10 group-hover:bg-brand-secondary/20'}`} />
+            <Timer className={`${filter === 'DONE' ? 'text-brand-secondary' : 'text-brand-secondary/40'} mb-6 group-hover:scale-110 transition-transform self-start`} size={32} />
             <div className="relative z-10 w-full text-left rtl:text-right">
               <h5 className={`text-[10px] font-mono font-black text-text-secondary uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-[0.3em]'} mb-2`}>{t('completion_load')}</h5>
               <p className="text-2xl md:text-4xl font-display font-black text-text-primary leading-none uppercase">{tasks.filter(t => t.done).length} <span className="text-[10px] md:text-sm font-mono text-text-secondary opacity-60">PULSES</span></p>
               {filter === 'DONE' && (
-                 <span className={`absolute -top-12 ${language === 'fa' ? 'left-0' : 'right-0'} bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>
+                 <span className={`absolute -top-12 ${language === 'fa' ? 'left-0' : 'right-0'} bg-brand-secondary text-slate-950 px-3 py-1 rounded-full text-[8px] font-black uppercase ${language === 'fa' ? 'tracking-normal' : 'tracking-widest'}`}>
                    {t('filtered') || 'FILTERED'}
                  </span>
                )}

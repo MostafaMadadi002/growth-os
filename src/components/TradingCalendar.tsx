@@ -83,9 +83,9 @@ export default function TradingCalendar() {
               key={day}
               whileHover={{ scale: 1.05 }}
               className={`aspect-square rounded-2xl md:rounded-3xl flex flex-col items-center justify-center relative overflow-hidden border transition-colors ${
-                status === 'profit' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
+                status === 'profit' ? 'bg-brand-primary/10 border-brand-primary/20 text-brand-primary' :
                 status === 'loss' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' :
-                status === 'breakeven' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' :
+                status === 'breakeven' ? 'bg-brand-secondary/10 border-brand-secondary/20 text-brand-secondary' :
                 'bg-surface-base border-surface-border text-text-secondary opacity-40'
               }`}
             >
