@@ -164,8 +164,8 @@ export default function ScheduleScreen() {
       </header>
       
       {goals.length > 0 && (
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {goals.slice(0, 3).map(goal => {
+        <section className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 pb-4 md:pb-0 scrollbar-hide">
+          {goals.map(goal => {
             const dailyTarget = calculateDailyTarget(goal);
             const todayDone = getTodayProgress(goal.id);
             const progress = dailyTarget > 0 ? Math.min(100, (todayDone / dailyTarget) * 100) : (todayDone > 0 ? 100 : 0);
@@ -175,10 +175,10 @@ export default function ScheduleScreen() {
                 key={goal.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-6 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] space-y-4 shadow-xl hover:border-brand-primary/20 transition-all duration-500"
+                className="flex-shrink-0 w-[280px] md:w-auto p-6 bg-surface-card backdrop-blur-xl border border-surface-border rounded-[2.5rem] space-y-4 shadow-xl hover:border-brand-primary/20 transition-all duration-500"
               >
                 <div className="flex justify-between items-start">
-                  <h4 className="text-[10px] font-mono font-black text-text-primary uppercase tracking-widest truncate max-w-[120px]">{goal.title}</h4>
+                  <h4 className="text-[10px] font-mono font-black text-text-primary uppercase tracking-widest truncate max-w-[180px] md:max-w-full">{goal.title}</h4>
                   <div className="flex items-center gap-1.5 bg-brand-primary/10 px-2 py-0.5 rounded-lg border border-brand-primary/20">
                     <span className="text-[10px] font-mono font-black text-brand-primary">
                       {todayDone}/{dailyTarget > 0 ? dailyTarget : (t('off_day') || 'OFF')}
